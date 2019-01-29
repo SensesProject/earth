@@ -11,7 +11,8 @@
 body {
   background: $color-background;
   font-family: 'Plex Sans', sans-serif;
-  font-weight: 400;
+  font-feature-settings: "kern";
+  font-weight: 300;
   color: $color-white;
   font-size: 16px;
   line-height: 1.125;
