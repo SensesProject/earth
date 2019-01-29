@@ -1,0 +1,22 @@
+@import "normalize-scss";
+@import "variables";
+@import "fonts";
+
+*, *:before, *:after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: $color-background;
+  font-family: 'Plex Sans', sans-serif;
+  font-weight: 400;
+  color: $color-white;
+  font-size: 16px;
+  line-height: 1.125;
+
+  h1, h2 {
+    font-size: 1rem;
+  }
+}
