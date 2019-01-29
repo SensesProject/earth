@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import fetch from 'unfetch'
-// import map from './assets/data/tas-rcp60-2025.json'
 import { scaleLinear } from 'd3-scale'
 
 Vue.use(Vuex)
