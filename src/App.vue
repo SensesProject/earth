@@ -1,6 +1,7 @@
 <template>
   <div class="app">
     <VisEarth :grid="grid"/>
+    <EarthHeader/>
     <EarthOptions/>
   </div>
 </template>
@@ -8,6 +9,7 @@
 <script>
 import VisEarth from './components/VisEarth.vue'
 import EarthOptions from './components/EarthOptions.vue'
+import EarthHeader from './components/EarthHeader.vue'
 
 import tasRCP26 from './assets/data/diff_annual_mean_tas_all-models-rcp26.nc.json'
 import tasRCP60 from './assets/data/tas-rcp60-2025.json'
@@ -18,6 +20,7 @@ export default {
   components: {
     VisEarth,
     EarthOptions,
+    EarthHeader
   },
   data () {
     return {
