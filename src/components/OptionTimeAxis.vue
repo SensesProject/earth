@@ -5,6 +5,7 @@
       <div v-for="t in labeledTicks" :key="`labeled-tick-${t.label}`" class="tick" :style="t.style">{{ t.label }}</div>
     </div>
     <svg
+      ref="svg"
       :width="width" height="64"
       @mousemove="setPeriod"
       @mousedown="setPeriod($event, true)"
@@ -92,8 +93,7 @@ export default {
       if (mousedown !== undefined) this.mousedown = mousedown
       if (!this.mousedown) return
       const stepSize = 5
-      const layerX = e.clientX - e.target.getBoundingClientRect().left
-      // console.log(year)
+      const layerX = e.clientX - this.$refs.svg.getBoundingClientRect().left
       this.period1 = Math.floor(this.scale.invert(layerX) / stepSize) * stepSize
     }
   }
