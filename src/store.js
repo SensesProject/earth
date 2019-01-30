@@ -11,7 +11,9 @@ export default new Vuex.Store({
     scenario: 'rcp60',
     year: 2025,
     map: null,
-    maps: {}
+    maps: {},
+    width: window.innerWidth,
+    height: window.innerHeight
   },
   mutations: {
     set (state, { prop, value }) {
@@ -36,6 +38,10 @@ export default new Vuex.Store({
   actions: {
     update ({ commit }, d) {
       commit('set', d)
+    },
+    updateSize ({ commit }) {
+      commit('set', { prop: 'width', value: window.innerWidth })
+      commit('set', { prop: 'height', value: window.innerHeight })
     },
     updateVariable ({ commit }, variable) {
       commit('setVariable', variable)
