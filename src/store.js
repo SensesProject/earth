@@ -14,6 +14,9 @@ export default new Vuex.Store({
     maps: {}
   },
   mutations: {
+    set (state, { prop, value }) {
+      state[prop] = value
+    },
     setVariable (state, variable) {
       state.variable = variable
     },
@@ -31,6 +34,9 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    update ({ commit }, d) {
+      commit('set', d)
+    },
     updateVariable ({ commit }, variable) {
       commit('setVariable', variable)
     },
