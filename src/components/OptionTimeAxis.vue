@@ -42,7 +42,7 @@ export default {
     }
   },
   computed: {
-    ...computeFromStore(['year']),
+    ...computeFromStore(['period1']),
     scale () {
       return scaleLinear()
         .domain(this.domain)
@@ -74,7 +74,7 @@ export default {
       })
     },
     slider () {
-      const x = [this.year, this.year + 5].map(v => this.scale(v))
+      const x = [this.period1, this.period1 + 5].map(v => this.scale(v))
       return {
         class: 'yellow',
         x: x[0],
@@ -93,8 +93,8 @@ export default {
       if (!this.mousedown) return
       const stepSize = 5
       const layerX = e.clientX - e.target.getBoundingClientRect().left
-      this.year = Math.floor(this.scale.invert(layerX) / stepSize) * stepSize
       // console.log(year)
+      this.period1 = Math.floor(this.scale.invert(layerX) / stepSize) * stepSize
     }
   }
 }
