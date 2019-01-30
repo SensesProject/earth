@@ -41,6 +41,9 @@ export default {
         variable: [{
           value: 'tas',
           label: 'temperature'
+        }, {
+          value: 'pr',
+          label: 'precipitation'
         }]
       }
     }
