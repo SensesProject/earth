@@ -7,57 +7,66 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    variable: 'tas',
-    scenario: 'rcp60',
-    mode: 0,
-    year: 2025,
-    map: null,
-    maps: {},
     width: window.innerWidth,
-    height: window.innerHeight
+    height: window.innerHeight,
+    mode: 0,
+    variable1: 'tas',
+    variable2: 'pr',
+    scenario1: 'rcp60',
+    scenario2: 'rcp26',
+    period1: 2095,
+    period2: 2005,
+    scale1: {
+      range: ['#00CC84', '#D2FEFF', '#4E40B2'],
+      domain: [-40, 0, 40]
+    },
+    scale2: {
+      range: ['#000', '#4E40B2'],
+      domain: [0, 1000]
+    },
+    dataset1: {},
+    dataset2: {},
+    grids: {},
+    // variable: 'tas',
+    // scenario: 'rcp60',
+    // year: 2005,
+    map: null
+    // maps: {}
   },
   mutations: {
     set (state, { prop, value }) {
       state[prop] = value
     },
-    setVariable (state, variable) {
-      state.variable = variable
-    },
-    setScenario (state, scenario) {
-      state.scenario = scenario
-    },
-    setYear (state, year) {
-      state.year = year
+    clear (state, prop) {
+      state[prop] = {}
+      // console.log(state[prop])
     },
     setMap (state) {
-      state.map = state.maps[`${state.variable}-${state.scenario}-${state.year}`]
+      state.map = state.dataset1[state.period1]
     },
-    addMap (state, { map, mapName }) {
-      state.maps[mapName] = map
+    addMap (state, { map, period }) {
+      state.dataset1[period] = map
     }
   },
   actions: {
-    update ({ commit }, d) {
+    update ({ commit, dispatch }, d) {
       commit('set', d)
+      switch (d.prop) {
+        case 'variable1':
+          commit('clear', 'dataset1')
+        case 'period1':
+        case 'period2':
+          dispatch('updateMap')
+          break
+      }
     },
     updateSize ({ commit }) {
       commit('set', { prop: 'width', value: window.innerWidth })
       commit('set', { prop: 'height', value: window.innerHeight })
     },
-    updateVariable ({ commit }, variable) {
-      commit('setVariable', variable)
-    },
-    updateScenario ({ commit, dispatch }, scenario) {
-      commit('setScenario', scenario)
-      dispatch('updateMap')
-    },
-    updateYear ({ commit, dispatch }, year) {
-      commit('setYear', year)
-      dispatch('updateMap')
-    },
     updateMap ({ commit, state }) {
-      if (state.maps[`${state.variable}-${state.scenario}-${state.year}`] === undefined) {
-        fetch(`/data/${state.variable}-${state.scenario}-${state.year}.json`)
+      if (state.dataset1[state.period1] === undefined) {
+        fetch(`/data/${state.variable1}-${state.scenario1}-${state.period1}.json`)
           .then(r => r.json())
           .then(data => {
             const map = []
@@ -72,7 +81,7 @@ export default new Vuex.Store({
               }
               map.push(lat)
             }
-            commit('addMap', { map, mapName: `${state.variable}-${state.scenario}-${state.year}` })
+            commit('addMap', { map, period: state.period1 })
             commit('setMap')
           })
       } else {

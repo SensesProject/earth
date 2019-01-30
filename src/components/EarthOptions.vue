@@ -7,7 +7,7 @@
     <div class="bottom">
       <OptionTimeAxis class="left" :width="axisWidth"/>
       <div class="right">
-        <OptionSelect :options="options.variable" color="green" value-key="variable" label="variable"/>
+        <OptionSelect :options="options.variable" color="green" value-key="variable1" label="variable"/>
       </div>
       <!-- <input v-model="year" type="range" min="2005" max="2095" step="5">
       <select v-model="scenario">
@@ -46,7 +46,7 @@ export default {
     }
   },
   computed: {
-    ...computeFromStore(['year', 'scenario', 'width']),
+    ...computeFromStore(['width']),
 
     axisWidth () {
       return this.width / 2 - 64

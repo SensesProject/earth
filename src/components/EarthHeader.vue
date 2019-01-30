@@ -22,7 +22,7 @@ export default {
     }
   },
   computed: {
-    ...computeFromStore(['year', 'scenario'])
+    ...computeFromStore(['period1', 'scenario1'])
   }
 }
 </script>

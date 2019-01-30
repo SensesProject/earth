@@ -1,12 +1,12 @@
-export default function (vars) {
+export default function (props) {
   const obj = {}
-  vars.forEach(v => {
-    obj[v] = {
+  props.forEach(prop => {
+    obj[prop] = {
       get () {
-        return this.$store.state[v]
+        return this.$store.state[prop]
       },
       set (value) {
-        this.$store.dispatch(`update${v.charAt(0).toUpperCase() + v.slice(1)}`, value)
+        this.$store.dispatch('update', { value, prop })
       }
     }
   })
