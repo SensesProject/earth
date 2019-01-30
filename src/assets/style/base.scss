@@ -29,4 +29,48 @@ body {
     color: inherit;
     text-decoration: none;
   }
+
+  span, select {
+    &.blue {
+      color: $color-blue;
+    }
+    &.red {
+      color: $color-red;
+    }
+    &.yellow {
+      color: $color-yellow;
+    }
+    &.green {
+      color: $color-green;
+    }
+    &.violet {
+      color: $color-violet;
+    }
+  }
+  svg {
+    .blue {
+      fill: $color-blue;
+      stroke: none;
+    }
+    .red {
+      fill: $color-red;
+      stroke: none;
+    }
+    .yellow {
+      fill: $color-yellow;
+      stroke: none;
+    }
+    .green {
+      fill: $color-green;
+      stroke: none;
+    }
+    .violet {
+      fill: $color-violet;
+      stroke: none;
+    }
+  }
+
+  .upper {
+    text-transform: uppercase;
+  }
 }
