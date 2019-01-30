@@ -9,11 +9,6 @@
       <div class="right">
         <OptionSelect :options="options.variable" color="green" value-key="variable1" label="variable"/>
       </div>
-      <!-- <input v-model="year" type="range" min="2005" max="2095" step="5">
-      <select v-model="scenario">
-        <option value="rcp26">rcp26</option>
-        <option value="rcp60">rcp60</option>
-      </select> -->
     </div>
   </div>
 </template>
