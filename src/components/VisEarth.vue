@@ -98,6 +98,8 @@ export default {
     // console.log(borders)
 
     animate()
+
+    this.$store.dispatch('updateMap')
   },
   methods: {
     animate (t = 0) {
