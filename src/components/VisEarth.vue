@@ -9,27 +9,17 @@
 import * as THREE from 'three'
 import OrbitControls from 'three-orbitcontrols'
 import drawThreeGeo from '../assets/js/threeGeo.js'
-// import { scaleLinear } from 'd3-scale' // scaleSequential
-// import { interpolateSpectral } from 'd3-scale-chromatic'
 
 import world from '../assets/data/world.json'
 import worker from 'workerize-loader!../assets/js/mapRenderer' // eslint-disable-line
 
 export default {
   name: 'VisEarth',
-  // props: {
-  //   grid: {
-  //     type: Object,
-  //     default: null
-  //   }
-  // },
   data () {
     return {
       scene: new THREE.Scene(),
       camera: null,
       renderer: new THREE.WebGLRenderer({ antialias: true }),
-      // width: window.innerWidth,
-      // height: window.innerHeight,
       map: new THREE.MeshBasicMaterial(),
       frustumSize: 1000,
       workerInstance: null
@@ -64,7 +54,6 @@ export default {
   mounted () {
     const { renderer, $refs, scene, width, height, size, animate, createCanvas, map, frustumSize } = this
 
-    // this.camera = new THREE.OrthographicCamera(width / -2, width / 2, height / 2, height / -2, 1, size * 4)
     const aspect = width / height
     this.camera = new THREE.OrthographicCamera(frustumSize * aspect / -2, frustumSize * aspect / 2, frustumSize / 2, frustumSize / -2, 1, frustumSize * 2)
     this.camera.position.z = size * 2
@@ -89,13 +78,9 @@ export default {
     drawThreeGeo.drawThreeGeo(world, size / 4 + 0.5, 'sphere', {
       color: 0x1B2658
     }, globe)
-    // let quaternion = new THREE.Quaternion()
-    // globe.quaternion = quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 2)
     globe.setRotationFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2)
 
     scene.add(globe)
-
-    // console.log(borders)
 
     animate()
 
@@ -104,11 +89,6 @@ export default {
   methods: {
     animate (t = 0) {
       const { animate, scene, camera, renderer } = this
-
-      // camera.position.x = 1000 * Math.sin(THREE.Math.degToRad(0.01 * t))
-      // camera.position.y = 1000 * Math.sin(THREE.Math.degToRad(0.01 * t))
-      // camera.position.z = 1000 * Math.cos(THREE.Math.degToRad(0.01 * t))
-      // camera.lookAt(scene.position)
       camera.updateMatrixWorld()
       requestAnimationFrame(animate)
       renderer.render(scene, camera)
@@ -124,19 +104,16 @@ export default {
       return vector
     },
     createCanvas () {
-      // this.canvas = document.createElement('canvas')
       this.canvas = document.createElement('canvas') // this.$refs.canvas
       const resolution = 1
       this.canvas.setAttribute('width', 720 * resolution)
       this.canvas.setAttribute('height', 360 * resolution)
       this.ctx = this.canvas.getContext('2d')
       this.ctx.fillRect(0, 0, 360, 180)
-      // this.updateCanvas()
       const texture = new THREE.CanvasTexture(this.canvas)
 
       texture.magFilter = THREE.NearestFilter
       texture.minFilter = THREE.NearestFilter
-      // texture.repeat = new THREE.Vector2(0.703125, 1/)
       this.map.map = texture
     },
     updateCanvas () {
