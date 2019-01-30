@@ -1,5 +1,6 @@
 <template>
   <div class="app">
+    <ResizeObserver @notify="setClientSize"/>
     <VisEarth/>
     <EarthHeader/>
     <EarthOptions/>
@@ -7,22 +8,30 @@
 </template>
 
 <script>
+import 'vue-resize/dist/vue-resize.css'
 import VisEarth from './components/VisEarth.vue'
 import EarthOptions from './components/EarthOptions.vue'
 import EarthHeader from './components/EarthHeader.vue'
+import { ResizeObserver } from 'vue-resize'
 
 export default {
   name: 'app',
   components: {
     VisEarth,
     EarthOptions,
-    EarthHeader
+    EarthHeader,
+    ResizeObserver
   },
   data () {
     return {
     }
   },
   computed: {
+  },
+  methods: {
+    setClientSize () {
+      this.$store.dispatch('updateSize')
+    }
   }
 }
 </script>
