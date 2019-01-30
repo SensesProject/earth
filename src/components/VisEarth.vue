@@ -9,10 +9,11 @@
 import * as THREE from 'three'
 import OrbitControls from 'three-orbitcontrols'
 import drawThreeGeo from '../assets/js/threeGeo.js'
-import { scaleLinear } from 'd3-scale' // scaleSequential
+// import { scaleLinear } from 'd3-scale' // scaleSequential
 // import { interpolateSpectral } from 'd3-scale-chromatic'
 
 import world from '../assets/data/world.json'
+import worker from 'workerize-loader!../assets/js/mapRenderer' // eslint-disable-line
 
 export default {
   name: 'VisEarth',
@@ -29,7 +30,8 @@ export default {
       renderer: new THREE.WebGLRenderer({ antialias: true }),
       width: window.innerWidth,
       height: window.innerHeight,
-      map: new THREE.MeshBasicMaterial()
+      map: new THREE.MeshBasicMaterial(),
+      workerInstance: null
     }
   },
   computed: {
@@ -121,39 +123,17 @@ export default {
       this.map.map = texture
     },
     updateCanvas () {
-      // const domain = [40, -40]
       this.ctx.fillStyle = '#00CC84'
       this.ctx.fillRect(0, 0, 720, 360)
-      const colorScale = scaleLinear()
-        // .range(['#071A29', '#39C88A', '#071A29'])
-        .range(['#00CC84', '#D2FEFF', '#4E40B2'])
-        .domain([-40, 0, 40])
-      colorScale.clamp(true)
 
       const canvasData = this.ctx.getImageData(0, 0, 720, 360)
 
-      for (let y = 0; y < 360; y++) {
-        for (let x = 0; x < 720; x++) {
-          const value = this.grid[y][x]
-          // if (value > 8) {
-          this.ctx.fillStyle = colorScale(value)
-          const rgb = colorScale(value).match(/\((.*)\)/)[1].split(', ')
-          const index = (x + (359 - y) * 720) * 4
-          for (let i = 0; i < 3; i++) {
-            canvasData.data[index + i] = rgb[i]
-          }
-          // }
-        }
-      }
-      this.ctx.putImageData(canvasData, 0, 0)
-      // const texture = new THREE.CanvasTexture(this.canvas)
-      //
-      // texture.magFilter = THREE.NearestFilter
-      // texture.minFilter = THREE.NearestFilter
-      // // texture.repeat = new THREE.Vector2(0.703125, 1/)
-      // this.map.map = texture
-      this.map.map.needsUpdate = true
-      // return canvas
+      if (this.workerInstance != null) this.workerInstance.terminate()
+      this.workerInstance = worker()
+      this.workerInstance.renderMap({ canvasData, grid: this.grid }).then(cData => {
+        this.ctx.putImageData(cData, 0, 0)
+        this.map.map.needsUpdate = true
+      })
     }
   }
 }
