@@ -28,9 +28,10 @@ export default {
       scene: new THREE.Scene(),
       camera: null,
       renderer: new THREE.WebGLRenderer({ antialias: true }),
-      width: window.innerWidth,
-      height: window.innerHeight,
+      // width: window.innerWidth,
+      // height: window.innerHeight,
       map: new THREE.MeshBasicMaterial(),
+      frustumSize: 1000,
       workerInstance: null
     }
   },
@@ -41,17 +42,31 @@ export default {
     },
     grid () {
       return this.$store.state.map
+    },
+    width () {
+      return this.$store.state.width
+    },
+    height () {
+      return this.$store.state.height
     }
   },
   watch: {
     grid () {
       this.updateCanvas()
+    },
+    width () {
+      this.resize()
+    },
+    height () {
+      this.resize()
     }
   },
   mounted () {
-    const { renderer, $refs, scene, width, height, size, animate, createCanvas, map } = this
+    const { renderer, $refs, scene, width, height, size, animate, createCanvas, map, frustumSize } = this
 
-    this.camera = new THREE.OrthographicCamera(width / -2, width / 2, height / 2, height / -2, 1, size * 4)
+    // this.camera = new THREE.OrthographicCamera(width / -2, width / 2, height / 2, height / -2, 1, size * 4)
+    const aspect = width / height
+    this.camera = new THREE.OrthographicCamera(frustumSize * aspect / -2, frustumSize * aspect / 2, frustumSize / 2, frustumSize / -2, 1, frustumSize * 2)
     this.camera.position.z = size * 2
 
     scene.background = new THREE.Color(0x071A29)
@@ -134,6 +149,16 @@ export default {
         this.ctx.putImageData(cData, 0, 0)
         this.map.map.needsUpdate = true
       })
+    },
+    resize () {
+      const { width, height, camera, renderer, frustumSize } = this
+      const aspect = window.innerWidth / window.innerHeight
+      camera.left = -frustumSize * aspect / 2
+      camera.right = frustumSize * aspect / 2
+      camera.top = frustumSize / 2
+      camera.bottom = -frustumSize / 2
+      camera.updateProjectionMatrix()
+      renderer.setSize(width, height)
     }
   }
 }
