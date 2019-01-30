@@ -21,15 +21,21 @@
       <rect v-bind="slider"/>
       <!-- <rect width="200" height="200"/> -->
     </svg>
+    <OptionSelect :options="options.scenario" color="yellow" value-key="scenario1" label="scenario"/>
   </div>
 </template>
 
 <script>
+import OptionSelect from './OptionSelect.vue'
+
 import { scaleLinear } from 'd3-scale'
 import computeFromStore from '../assets/js/computeFromStore.js'
 
 export default {
   name: 'OptionTimeAxis',
+  components: {
+    OptionSelect
+  },
   props: {
     width: {
       type: Number,
@@ -39,7 +45,16 @@ export default {
   data () {
     return {
       domain: [2005, 2100],
-      mousedown: false
+      mousedown: false,
+      options: {
+        scenario: [{
+          value: 'rcp26',
+          label: 'RCP 2.6'
+        }, {
+          value: 'rcp60',
+          label: 'RCP 6.0'
+        }]
+      }
     }
   },
   computed: {
