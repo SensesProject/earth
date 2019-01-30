@@ -127,7 +127,7 @@ export default {
       const colorScale = scaleLinear()
         // .range(['#071A29', '#39C88A', '#071A29'])
         .range(['#00CC84', '#D2FEFF', '#4E40B2'])
-        .domain([8, 12, 16])
+        .domain([-40, 0, 40])
       colorScale.clamp(true)
 
       const canvasData = this.ctx.getImageData(0, 0, 720, 360)
@@ -135,16 +135,14 @@ export default {
       for (let y = 0; y < 360; y++) {
         for (let x = 0; x < 720; x++) {
           const value = this.grid[y][x]
-          if (value > 8) {
-            this.ctx.fillStyle = colorScale(value)
-            if (x === 0) {
-            }
-            const rgb = colorScale(value).match(/\((.*)\)/)[1].split(', ')
-            const index = (x + (359 - y) * 720) * 4
-            for (let i = 0; i < 3; i++) {
-              canvasData.data[index + i] = rgb[i]
-            }
+          // if (value > 8) {
+          this.ctx.fillStyle = colorScale(value)
+          const rgb = colorScale(value).match(/\((.*)\)/)[1].split(', ')
+          const index = (x + (359 - y) * 720) * 4
+          for (let i = 0; i < 3; i++) {
+            canvasData.data[index + i] = rgb[i]
           }
+          // }
         }
       }
       this.ctx.putImageData(canvasData, 0, 0)

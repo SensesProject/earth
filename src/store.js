@@ -9,6 +9,7 @@ export default new Vuex.Store({
   state: {
     variable: 'tas',
     scenario: 'rcp60',
+    mode: 0,
     year: 2025,
     map: null,
     maps: {},
