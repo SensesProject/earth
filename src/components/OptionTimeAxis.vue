@@ -6,21 +6,25 @@
     </div>
     <svg
       ref="svg"
-      :width="width" height="64"
+      :width="width" height="40"
       @mousemove="setPeriod"
       @mousedown="setPeriod($event, true)"
       @mouseup="setPeriod($event, false)"
       @mouseleave="setPeriod($event, false)"
       >
-      <g class="axis" transform="translate(0, 20)">
-        <polyline class="axis" :points="`0,3.5 ${width},3.5`"/>
+      <g class="axis" transform="translate(0, 3.5)">
+        <polyline class="axis" :points="`0,0 ${width},0`"/>
         <g v-for="t in ticks" :key="`tick-${t.x}`">
-          <polyline class="axis tick" :points="`${t.x},0 ${t.x},4`"/>
+          <polyline class="axis tick" :points="`${t.x},0 ${t.x},-4`"/>
         </g>
+      </g>
+      <g class="axis scenario-axis" transform="translate(0, 36.5)">
+        <polyline class="axis" :points="`${scenarioAxisStart},0 ${width},0`"/>
+        <polyline class="axis tick" :points="`${scenarioAxisStart},0 ${scenarioAxisStart},4`"/>
       </g>
       <rect v-bind="slider"/>
     </svg>
-    <OptionSelect :options="options.scenario" color="yellow" value-key="scenario1" label="scenario"/>
+    <OptionSelect :style="{transform: `translate(${scenarioAxisStart}px)`}" :options="options.scenario" color="yellow" value-key="scenario1" label="scenario"/>
   </div>
 </template>
 
@@ -61,7 +65,7 @@ export default {
     scale () {
       return scaleLinear()
         .domain(this.domain)
-        .range([0, this.width])
+        .range([0.5, this.width - 0.5])
     },
     perc_scale () {
       return scaleLinear()
@@ -93,10 +97,13 @@ export default {
       return {
         class: 'yellow',
         x: x[0],
-        y: 27,
+        y: 8,
         height: 24,
         width: x[1] - x[0]
       }
+    },
+    scenarioAxisStart () {
+      return this.scale(2050)
     }
   },
   mounted () {
@@ -120,14 +127,14 @@ export default {
 .OptionTimeAxis {
   .ticks {
     position: relative;
-
+    height: 1.25rem;
     .tick {
       position: absolute;
     }
   }
   svg {
     display: block;
-    overflow: visible;
+    // overflow: visible;
     position: relative;
 
     .axis {
