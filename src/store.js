@@ -27,11 +27,7 @@ export default new Vuex.Store({
     dataset1: {},
     dataset2: {},
     grids: {},
-    // variable: 'tas',
-    // scenario: 'rcp60',
-    // year: 2005,
     map: null
-    // maps: {}
   },
   mutations: {
     set (state, { prop, value }) {
@@ -54,6 +50,7 @@ export default new Vuex.Store({
     update ({ commit, dispatch }, d) {
       commit('set', d)
       switch (d.prop) {
+        case 'scenario1':
         case 'variable1':
           commit('clear', 'dataset1')
           commit('clear', 'grids')
@@ -68,7 +65,6 @@ export default new Vuex.Store({
       commit('set', { prop: 'height', value: window.innerHeight })
     },
     updateMap ({ commit, state }) {
-      // store period before fetching data !!
       const { dataset1, period1, variable1, scenario1 } = state
       if (dataset1[period1] === undefined) {
         fetch(`/data/${variable1}-${scenario1}-${period1}.json`)
