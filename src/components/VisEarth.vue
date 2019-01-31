@@ -38,6 +38,12 @@ export default {
     },
     height () {
       return this.$store.state.height
+    },
+    grids () {
+      return this.$store.state.grids
+    },
+    period1 () {
+      return this.$store.state.period1
     }
   },
   watch: {
@@ -117,17 +123,25 @@ export default {
       this.map.map = texture
     },
     updateCanvas () {
+      const { period1 } = this
       this.ctx.fillStyle = '#00CC84'
       this.ctx.fillRect(0, 0, 720, 360)
-
+      if (this.grids[period1] !== undefined) {
+        this.updateTexture(this.grids[period1])
+        return
+      }
       const canvasData = this.ctx.getImageData(0, 0, 720, 360)
 
-      if (this.workerInstance != null) this.workerInstance.terminate()
+      // if (this.workerInstance != null) this.workerInstance.terminate()
       this.workerInstance = worker()
-      this.workerInstance.renderMap({ canvasData, grid: this.grid }).then(cData => {
-        this.ctx.putImageData(cData, 0, 0)
-        this.map.map.needsUpdate = true
+      this.workerInstance.renderMap({ canvasData, grid: this.grid, period1 }).then(cData => {
+        this.$store.dispatch('addGrid', { period: period1, grid: cData })
+        this.updateTexture(cData)
       })
+    },
+    updateTexture (canvasData) {
+      this.ctx.putImageData(canvasData, 0, 0)
+      this.map.map.needsUpdate = true
     },
     resize () {
       const { width, height, camera, renderer, frustumSize } = this
