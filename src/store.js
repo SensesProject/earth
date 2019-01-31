@@ -39,13 +39,15 @@ export default new Vuex.Store({
     },
     clear (state, prop) {
       state[prop] = {}
-      // console.log(state[prop])
     },
     setMap (state) {
       state.map = state.dataset1[state.period1]
     },
     addMap (state, { map, period }) {
       state.dataset1[period] = map
+    },
+    addGrid (state, { grid, period }) {
+      state.grids[period] = grid
     }
   },
   actions: {
@@ -54,6 +56,7 @@ export default new Vuex.Store({
       switch (d.prop) {
         case 'variable1':
           commit('clear', 'dataset1')
+          commit('clear', 'grids')
         case 'period1':
         case 'period2':
           dispatch('updateMap')
@@ -65,8 +68,10 @@ export default new Vuex.Store({
       commit('set', { prop: 'height', value: window.innerHeight })
     },
     updateMap ({ commit, state }) {
-      if (state.dataset1[state.period1] === undefined) {
-        fetch(`/data/${state.variable1}-${state.scenario1}-${state.period1}.json`)
+      // store period before fetching data !!
+      const { dataset1, period1, variable1, scenario1 } = state
+      if (dataset1[period1] === undefined) {
+        fetch(`/data/${variable1}-${scenario1}-${period1}.json`)
           .then(r => r.json())
           .then(data => {
             const map = []
@@ -81,12 +86,19 @@ export default new Vuex.Store({
               }
               map.push(lat)
             }
-            commit('addMap', { map, period: state.period1 })
-            commit('setMap')
+            if (state.variable1 === variable1 && state.scenario1 === scenario1) {
+              commit('addMap', { map, period: period1 })
+              if (state.period1 === period1) {
+                commit('setMap')
+              }
+            }
           })
       } else {
         commit('setMap')
       }
+    },
+    addGrid ({ commit }, { grid, period }) {
+      commit('addGrid', { grid, period })
     }
   }
 })
