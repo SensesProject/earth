@@ -11,7 +11,7 @@ import OrbitControls from 'three-orbitcontrols'
 import drawThreeGeo from '../assets/js/threeGeo.js'
 
 import world from '../assets/data/world.json'
-import worker from 'workerize-loader!../assets/js/mapRenderer' // eslint-disable-line
+import worker from 'workerize-loader!../assets/js/mapRenderer'
 
 export default {
   name: 'VisEarth',

@@ -74,24 +74,5 @@ export default {
     font-weight: 300;
     line-height: 1;
   }
-  // svg {
-  //   position: absolute;
-  //   transform: translate(2px, 6px);
-  //   &.blue {
-  //     fill: $color-blue;
-  //   }
-  //   &.red {
-  //     fill: $color-red;
-  //   }
-  //   &.yellow {
-  //     fill: $color-yellow;
-  //   }
-  //   &.green {
-  //     fill: $color-green;
-  //   }
-  //   &.violet {
-  //     fill: $color-violet;
-  //   }
-  // }
 }
 </style>

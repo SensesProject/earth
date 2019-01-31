@@ -19,7 +19,6 @@
         </g>
       </g>
       <rect v-bind="slider"/>
-      <!-- <rect width="200" height="200"/> -->
     </svg>
     <OptionSelect :options="options.scenario" color="yellow" value-key="scenario1" label="scenario"/>
   </div>
@@ -124,7 +123,6 @@ export default {
 
     .tick {
       position: absolute;
-      // z-index: -1;
     }
   }
   svg {
