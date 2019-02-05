@@ -16,7 +16,7 @@
       </g>
       <g class="axis scenario-axis" transform="translate(0, 36.5)">
         <polyline class="axis" :points="`${scenarioAxisStart},0 ${width},0`"/>
-        <polyline class="axis tick" :points="`${scenarioAxisStart},0 ${scenarioAxisStart},4`"/>
+        <polyline class="axis tick" :points="`${scenarioAxisStart},-0.5 ${scenarioAxisStart},4`"/>
       </g>
       <rect v-bind="slider"/>
     </svg>
