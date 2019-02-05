@@ -57,6 +57,7 @@ export default {
 
 .OptionSelect {
   text-transform: uppercase;
+  display: inline-block;
 
   select {
     -webkit-appearance: none;
