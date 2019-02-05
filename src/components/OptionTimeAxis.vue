@@ -7,11 +7,7 @@
     <svg
       ref="svg"
       :width="width" height="40"
-      @mousemove="setPeriod"
-      @mousedown="setPeriod($event, true)"
-      @mouseup="setPeriod($event, false)"
-      @mouseleave="setPeriod($event, false)"
-      >
+      @mousedown="setPeriod($event, true)">
       <g class="axis" transform="translate(0, 3.5)">
         <polyline class="axis" :points="`0,0 ${width},0`"/>
         <g v-for="t in ticks" :key="`tick-${t.x}`">
@@ -115,7 +111,8 @@ export default {
       if (!this.mousedown) return
       const stepSize = 5
       const layerX = e.clientX - this.$refs.svg.getBoundingClientRect().left
-      this.period1 = Math.floor(this.scale.invert(layerX) / stepSize) * stepSize
+      const period = Math.floor(this.scale.invert(layerX) / stepSize) * stepSize
+      this.period1 = Math.max(Math.min(period, 2095), 2005)
     }
   }
 }
