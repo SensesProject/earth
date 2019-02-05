@@ -79,7 +79,6 @@ export default {
   .top, .bottom {
     display: flex;
     justify-content: space-between;
-    align-items: center;
   }
 
   .top {
