@@ -1,11 +1,14 @@
 <template>
-  <div class="EarthOptions">
+  <div class="EarthOptions"
+    @mousemove="passEvents"
+    @mouseup="passEvents($event, false)"
+    @mouseleave="passEvents($event, false)">
     <div class="top">
       <OptionSelect :options="options.mode" value-key="mode" label="mode"/>
       <span class="blue upper">share</span>
     </div>
     <div class="bottom">
-      <OptionTimeAxis class="left" :width="axisWidth"/>
+      <OptionTimeAxis ref="OptionTimeAxis" class="left" :width="axisWidth"/>
       <div class="right">
         <OptionSelect :options="options.variable" color="green" value-key="variable1" label="variable"/>
       </div>
@@ -48,6 +51,11 @@ export default {
 
     axisWidth () {
       return this.width / 2 - 64
+    }
+  },
+  methods: {
+    passEvents (e, v) {
+      this.$refs.OptionTimeAxis.setPeriod(e, v)
     }
   }
 }
