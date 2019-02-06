@@ -7,7 +7,8 @@
     <svg
       ref="svg"
       :width="width" height="40"
-      @mousedown="setPeriod($event, true)">
+      @mousedown="setPeriod($event, true)"
+      @touchstart="setPeriod($event, true)">
       <g class="axis" transform="translate(0, 3.5)">
         <polyline class="axis" :points="`0,0 ${width},0`"/>
         <g v-for="t in ticks" :key="`tick-${t.x}`">

@@ -1,7 +1,9 @@
 <template>
   <div class="EarthOptions"
     @mousemove="passEvents"
+    @touchmove="passEvents"
     @mouseup="passEvents($event, false)"
+    @touchend="passEvents($event, false)"
     @mouseleave="passEvents($event, false)">
     <div class="top">
       <OptionSelect :options="options.mode" value-key="mode" label="mode"/>
