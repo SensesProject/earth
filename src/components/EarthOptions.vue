@@ -11,9 +11,7 @@
     </div>
     <div class="bottom">
       <OptionTimeAxis ref="OptionTimeAxis" class="left" :width="axisWidth"/>
-      <div class="right">
-        <OptionSelect :options="options.variable" color="green" value-key="variable1" label="variable"/>
-      </div>
+      <InputSlider class="right" :width="axisWidth"/>
     </div>
   </div>
 </template>
@@ -21,12 +19,14 @@
 <script>
 import OptionSelect from './OptionSelect.vue'
 import OptionTimeAxis from './OptionTimeAxis.vue'
+import InputSlider from './InputSlider.vue'
 import computeFromStore from '../assets/js/computeFromStore.js'
 export default {
   name: 'EarthOptions',
   components: {
     OptionSelect,
-    OptionTimeAxis
+    OptionTimeAxis,
+    InputSlider
   },
   data () {
     return {
@@ -37,13 +37,6 @@ export default {
         }, {
           value: 1,
           label: 'compare variables'
-        }],
-        variable: [{
-          value: 'tas',
-          label: 'temperature'
-        }, {
-          value: 'pr',
-          label: 'precipitation'
         }]
       }
     }
