@@ -44,10 +44,19 @@ export default {
     },
     period1 () {
       return this.$store.state.period1
+    },
+    range1 () {
+      return this.$store.state.range1
+    },
+    domain1 () {
+      return this.$store.state.domain1
     }
   },
   watch: {
     grid () {
+      this.updateCanvas()
+    },
+    domain1 () {
       this.updateCanvas()
     },
     width () {
@@ -123,7 +132,7 @@ export default {
       this.map.map = texture
     },
     updateCanvas () {
-      const { period1 } = this
+      const { period1, range1, domain1 } = this
       this.ctx.fillStyle = '#00CC84'
       this.ctx.fillRect(0, 0, 720, 360)
       if (this.grids[period1] !== undefined) {
@@ -134,7 +143,7 @@ export default {
 
       // if (this.workerInstance != null) this.workerInstance.terminate()
       this.workerInstance = worker()
-      this.workerInstance.renderMap({ canvasData, grid: this.grid, period1 }).then(cData => {
+      this.workerInstance.renderMap({ canvasData, grid: this.grid, period1, range1, domain1 }).then(cData => {
         this.$store.dispatch('addGrid', { period: period1, grid: cData })
         this.updateTexture(cData)
       })
