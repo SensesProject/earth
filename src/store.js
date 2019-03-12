@@ -16,10 +16,8 @@ export default new Vuex.Store({
     scenario2: 'rcp26',
     period1: 2095,
     period2: 2005,
-    scale1: {
-      range: ['#00CC84', '#D2FEFF', '#4E40B2'],
-      domain: [-40, 0, 40]
-    },
+    range1: ['#00CC84', '#D2FEFF', '#4E40B2'],
+    domain1: [-40, 0, 40],
     scale2: {
       range: ['#000', '#4E40B2'],
       domain: [0, 1000]
@@ -53,6 +51,7 @@ export default new Vuex.Store({
         case 'scenario1':
         case 'variable1':
           commit('clear', 'dataset1')
+        case 'domain1':
           commit('clear', 'grids')
         case 'period1':
         case 'period2':

@@ -1,10 +1,11 @@
 import { scaleLinear } from 'd3-scale'
 
-export function renderMap ({ canvasData, grid, period1 }) {
+export function renderMap ({ canvasData, grid, period1, range1, domain1 }) {
+  const domain = [domain1[0], (domain1[0] + domain1[1]) * 0.5, domain1[1]]
   const colorScale = scaleLinear()
     // .range(['#071A29', '#39C88A', '#071A29'])
-    .range(['#00CC84', '#D2FEFF', '#4E40B2'])
-    .domain([10, 11, 12])
+    .range(range1)
+    .domain(domain)
   colorScale.clamp(true)
   // console.log(period1, grid)
   for (let y = 0; y < 360; y++) {
