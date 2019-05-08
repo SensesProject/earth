@@ -1,0 +1,85 @@
+{
+  "plot_type": "frequency_map_vs_temperature",
+
+  "indicator": "land-area-affected-by-crop-failure",
+  "assessment_category": "ISIMIP-projections",
+  "region": "Global",
+
+  "map_title": "Land area affected by crop failure",
+  "temperature_unit": "°C",
+  "indicator_unit": "",
+
+  "temperature_list": [ "1", "1.5", "2" ],
+  "climate_model_list": [ "IPSL-CM5A-LR", "GFDL-ESM2M", "MIROC5" ],
+  "impact_model_list": [ "LPJmL", "GEPIC", "PEPIC" ],
+
+  "frequency_maps": {
+
+    "1": {
+      "IPSL-CM5A-LR": {
+
+        "LPJmL": "frequency_map_IPSL-CM5A-LR_LPJmL_1.json",
+        "GEPIC": "frequency_map_IPSL-CM5A-LR_GEPIC_1.json",
+        "PEPIC": "frequency_map_IPSL-CM5A-LR_PEPIC_1.json"
+      },
+
+      "GFDL-ESM2M": {
+
+        "LPJmL": "frequency_map_GFDL-ESM2M_LPJmL_1.json",
+        "GEPIC": "frequency_map_GFDL-ESM2M_GEPIC_1.json",
+        "PEPIC": "frequency_map_GFDL-ESM2M_PEPIC_1.json"
+      },
+
+      "MIROC5": {
+
+        "LPJmL": "frequency_map_MIROC5_LPJmL_1.json",
+        "GEPIC": "frequency_map_MIROC5_GEPIC_1.json",
+        "PEPIC": "frequency_map_MIROC5_PEPIC_1.json"
+      }
+    },
+    "1.5": {
+      "IPSL-CM5A-LR": {
+
+        "LPJmL": "frequency_map_IPSL-CM5A-LR_LPJmL_1.5.json",
+        "GEPIC": "frequency_map_IPSL-CM5A-LR_GEPIC_1.5.json",
+        "PEPIC": "frequency_map_IPSL-CM5A-LR_PEPIC_1.5.json"
+      },
+
+      "GFDL-ESM2M": {
+
+        "LPJmL": "frequency_map_GFDL-ESM2M_LPJmL_1.5.json",
+        "GEPIC": "frequency_map_GFDL-ESM2M_GEPIC_1.5.json",
+        "PEPIC": "frequency_map_GFDL-ESM2M_PEPIC_1.5.json"
+      },
+
+      "MIROC5": {
+
+        "LPJmL": "frequency_map_MIROC5_LPJmL_1.5.json",
+        "GEPIC": "frequency_map_MIROC5_GEPIC_1.5.json",
+        "PEPIC": "frequency_map_MIROC5_PEPIC_1.5.json"
+      }
+    },
+    "2": {
+      "IPSL-CM5A-LR": {
+
+        "LPJmL": "frequency_map_IPSL-CM5A-LR_LPJmL_2.json",
+        "GEPIC": "frequency_map_IPSL-CM5A-LR_GEPIC_2.json",
+        "PEPIC": "frequency_map_IPSL-CM5A-LR_PEPIC_2.json"
+      },
+
+      "GFDL-ESM2M": {
+
+        "LPJmL": "frequency_map_GFDL-ESM2M_LPJmL_2.json",
+        "GEPIC": "frequency_map_GFDL-ESM2M_GEPIC_2.json",
+        "PEPIC": "frequency_map_GFDL-ESM2M_PEPIC_2.json"
+      },
+
+      "MIROC5": {
+
+        "LPJmL": "frequency_map_MIROC5_LPJmL_2.json",
+        "GEPIC": "frequency_map_MIROC5_GEPIC_2.json",
+        "PEPIC": "frequency_map_MIROC5_PEPIC_2.json"
+      }
+    }
+  }
+}
