@@ -20,6 +20,29 @@ export default new Vuex.Store({
     modes: ['explore', 'indicator', 'global-warming-level', 'climate-model', 'impact-model'],
     variable: null,
     indicator: null,
+    indicators: [{
+      value: 'crop-failure',
+      label: 'crop failure'
+    }, {
+      value: 'drought',
+      label: 'drought'
+    }, {
+      value: 'heatwave',
+      label: 'heatwave'
+    }, {
+      value: 'river-flood',
+      label: 'river flood'
+    }, {
+      value: 'wildfire',
+      label: 'wildfire'
+    }],
+    scenario: [{
+      value: 'rcp26',
+      label: 'RCP 2.6'
+    }, {
+      value: 'rcp60',
+      label: 'RCP 6.0'
+    }],
     impactModel: null,
     impactModels: [],
     climateModel: null,
