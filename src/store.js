@@ -44,6 +44,7 @@ export default new Vuex.Store({
     dataset2: {},
     grids: {},
     map: null,
+    mapComparison: null,
     title: null,
     compareOption: null,
     compareValue: null
@@ -71,8 +72,11 @@ export default new Vuex.Store({
     clear (state, prop) {
       state[prop] = {}
     },
-    setMap (state) {
-      state.map = state.dataset[state.temperature]
+    setMap (state, map) {
+      state.map = map
+    },
+    setMapComparison (state, map) {
+      state.mapComparison = map
     },
     addMap (state, { map, temperature }) {
       state.dataset[temperature] = map
@@ -107,6 +111,7 @@ export default new Vuex.Store({
         case 'temperature':
         case 'period1':
         case 'period2':
+        case 'compareValue':
           dispatch('updateMap')
           break
       }
@@ -133,17 +138,33 @@ export default new Vuex.Store({
       commit('set', { prop: 'height', value: window.innerHeight })
     },
     updateMap ({ commit, state }) {
-      const { climateModel, impactModel, temperature, dataset, variable, indicator } = state
+      const { climateModel, impactModel, temperature, variable, indicator, compareOption, compareValue } = state
       if (climateModel != null && impactModel != null && temperature != null) {
-        if (dataset[temperature] === undefined) {
-          if (state.files[state.temperature][state.climateModel][state.impactModel] == null) return
-          fetch(`./impacts/${variable}-by-${indicator}/${state.files[state.temperature][state.climateModel][state.impactModel]}`)
+        if (state.files[state.temperature][state.climateModel][state.impactModel] == null) return
+        fetch(`./impacts/${variable}-by-${indicator}/${state.files[state.temperature][state.climateModel][state.impactModel]}`)
+          .then(r => r.json())
+          .then(data => {
+            const map = []
+            for (let y = 359; y >= 0; y--) {
+              const lat = []
+              const line = data.grid[y]
+              for (let x = 0; x < 720; x++) {
+                lat.push(charcodeToValue(line.charCodeAt(y === 0 ? x : x + 1)))
+              }
+              map.push(lat)
+            }
+            if (state.variable === variable && state.indicator === indicator && state.temperature === temperature) {
+              commit('setMap', map)
+            }
+          })
+        if (compareValue != null) {
+          const compareTemp = compareOption === 'global-warming-level' ? compareValue : state.temperature
+          const compareClimateModel = compareOption === 'climate-model' ? compareValue : state.climateModel
+          const compareImpactModel = compareOption === 'impact-model' ? compareValue : state.impactModel
+          fetch(`./impacts/${variable}-by-${indicator}/${state.files[compareTemp][compareClimateModel][compareImpactModel]}`)
             .then(r => r.json())
             .then(data => {
               const map = []
-              // const scale = scaleLinear()
-              //   .domain(data.domain)
-              //   .range(data.range)
               for (let y = 359; y >= 0; y--) {
                 const lat = []
                 const line = data.grid[y]
@@ -152,15 +173,10 @@ export default new Vuex.Store({
                 }
                 map.push(lat)
               }
-              if (state.variable === variable && state.indicator === indicator) {
-                commit('addMap', { map, temperature })
-                if (state.temperature === temperature) {
-                  commit('setMap')
-                }
+              if (state.variable === variable && state.indicator === indicator && state.temperature === temperature) {
+                commit('setMapComparison', map)
               }
             })
-        } else {
-          commit('setMap')
         }
       }
     },
