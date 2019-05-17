@@ -139,7 +139,7 @@ export default new Vuex.Store({
           break
       }
     },
-    updateMetadata ({ commit, state, dispatch }) {
+    updateMetadata ({ commit, state, dispatch, getters }) {
       const { variable, indicator, climateModel, impactModel, temperature } = state
       if (variable == null || indicator == null) return
       fetch(`./impacts/${variable}-by-${indicator}/${variable}-by-${indicator}_ISIMIP-projections_world_frequency_map_vs_temperature.json`)
@@ -150,8 +150,10 @@ export default new Vuex.Store({
           commit('set', { prop: 'impactModels', value: d.impact_model_list })
           commit('set', { prop: 'temperatures', value: d.temperature_list })
           if (d.climate_model_list.indexOf(climateModel) === -1) commit('set', { prop: 'climateModel', value: d.climate_model_list[0] })
-          if (d.impact_model_list.indexOf(impactModel) === -1) commit('set', { prop: 'impactModel', value: d.impact_model_list[0] })
           if (d.temperature_list.indexOf(temperature) === -1) commit('set', { prop: 'temperature', value: d.temperature_list[0] })
+          if (Object.keys(d.frequency_maps[state.temperature][state.climateModel]).indexOf(impactModel) === -1) {
+            commit('set', { prop: 'impactModel', value: Object.keys(d.frequency_maps[state.temperature][state.climateModel])[0] })
+          }
           dispatch('update', { prop: 'files', value: d.frequency_maps })
           // dispatch('updateMap')
         })
