@@ -196,7 +196,7 @@ export default {
       // }
       const canvasData = this.ctx.getImageData(0, 0, 720, 360)
 
-      // if (this.workerInstance != null) this.workerInstance.terminate()
+      if (this.workerInstance != null) this.workerInstance.terminate()
       this.workerInstance = worker()
       this.workerInstance.renderMap({ canvasData, grid, gridComparison, comparing: compareValue != null, temperature, range1, domain1, colors }).then(cData => {
         this.$store.dispatch('addGrid', { temperature, grid: cData })
