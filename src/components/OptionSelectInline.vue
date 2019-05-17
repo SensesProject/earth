@@ -1,6 +1,5 @@
 <template>
   <div class="option-select">
-    <span class="label">{{ label }}&nbsp;</span>
     <div class="select">
       <select :value="value" @change="$emit('input', $event.target.value)">
         <option
@@ -46,18 +45,14 @@ export default {
 <style scoped lang="scss">
 @import "../assets/style/variables";
 .option-select {
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
-  .label {
-    font-family: $font-mono;
-    font-size: 0.7em;
-    line-height: 1.2;
-  }
   .select {
-    text-transform: capitalize;
+    // text-transform: capitalize;
     position: relative;
-    border-bottom: 1px solid $color-white;
-    background: url(../assets/img/arrow.svg) center right no-repeat;
+    margin: $spacing / 8;
+    background: linear-gradient(0deg,transparent,transparent 2px,$color-white 2px,$color-white 3px,transparent 0);
+    // border-bottom: 1px solid $color-white;
 
     select {
       position: absolute;
@@ -68,6 +63,10 @@ export default {
       -webkit-appearance: none;
       font-size: 1em;
       // font-family: $font-sans;
+    }
+    .selected {
+      background: url(../assets/img/arrow.svg) center right no-repeat;
+      padding-right: $spacing / 4;
     }
   }
 }

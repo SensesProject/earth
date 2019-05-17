@@ -3,19 +3,17 @@
     <SensesLogo class="senses" color="white" :sx="2" :sy="0" :mx="1" :my="0" :lx="0" :ly="0"/>
     <h2>
       Frequency of
-      <span class="option" :class="{ green: compareOption === 'indicator', white: compareOption === null}">
-        {{ formatIndicator(indicator) }}</span>
+      <OptionSelectInline v-model="indicator" :options="indicators" class="option" :class="{ green: compareOption === 'indicator', white: compareOption === null}" />
+        <!-- {{ formatIndicator(indicator) }}</span> -->
       <span v-if="compareOption === 'indicator'">
         &
-        <span class="option violet">{{ formatIndicator(compareValue) }}</span>
+        <OptionSelectInline v-model="compareValue" :options="indicators" class="option violet"/>
       </span>
       at a
-      <span class="option" :class="{ green: compareOption === 'global-warming-level'}">
-        {{ formatGlobalWarmingLevel(temperature) }}&#8239;°C
-      </span>
+      <OptionSelectInline v-model="temperature" :options="globalWarmingLevels" class="option" :class="{ green: compareOption === 'global-warming-level'}"/>
       <span v-if="compareOption === 'global-warming-level'">
         &
-        <span class="option violet">{{ formatGlobalWarmingLevel(compareValue) }}&#8239;°C</span>
+        <OptionSelectInline v-model="compareValue" :options="globalWarmingLevels" class="option violet"/>
       </span>
       global warming level<br>
       in climate model
@@ -41,19 +39,23 @@
 
 <script>
 import SensesLogo from 'library/src/components/SensesLogo.vue'
+import OptionSelectInline from './OptionSelectInline.vue'
 import computeFromStore from '../assets/js/computeFromStore.js'
+import { mapGetters } from 'vuex'
 import { format } from 'd3-format'
 export default {
   name: 'EarthHeader',
   components: {
-    SensesLogo
+    SensesLogo,
+    OptionSelectInline
   },
   data () {
     return {
     }
   },
   computed: {
-    ...computeFromStore(['mode', 'indicator', 'climateModel', 'impactModel', 'temperature', 'showOptions', 'compareValue', 'compareOption'])
+    ...computeFromStore(['mode', 'indicator', 'indicators', 'climateModel', 'impactModel', 'temperature', 'showOptions', 'compareValue', 'compareOption']),
+    ...mapGetters(['globalWarmingLevels'])
   },
   methods: {
     formatGlobalWarmingLevel (value) {
@@ -100,15 +102,15 @@ export default {
       font-weight: $font-weight-bold;
       &.white {
         color: $color-white;
-        background: linear-gradient(0deg,transparent,transparent 2px,$color-white 2px,$color-white 3.5px,transparent 0);
+        // background: linear-gradient(0deg,transparent,transparent 2px,$color-white 2px,$color-white 3.5px,transparent 0);
       }
       &.violet {
         color: $color-scale-violet;
-        background: linear-gradient(0deg,transparent,transparent 2px,$color-scale-violet 2px,$color-scale-violet 3.5px,transparent 0);
+        // background: linear-gradient(0deg,transparent,transparent 2px,$color-scale-violet 2px,$color-scale-violet 3.5px,transparent 0);
       }
       &.green {
         color: $color-scale-green;
-        background: linear-gradient(0deg,transparent,transparent 2px,$color-scale-green 2px,$color-scale-green 3.5px,transparent 0);
+        // background: linear-gradient(0deg,transparent,transparent 2px,$color-scale-green 2px,$color-scale-green 3.5px,transparent 0);
       }
       // text-transform: uppercase;
     }
