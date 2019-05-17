@@ -1,0 +1,100 @@
+{
+  "plot_type": "frequency_map_vs_temperature",
+
+  "indicator": "land-area-affected-by-wildfire",
+  "assessment_category": "ISIMIP-projections",
+  "region": "Global",
+
+  "map_title": "frequency of wild fires",
+  "temperature_unit": "°C",
+  "indicator_unit": "events per year",
+
+  "temperature_list": [ "1", "1.5", "2" ],
+  "climate_model_list": [ "IPSL-CM5A-LR", "GFDL-ESM2M", "MIROC5" ],
+  "impact_model_list": [ "CARAIB", "LPJ-GUESS", "LPJmL", "ORCHIDEE", "VISIT" ],
+
+  "frequency_maps": {
+
+    "1": {
+      "IPSL-CM5A-LR": {
+
+        "CARAIB": "frequency_map_IPSL-CM5A-LR_CARAIB_1.json",
+        "LPJ-GUESS": "frequency_map_IPSL-CM5A-LR_LPJ-GUESS_1.json",
+        "LPJmL": "frequency_map_IPSL-CM5A-LR_LPJmL_1.json",
+        "ORCHIDEE": "frequency_map_IPSL-CM5A-LR_ORCHIDEE_1.json",
+        "VISIT": "frequency_map_IPSL-CM5A-LR_VISIT_1.json"
+      },
+
+      "GFDL-ESM2M": {
+
+        "CARAIB": "frequency_map_GFDL-ESM2M_CARAIB_1.json",
+        "LPJ-GUESS": "frequency_map_GFDL-ESM2M_LPJ-GUESS_1.json",
+        "LPJmL": "frequency_map_GFDL-ESM2M_LPJmL_1.json",
+        "ORCHIDEE": "frequency_map_GFDL-ESM2M_ORCHIDEE_1.json",
+        "VISIT": "frequency_map_GFDL-ESM2M_VISIT_1.json"
+      },
+
+      "MIROC5": {
+
+        "CARAIB": "frequency_map_MIROC5_CARAIB_1.json",
+        "LPJ-GUESS": "frequency_map_MIROC5_LPJ-GUESS_1.json",
+        "LPJmL": "frequency_map_MIROC5_LPJmL_1.json",
+        "VISIT": "frequency_map_MIROC5_VISIT_1.json"
+      }
+    },
+    "1.5": {
+      "IPSL-CM5A-LR": {
+
+        "CARAIB": "frequency_map_IPSL-CM5A-LR_CARAIB_1.5.json",
+        "LPJ-GUESS": "frequency_map_IPSL-CM5A-LR_LPJ-GUESS_1.5.json",
+        "LPJmL": "frequency_map_IPSL-CM5A-LR_LPJmL_1.5.json",
+        "ORCHIDEE": "frequency_map_IPSL-CM5A-LR_ORCHIDEE_1.5.json",
+        "VISIT": "frequency_map_IPSL-CM5A-LR_VISIT_1.5.json"
+      },
+
+      "GFDL-ESM2M": {
+
+        "CARAIB": "frequency_map_GFDL-ESM2M_CARAIB_1.5.json",
+        "LPJ-GUESS": "frequency_map_GFDL-ESM2M_LPJ-GUESS_1.5.json",
+        "LPJmL": "frequency_map_GFDL-ESM2M_LPJmL_1.5.json",
+        "ORCHIDEE": "frequency_map_GFDL-ESM2M_ORCHIDEE_1.5.json",
+        "VISIT": "frequency_map_GFDL-ESM2M_VISIT_1.5.json"
+      },
+
+      "MIROC5": {
+
+        "CARAIB": "frequency_map_MIROC5_CARAIB_1.5.json",
+        "LPJ-GUESS": "frequency_map_MIROC5_LPJ-GUESS_1.5.json",
+        "LPJmL": "frequency_map_MIROC5_LPJmL_1.5.json",
+        "VISIT": "frequency_map_MIROC5_VISIT_1.5.json"
+      }
+    },
+    "2": {
+      "IPSL-CM5A-LR": {
+
+        "CARAIB": "frequency_map_IPSL-CM5A-LR_CARAIB_2.json",
+        "LPJ-GUESS": "frequency_map_IPSL-CM5A-LR_LPJ-GUESS_2.json",
+        "LPJmL": "frequency_map_IPSL-CM5A-LR_LPJmL_2.json",
+        "ORCHIDEE": "frequency_map_IPSL-CM5A-LR_ORCHIDEE_2.json",
+        "VISIT": "frequency_map_IPSL-CM5A-LR_VISIT_2.json"
+      },
+
+      "GFDL-ESM2M": {
+
+        "CARAIB": "frequency_map_GFDL-ESM2M_CARAIB_2.json",
+        "LPJ-GUESS": "frequency_map_GFDL-ESM2M_LPJ-GUESS_2.json",
+        "LPJmL": "frequency_map_GFDL-ESM2M_LPJmL_2.json",
+        "ORCHIDEE": "frequency_map_GFDL-ESM2M_ORCHIDEE_2.json",
+        "VISIT": "frequency_map_GFDL-ESM2M_VISIT_2.json"
+      },
+
+      "MIROC5": {
+
+        "CARAIB": "frequency_map_MIROC5_CARAIB_2.json",
+        "LPJ-GUESS": "frequency_map_MIROC5_LPJ-GUESS_2.json",
+        "LPJmL": "frequency_map_MIROC5_LPJmL_2.json",
+        "VISIT": "frequency_map_MIROC5_VISIT_2.json"
+      }
+    }
+  }
+}

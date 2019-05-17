@@ -1,0 +1,224 @@
+{
+  "plot_type": "indicator_vs_temperature",
+
+  "indicator": "land-area-affected-by-river-flood",
+  "assessment_category": "ISIMIP-projections",
+  "region": "Global",
+
+  "plot_title": "Land area affected by river floods vs. Global warming level",
+  "plot_label_x": "Global warming level",
+  "plot_unit_x": "°C",
+  "plot_label_y": "Land area affected by river floods",
+  "plot_unit_y": "% of land area",
+
+  "temperature_list": [0.0, 0.50, 1.0, 1.50, 2.0, 2.50, 3.0, 3.50, 4.0],
+  "climate_model_list": ["multi-model-median", "IPSL-CM5A-LR", "GFDL-ESM2M", "MIROC5"],
+  "impact_model_list": ["multi-model-median", "CLM45", "H08", "LPJmL", "JULES-W1", "MPI-HM", "ORCHIDEE", "PCR-GLOBWB", "WaterGAP2"],
+
+  "data": {
+
+    "overall": {
+
+      "median_actual_values": [0.09169653, 0.1098170, 0.162970, 0.1932330, 0.2602252, 0.3182950, 0.3162240, 0.4043160, 0.4262840],
+      "interannual_standard_deviation_actual_values": [0.04439105, 0.05454075, 0.06437305, 0.08079665, 0.09670955, 0.07465950, 0.1136310, 0.1176850, 0.1099610],
+      "shading_lower_border_actual_values": [0.04730548, 0.05527625, 0.09859695, 0.1124363, 0.1635157, 0.2436355, 0.2025930, 0.2866310, 0.3163230],
+      "shading_upper_border_actual_values": [0.1360876, 0.1643578, 0.2273431, 0.2740296, 0.3569348, 0.3929545, 0.4298550, 0.5220010, 0.5362450],
+
+      "median_absolute_changes": [0.0, 0.0304850, 0.0822850, 0.1086950, 0.1756250, 0.240730, 0.237490, 0.325580, 0.34870],
+      "interannual_standard_deviation_absolute_changes": [0.0441250, 0.053940, 0.0643750, 0.0807950, 0.0967050, 0.074660, 0.113630, 0.117690, 0.109960],
+      "shading_lower_border_absolute_changes": [-0.0441250, -0.0234550, 0.017910, 0.02790, 0.078920, 0.166070, 0.123860, 0.207890, 0.238740],
+      "shading_upper_border_absolute_changes": [0.0441250, 0.0844250, 0.146660, 0.189490, 0.272330, 0.315390, 0.351120, 0.443270, 0.458660],
+
+      "median_relative_changes": [0.0, 36.42867, 95.79285, 133.0191, 214.4299, 310.4842, 301.6509, 413.5408, 449.4389],
+      "interannual_standard_deviation_relative_changes": [58.26325, 67.75370, 76.44786, 98.95231, 120.8409, 96.32786, 146.2045, 154.7822, 141.2268],
+      "shading_lower_border_relative_changes": [-58.26325, -31.32504, 19.34499, 34.06683, 93.58897, 214.1564, 155.4464, 258.7586, 308.2122],
+      "shading_upper_border_relative_changes": [58.26325, 104.1824, 172.2407, 231.9714, 335.2708, 406.8121, 447.8554, 568.3230, 590.6656]
+    },
+
+    "IPSL-CM5A-LR": {
+
+      "median_actual_values": [0.09444365, 0.09866530, 0.1166765, 0.1960140, 0.2244990, 0.2258370, 0.3162240, 0.4043160, 0.4262840],
+      "interannual_standard_deviation_actual_values": [0.04298190, 0.04518155, 0.05419410, 0.07092125, 0.07285764, 0.07431050, 0.1136310, 0.1176850, 0.1099610],
+      "shading_lower_border_actual_values": [0.05146175, 0.05348375, 0.06248240, 0.1250927, 0.1516414, 0.1515265, 0.2025930, 0.2866310, 0.3163230],
+      "shading_upper_border_actual_values": [0.1374255, 0.1438468, 0.1708706, 0.2669353, 0.2973566, 0.3001475, 0.4298550, 0.5220010, 0.5362450],
+
+      "median_absolute_changes": [0.0, 0.025520, 0.04524101, 0.1154625, 0.132330, 0.147110, 0.237490, 0.325580, 0.34870],
+      "interannual_standard_deviation_absolute_changes": [0.042720, 0.0449150, 0.0541050, 0.070910, 0.07285301, 0.074310, 0.113630, 0.117690, 0.109960],
+      "shading_lower_border_absolute_changes": [-0.042720, -0.0193950, -0.008863993, 0.04455254, 0.05947699, 0.07280, 0.123860, 0.207890, 0.238740],
+      "shading_upper_border_absolute_changes": [0.042720, 0.0704350, 0.0993460, 0.1863725, 0.2051830, 0.221420, 0.351120, 0.443270, 0.458660],
+
+      "median_relative_changes": [0.0, 33.93906, 53.68439, 139.1558, 169.6643, 187.2315, 301.6509, 413.5408, 449.4389],
+      "interannual_standard_deviation_relative_changes": [57.42369, 59.53799, 69.30527, 89.51814, 90.31647, 97.08531, 146.2045, 154.7822, 141.2268],
+      "shading_lower_border_relative_changes": [-57.42369, -25.59893, -15.62087, 49.63768, 79.34779, 90.14622, 155.4464, 258.7586, 308.2122],
+      "shading_upper_border_relative_changes": [57.42369, 93.47705, 122.9897, 228.6740, 259.9807, 284.3168, 447.8554, 568.3230, 590.6656],
+
+      "runs": {
+
+        "CLM45": {
+          "actual_values": [null, null, null, null, null, null, null, null, null],
+          "absolute_changes": [null, null, null, null, null, null, null, null, null],
+          "relative_changes": [null, null, null, null, null, null, null, null, null]
+        },
+        "H08": {
+          "actual_values": [0.09401480, 0.09708560, 0.113940, 0.1851710, 0.2086410, 0.2219160, 0.3034740, 0.3875910, 0.4235950],
+          "absolute_changes": [0.0, 0.021670, 0.037240, 0.107920, 0.131380, 0.144660, 0.226210, 0.310330, 0.346330],
+          "relative_changes": [0.0, 28.64143, 48.42614, 139.7053, 170.0485, 187.2315, 292.7937, 401.6680, 448.2689]
+        },
+        "LPJmL": {
+          "actual_values": [0.08720780, 0.09179650, 0.1104920, 0.1867980, 0.2120070, 0.2258370, 0.3162240, 0.4043160, 0.4341160],
+          "absolute_changes": [0.0, 0.01690, 0.032920, 0.10810, 0.133280, 0.147110, 0.237490, 0.325580, 0.355390],
+          "relative_changes": [0.0, 22.31233, 42.22019, 137.3209, 169.280, 186.8465, 301.6509, 413.5408, 451.3916]
+        },
+        "JULES-W1": {
+          "actual_values": [0.09611280, 0.1002450, 0.1263760, 0.2253790, 0.2501790, 0.2638530, 0.3674270, 0.4325670, 0.4262840],
+          "absolute_changes": [0.0, 0.024530, 0.049360, 0.147810, 0.172590, 0.186270, 0.289840, 0.354980, 0.34870],
+          "relative_changes": [0.0, 32.28765, 63.90370, 190.5280, 222.4566, 240.0809, 373.5786, 457.5370, 449.4389]
+        },
+        "MPI-HM": {
+          "actual_values": [0.09127460, 0.09647360, 0.111990, 0.1813990, 0.2036390, 0.2160460, 0.3027550, 0.3865730, 0.4156030],
+          "absolute_changes": [0.0, 0.021910, 0.03640, 0.105380, 0.127610, 0.140010, 0.226720, 0.310540, 0.339570],
+          "relative_changes": [0.0, 29.29665, 48.08115, 138.6063, 167.8311, 184.1490, 298.1905, 408.4299, 446.6106]
+        },
+        "ORCHIDEE": {
+          "actual_values": [0.08586310, 0.08982680, 0.11210, 0.1855930, 0.2048060, 0.2168370, 0.2990020, 0.3610480, 0.3824240],
+          "absolute_changes": [0.0, 0.031830, 0.063660, 0.095480, 0.127310, 0.139340, 0.221510, 0.283550, 0.304930],
+          "relative_changes": [0.0, 41.07176, 82.14351, 123.2153, 164.2870, 179.8123, 285.8399, 365.9058, 393.4901]
+        },
+        "PCR-GLOBWB": {
+          "actual_values": [0.1074670, 0.1135480, 0.1359590, 0.2622220, 0.3006970, 0.316850, 0.4015180, 0.5013360, 0.5446430],
+          "absolute_changes": [0.0, 0.036430, 0.057670, 0.183440, 0.221910, 0.238060, 0.322730, 0.422540, 0.465850],
+          "relative_changes": [0.0, 47.14598, 73.54517, 232.8391, 281.6364, 302.1376, 409.5954, 536.2823, 591.2458]
+        },
+        "WaterGAP2": {
+          "actual_values": [0.09487250, 0.1008530, 0.1194130, 0.205230, 0.2369910, 0.2541560, 0.3491390, 0.4427570, 0.4795720],
+          "absolute_changes": [0.0, 0.026510, 0.044320, 0.129820, 0.161570, 0.178730, 0.273720, 0.367340, 0.404150],
+          "relative_changes": [0.0, 35.59048, 58.94265, 172.1305, 214.2208, 236.9796, 362.9149, 487.0412, 535.8537]
+        }
+      }
+    },
+
+    "GFDL-ESM2M": {
+
+      "median_actual_values": [0.09354395, 0.1151521, 0.1782380, 0.1932330, 0.2984550, null, null, null, null],
+      "interannual_standard_deviation_actual_values": [0.05160440, 0.06197055, 0.07063835, 0.08588479, 0.1326120, null, null, null, null],
+      "shading_lower_border_actual_values": [0.04193955, 0.05318158, 0.1075997, 0.1073482, 0.1658430, null, null, null, null],
+      "shading_upper_border_actual_values": [0.1451484, 0.1771227, 0.2488764, 0.2791178, 0.4310670, null, null, null, null],
+
+      "median_absolute_changes": [0.0, 0.03146388, 0.0929650, 0.106030, 0.201560, null, null, null, null],
+      "interannual_standard_deviation_absolute_changes": [0.0513950, 0.0619650, 0.070630, 0.08588588, 0.132610, null, null, null, null],
+      "shading_lower_border_absolute_changes": [-0.0513950, -0.03050112, 0.0223350, 0.02014412, 0.06895001, null, null, null, null],
+      "shading_upper_border_absolute_changes": [0.0513950, 0.09342888, 0.1635950, 0.1919159, 0.334170, null, null, null, null],
+
+      "median_relative_changes": [0.0, 37.08168, 104.5413, 120.7467, 236.2722, null, null, null, null],
+      "interannual_standard_deviation_relative_changes": [60.5120, 74.15282, 79.36481, 99.35693, 149.0668, null, null, null, null],
+      "shading_lower_border_relative_changes": [-60.5120, -37.07113, 25.17654, 21.38974, 87.20549, null, null, null, null],
+      "shading_upper_border_relative_changes": [60.5120, 111.2345, 183.9062, 220.1036, 385.3390, null, null, null, null],
+
+      "runs": {
+
+        "CLM45": {
+          "actual_values": [0.1159250, 0.146640, 0.2135370, 0.2224920, 0.3099430, null, null, null, null],
+          "absolute_changes": [0.0, 0.052390, 0.096790, 0.105460, 0.192910, null, null, null, null],
+          "relative_changes": [0.0, 54.21379, 82.79799, 90.10681, 164.8285, null, null, null, null]
+        },
+        "H08": {
+          "actual_values": [0.08820860, 0.1111530, 0.1729430, 0.1894160, 0.3052640, null, null, null, null],
+          "absolute_changes": [0.0, 0.029220, 0.090140, 0.10660, 0.222450, null, null, null, null],
+          "relative_changes": [0.0, 35.38730, 108.8456, 128.7174, 268.6013, null, null, null, null]
+        },
+        "LPJmL": {
+          "actual_values": [0.09380660, 0.1140860, 0.1638490, 0.1793170, 0.2787580, null, null, null, null],
+          "absolute_changes": [0.0, 0.030930, 0.078620, 0.094060, 0.19350, null, null, null, null],
+          "relative_changes": [0.0, 36.69520, 92.23597, 110.3352, 226.9775, null, null, null, null]
+        },
+        "JULES-W1": {
+          "actual_values": [null, null, null, null, null, null, null, null, null],
+          "absolute_changes": [null, null, null, null, null, null, null, null, null],
+          "relative_changes": [null, null, null, null, null, null, null, null, null]
+        },
+        "MPI-HM": {
+          "actual_values": [0.08948190, 0.1107510, 0.1660480, 0.1799410, 0.282170, null, null, null, null],
+          "absolute_changes": [0.0, 0.028510, 0.083120, 0.097010, 0.199240, null, null, null, null],
+          "relative_changes": [0.0, 34.45541, 100.2371, 116.9733, 240.2408, null, null, null, null]
+        },
+        "ORCHIDEE": {
+          "actual_values": [0.09596670, 0.1158180, 0.1629550, 0.1758820, 0.2747810, null, null, null, null],
+          "absolute_changes": [0.0, 0.037650, 0.07530, 0.088250, 0.187150, null, null, null, null],
+          "relative_changes": [0.0, 42.95511, 85.91022, 100.7090, 213.5679, null, null, null, null]
+        },
+        "PCR-GLOBWB": {
+          "actual_values": [0.09366310, 0.1177860, 0.1835330, 0.197050, 0.2916460, null, null, null, null],
+          "absolute_changes": [0.0, 0.031580, 0.095790, 0.109290, 0.203880, null, null, null, null],
+          "relative_changes": [0.0, 36.16213, 109.1509, 124.5201, 232.3036, null, null, null, null]
+        },
+        "WaterGAP2": {
+          "actual_values": [0.09342480, 0.1180350, 0.1904380, 0.2100190, 0.3263320, null, null, null, null],
+          "absolute_changes": [0.0, 0.036840, 0.109240, 0.128830, 0.245140, null, null, null, null],
+          "relative_changes": [0.0, 45.36893, 134.5486, 158.6651, 301.9194, null, null, null, null]
+        }
+      }
+    },
+
+    "MIROC5": {
+
+      "median_actual_values": [0.08699170, 0.1053185, 0.1695622, 0.1945428, 0.2545855, 0.3551410, null, null, null],
+      "interannual_standard_deviation_actual_values": [0.03629354, 0.05224965, 0.06692175, 0.07958429, 0.09670955, 0.07536554, null, null, null],
+      "shading_lower_border_actual_values": [0.05069816, 0.05306889, 0.1026405, 0.1149585, 0.1578760, 0.2797755, null, null, null],
+      "shading_upper_border_actual_values": [0.1232852, 0.1575682, 0.2364840, 0.2741271, 0.3512951, 0.4305066, null, null, null],
+
+      "median_absolute_changes": [0.0, 0.02875439, 0.09293975, 0.1108286, 0.1669550, 0.273710, null, null, null],
+      "interannual_standard_deviation_absolute_changes": [0.03661330, 0.05224838, 0.0668950, 0.07958517, 0.0967050, 0.07537486, null, null, null],
+      "shading_lower_border_absolute_changes": [-0.03661330, -0.0234940, 0.02604475, 0.03124346, 0.070250, 0.1983351, null, null, null],
+      "shading_upper_border_absolute_changes": [0.03661330, 0.08100277, 0.1598347, 0.1904138, 0.263660, 0.3490849, null, null, null],
+
+      "median_relative_changes": [0.0, 36.56262, 113.2580, 135.0787, 209.9552, 342.3519, null, null, null],
+      "interannual_standard_deviation_relative_changes": [45.66265, 65.71664, 82.46823, 99.12257, 121.6863, 95.57041, null, null, null],
+      "shading_lower_border_relative_changes": [-45.66265, -29.15402, 30.78973, 35.95615, 88.26898, 246.7815, null, null, null],
+      "shading_upper_border_relative_changes": [45.66265, 102.2793, 195.7262, 234.2013, 331.6415, 437.9223, null, null, null],
+
+      "runs": {
+
+        "CLM45": {
+          "actual_values": [null, null, null, null, null, null, null, null, null],
+          "absolute_changes": [null, null, null, null, null, null, null, null, null],
+          "relative_changes": [null, null, null, null, null, null, null, null, null]
+        },
+        "H08": {
+          "actual_values": [0.08545340, 0.1039460, 0.1626540, 0.1873660, 0.2439510, 0.3429710, null, null, null],
+          "absolute_changes": [0.0, 0.026130, 0.085110, 0.109830, 0.166420, 0.265440, null, null, null],
+          "relative_changes": [0.0, 33.67606, 109.7732, 141.6577, 214.6390, 342.3519, null, null, null]
+        },
+        "LPJmL": {
+          "actual_values": [0.08961670, 0.1088830, 0.1629850, 0.1864440, 0.2490870, 0.3634830, null, null, null],
+          "absolute_changes": [0.0, 0.030040, 0.081450, 0.104850, 0.167490, 0.281890, null, null, null],
+          "relative_changes": [0.0, 37.25260, 99.86790, 128.4997, 205.2715, 345.4716, null, null, null]
+        },
+        "JULES-W1": {
+          "actual_values": [null, null, null, null, null, null, null, null, null],
+          "absolute_changes": [null, null, null, null, null, null, null, null, null],
+          "relative_changes": [null, null, null, null, null, null, null, null, null]
+        },
+        "MPI-HM": {
+          "actual_values": [0.08542780, 0.1038220, 0.1521890, 0.1743440, 0.2286390, 0.319740, null, null, null],
+          "absolute_changes": [0.0, 0.02740, 0.075850, 0.0980, 0.15230, 0.24340, null, null, null],
+          "relative_changes": [0.0, 35.87264, 99.34974, 128.3756, 199.4969, 318.8309, null, null, null]
+        },
+        "ORCHIDEE": {
+          "actual_values": [null, null, null, null, null, null, null, null, null],
+          "absolute_changes": [null, null, null, null, null, null, null, null, null],
+          "relative_changes": [null, null, null, null, null, null, null, null, null]
+        },
+        "PCR-GLOBWB": {
+          "actual_values": [0.08287550, 0.1020590, 0.1779960, 0.2046450, 0.2600840, 0.3551410, null, null, null],
+          "absolute_changes": [0.0, 0.021140, 0.096580, 0.123220, 0.178660, 0.273710, null, null, null],
+          "relative_changes": [0.0, 25.96465, 118.6077, 151.3179, 219.4003, 336.1360, null, null, null]
+        },
+        "WaterGAP2": {
+          "actual_values": [0.0891160, 0.1115660, 0.1799650, 0.2100310, 0.2787690, 0.3898170, null, null, null],
+          "absolute_changes": [0.0, 0.03310, 0.10170, 0.131770, 0.200510, 0.311560, null, null, null],
+          "relative_changes": [0.0, 42.24917, 129.9502, 168.3791, 256.2127, 398.1106, null, null, null]
+        }
+      }
+    }
+  }
+}
