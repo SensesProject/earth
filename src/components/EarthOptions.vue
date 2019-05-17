@@ -1,45 +1,73 @@
 <template>
-  <div class="EarthOptions"
-    @mousemove="passEvents"
-    @touchmove="passEvents"
-    @mouseup="passEvents($event, false)"
-    @touchend="passEvents($event, false)"
-    @mouseleave="passEvents($event, false)">
-    <div class="top">
-      <OptionSelect :options="options.mode" value-key="mode" label="mode"/>
-      <span class="blue upper">share</span>
+  <div class="earth-options" :class="{comparing}">
+    <div class="option-group option-group-explore">
+      <div class="option option-title">
+        <span class="title">Options</span>
+        <span class="compare label" @click="toggleCompare()">{{comparing ? `EXPLORE ←` : `COMPARE →`}}</span>
+      </div>
+      <OptionSelect class="option" label="Indicator" v-model="indicator" :options="options.indicator"/>
+      <OptionRadio class="option" label="Global Warming Level" v-model="temperature" :options="globalWarmingLevels"/>
+      <OptionSelect class="option" label="Climate Model" v-model="climateModel" :options="climateModels"/>
+      <OptionSelect class="option" label="Impact Model" v-model="impactModel" :options="impactModels"/>
+      <OptionButton class="option" label="OK" @input="showOptions = false"/>
     </div>
-    <div class="bottom">
-      <div class="left">
-        <InputSlider v-model="periodRange" :options="periodOptions" color="yellow" ref="inputPeriod" :width="axisWidth"/>
-        <OptionSelect :options="options.scenario" color="yellow" value-key="scenario1" label="scenario"/>
+    <div class="option-group option-group-compare">
+      <div class="option option-title">
+        <span class="label">Pick one!</span>
+        <span class="title">&nbsp;</span>
       </div>
-      <div class="right">
-        <InputSlider v-model="domain1" :color-scheme="range1" :options="variableOptions" ref="inputVariableRange" :width="axisWidth"/>
-      </div>
+      <OptionSelect class="option" label="Indicator" :value="compareValue" @input="setComparison($event, 'indicator')" :options="options.indicator"/>
+      <OptionRadio class="option" label="Global Warming Level" :value="compareValue" @input="setComparison($event, 'global-warming-level')" :options="globalWarmingLevels"/>
+      <OptionSelect class="option" label="Climate Model" :value="compareValue" @input="setComparison($event, 'climate-model')" :options="climateModels"/>
+      <OptionSelect class="option" label="Impact Model" :value="compareValue" @input="setComparison($event, 'impact-model')" :options="impactModels"/>
     </div>
   </div>
 </template>
 
 <script>
 import OptionSelect from './OptionSelect.vue'
-import InputSlider from './InputSlider.vue'
+import OptionRadio from './OptionRadio.vue'
+import OptionButton from './OptionButton.vue'
+// import chroma from 'chroma-js'
 import computeFromStore from '../assets/js/computeFromStore.js'
+import { mapGetters } from 'vuex'
 export default {
   name: 'EarthOptions',
   components: {
     OptionSelect,
-    InputSlider
+    OptionRadio,
+    OptionButton
   },
   data () {
     return {
+      comparing: this.$store.state.compareValue != null,
+      compare: null,
+      mode: this.$store.state.mode,
       options: {
         mode: [{
-          value: 0,
-          label: 'single variable'
+          value: 'explore'
         }, {
-          value: 1,
-          label: 'compare variables'
+          value: 'compare'
+        }],
+        variable: [{
+          value: 'land-area-affected',
+          label: 'land area affected'
+        }],
+        indicator: [{
+          value: 'crop-failure',
+          label: 'crop failure'
+        }, {
+          value: 'drought',
+          label: 'drought'
+        }, {
+          value: 'heatwave',
+          label: 'heatwave'
+        }, {
+          value: 'river-flood',
+          label: 'river flood'
+        }, {
+          value: 'wildfire',
+          label: 'wildfire'
         }],
         scenario: [{
           value: 'rcp26',
@@ -50,40 +78,70 @@ export default {
         }]
       },
       // periodRange: [2005, 2010],
-      periodOptions: {
-        domain: [2005, 2100],
-        slider: 5,
-        step: 5,
-        ticks: 2
-      },
       variableOptions: {
-        domain: [-50, 50],
-        slider: 4,
+        domain: [0, 1],
+        slider: 1,
         step: 1,
         ticks: 2
       }
     }
   },
   computed: {
-    ...computeFromStore(['width', 'period1', 'domain1', 'range1']),
-
+    ...computeFromStore([
+      'width',
+      'period1',
+      'domain1',
+      'range1',
+      'climateModels',
+      'climateModel',
+      'temperature',
+      'temperatures',
+      'indicator',
+      'impactModel',
+      'showOptions',
+      'compareOption',
+      'compareValue'
+    ]),
+    ...mapGetters([
+      'impactModels',
+      'globalWarmingLevels'
+    ]),
     axisWidth () {
       return this.width / 2 - 64
     },
-    periodRange: {
-      get () {
-        return [this.period1, this.period1 + 5]
-      },
-      set (value) {
-        this.period1 = value[0]
-      }
+    // colors () {
+    //   const color0 = '#070019'
+    //   const color1 = '#B035C9'
+    //   const color2 = '#54E8A9'
+    //   const color3 = '#FEF4DD'
+    //
+    //   const cs1 = chroma.scale([color0, color1]).mode('lab').colors(50)
+    //   const cs2 = chroma.scale([color2, color3]).mode('lab').colors(50)
+    //
+    //   return cs1.map((c1, i) => {
+    //     return chroma.scale([c1, cs2[i]]).mode('lab').colors(50)
+    //     // return cs2.map((c2, i) => {
+    //     //   return chroma.average([c1, c2], 'lch')
+    //     // })
+    //   })
+    // },
+    keyColors () {
+      const { colors } = this
+      return [
+        colors[0],
+        colors.map((c, i) => c[i]),
+        colors.map(c => c[0])
+      ]
     }
   },
   methods: {
-    passEvents (e, v) {
-      // this.$refs.OptionTimeAxis.setPeriod(e, v)
-      this.$refs.inputPeriod.setRange(e, v)
-      this.$refs.inputVariableRange.setRange(e, v)
+    toggleCompare () {
+      this.comparing = !this.comparing
+      this.setComparison(null, null)
+    },
+    setComparison (value, option) {
+      this.compareOption = option
+      this.compareValue = value
     }
   }
 }
@@ -92,25 +150,72 @@ export default {
 <style scoped lang="scss">
 @import "../assets/style/variables";
 
-.EarthOptions {
-  position: absolute;
-  background: $color-overlay-background;
-  width: 100%;
-  bottom: 0;
-  left: 0;
-
-  padding: $spacing / 2 $spacing;
-
+.earth-options {
+  transition: transform .4s;
+  color: $color-black;
   display: flex;
-  flex-direction: column;
 
-  .top, .bottom {
-    display: flex;
-    justify-content: space-between;
+  .option-group {
+    width: 320px;
+    border-radius: 4px;
+    transition: transform .4s, border-radius .4s;
+    color: $color-black;
+    padding: $spacing / 2 $spacing / 2;
+
+    &.option-group-explore {
+      background: $color-green;
+      transform: translate(50%);
+      z-index: 2;
+    }
+
+    &.option-group-compare {
+      background: lighten($color-violet, 38);
+      transform: translate(-50%);
+    }
   }
 
-  .top {
-    margin-bottom: $spacing / 2;
+  &.comparing {
+    .option-group-explore {
+      transform: translate(0);
+      border-radius: 4px 0px 0px 4px;
+    }
+
+    .option-group-compare {
+      transform: translate(0);
+      border-radius: 0px 4px 4px 0px;
+    }
+  }
+
+  .option-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    .title {
+      font-weight: $font-weight-bold;
+    }
+    .label {
+      font-family: $font-mono;
+      font-size: 0.7em;
+
+      &.compare {
+        cursor: pointer;
+
+        &:hover {
+          text-decoration: underline;
+        }
+
+        &.fade-enter-active, &.fade-leave-active {
+          transition: opacity .2s;
+        }
+        &.fade-enter, &.fade-leave-to {
+          opacity: 0;
+        }
+      }
+    }
+  }
+
+  .option + .option {
+    margin-top: $spacing / 2;
   }
 }
 </style>
