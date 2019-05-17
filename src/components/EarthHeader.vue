@@ -3,36 +3,36 @@
     <SensesLogo class="senses" color="white" :sx="2" :sy="0" :mx="1" :my="0" :lx="0" :ly="0"/>
     <h2>
       Frequency of
-      <span class="option" :class="{ violet: compareOption === null || compareOption === 'indicator'}">
+      <span class="option" :class="{ green: compareOption === 'indicator', white: compareOption === null}">
         {{ formatIndicator(indicator) }}</span>
       <span v-if="compareOption === 'indicator'">
         &
-        <span class="option green">{{ formatIndicator(compareValue) }}</span>
+        <span class="option violet">{{ formatIndicator(compareValue) }}</span>
       </span>
       at a
-      <span class="option" :class="{ violet: compareOption === 'global-warming-level'}">
+      <span class="option" :class="{ green: compareOption === 'global-warming-level'}">
         {{ formatGlobalWarmingLevel(temperature) }}&#8239;°C
       </span>
       <span v-if="compareOption === 'global-warming-level'">
         &
-        <span class="option green">{{ formatGlobalWarmingLevel(compareValue) }}&#8239;°C</span>
+        <span class="option violet">{{ formatGlobalWarmingLevel(compareValue) }}&#8239;°C</span>
       </span>
       global warming level<br>
       in climate model
-      <span class="option" :class="{ violet: compareOption === 'climate-model'}">
+      <span class="option" :class="{ green: compareOption === 'climate-model'}">
         {{ climateModel }}
       </span>
       <span v-if="compareOption === 'climate-model'">
         &
-        <span class="option green">{{ compareValue }}</span>
+        <span class="option violet">{{ compareValue }}</span>
       </span>
       and impact model
-      <span class="option" :class="{ violet: compareOption === 'impact-model'}">
+      <span class="option" :class="{ green: compareOption === 'impact-model'}">
         {{ impactModel }}
       </span>
       <span v-if="compareOption === 'impact-model'">
         &
-        <span class="option green">{{ compareValue }}</span>
+        <span class="option violet">{{ compareValue }}</span>
       </span><br>
       <div class="button" role="button" @click="showOptions = true"/>
     </h2>
@@ -86,6 +86,7 @@ export default {
 
   .senses-logo {
     height: $spacing * 1.5;
+    pointer-events: all;
   }
 
   h2 {
@@ -97,12 +98,16 @@ export default {
       pointer-events: all;
       cursor: default;
       font-weight: $font-weight-bold;
-      &.violet {
+      &.white {
         color: $color-white;
-        background: linear-gradient(0deg,transparent,transparent 2px,$color-scale-violet 2px,$color-scale-violet 5px,transparent 0);
+        background: linear-gradient(0deg,transparent,transparent 2px,$color-white 2px,$color-white 3.5px,transparent 0);
+      }
+      &.violet {
+        color: $color-scale-violet;
+        background: linear-gradient(0deg,transparent,transparent 2px,$color-scale-violet 2px,$color-scale-violet 3.5px,transparent 0);
       }
       &.green {
-        color: $color-white;
+        color: $color-scale-green;
         background: linear-gradient(0deg,transparent,transparent 2px,$color-scale-green 2px,$color-scale-green 3.5px,transparent 0);
       }
       // text-transform: uppercase;
