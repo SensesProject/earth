@@ -1,0 +1,134 @@
+{
+  "plot_type": "indicator_vs_temperature",
+
+  "indicator": "land-area-affected-by-wildfire",
+  "assessment_category": "ISIMIP-projections",
+  "region": "Global",
+
+  "plot_title": "Land area affected by wildfire vs. Global warming level",
+  "plot_label_x": "Global warming level",
+  "plot_unit_x": "°C",
+  "plot_label_y": "Land area affected by wildfire",
+  "plot_unit_y": "% of land area",
+
+  "temperature_list": [0.0, 0.50, 1.0, 1.50, 2.0, 2.50, 3.0, 3.50, 4.0],
+  "climate_model_list": ["multi-model-median", "IPSL-CM5A-LR", "GFDL-ESM2M", "MIROC5"],
+  "impact_model_list": ["multi-model-median", "VISIT", "LPJ-GUESS"],
+
+  "data": {
+
+    "overall": {
+
+      "median_actual_values": [1.540228, 1.613979, 1.801666, 1.894661, 2.061909, 2.145937, 2.408428, 2.630783, 2.776175],
+      "interannual_standard_deviation_actual_values": [0.1917229, 0.195650, 0.1953515, 0.2240613, 0.2208073, 0.2590397, 0.3041248, 0.3040042, 0.2682673],
+      "shading_lower_border_actual_values": [1.348505, 1.418329, 1.606315, 1.67060, 1.841102, 1.886898, 2.104303, 2.326779, 2.507908],
+      "shading_upper_border_actual_values": [1.731951, 1.809629, 1.997018, 2.118722, 2.282717, 2.404977, 2.712553, 2.934787, 3.044442],
+
+      "median_absolute_changes": [0.0, 0.118260, 0.255070, 0.369550, 0.4891750, 0.5610550, 0.824910, 1.047270, 1.192660],
+      "interannual_standard_deviation_absolute_changes": [0.188740, 0.193590, 0.195690, 0.224060, 0.2208050, 0.259040, 0.3041250, 0.3040050, 0.268270],
+      "shading_lower_border_absolute_changes": [-0.188740, -0.075330, 0.05937999, 0.145490, 0.268370, 0.3020150, 0.5207850, 0.7432650, 0.924390],
+      "shading_upper_border_absolute_changes": [0.188740, 0.311850, 0.450760, 0.593610, 0.709980, 0.8200950, 1.129035, 1.351275, 1.460930],
+
+      "median_relative_changes": [0.0, 5.315270, 13.66156, 18.39109, 23.94986, 29.36871, 36.60754, 46.44324, 52.66948],
+      "interannual_standard_deviation_relative_changes": [12.73680, 13.68926, 13.99597, 14.96719, 14.43748, 15.28829, 15.83847, 15.94889, 14.10047],
+      "shading_lower_border_relative_changes": [-12.73680, -8.373989, -0.3344097, 3.423896, 9.512371, 14.08041, 20.76907, 30.49435, 38.56902],
+      "shading_upper_border_relative_changes": [12.73680, 19.00453, 27.65753, 33.35828, 38.38734, 44.65701, 52.44601, 62.39214, 66.76995]
+    },
+
+    "IPSL-CM5A-LR": {
+
+      "median_actual_values": [1.639922, 1.681594, 1.811256, 1.989995, 2.046212, 2.095211, 2.408428, 2.630783, 2.776175],
+      "interannual_standard_deviation_actual_values": [0.2167455, 0.2186299, 0.2348416, 0.2376561, 0.2319354, 0.2483193, 0.3041248, 0.3040042, 0.2682673],
+      "shading_lower_border_actual_values": [1.423176, 1.462964, 1.576414, 1.752339, 1.814277, 1.846891, 2.104303, 2.326779, 2.507908],
+      "shading_upper_border_actual_values": [1.856667, 1.900223, 2.046098, 2.227652, 2.278147, 2.343530, 2.712553, 2.934787, 3.044442],
+
+      "median_absolute_changes": [0.0, 0.1008750, 0.2242350, 0.348620, 0.46270, 0.5116950, 0.824910, 1.047270, 1.192660],
+      "interannual_standard_deviation_absolute_changes": [0.218120, 0.2182950, 0.231140, 0.2375450, 0.2319350, 0.248320, 0.3041250, 0.3040050, 0.268270],
+      "shading_lower_border_absolute_changes": [-0.218120, -0.117420, -0.006905004, 0.1110750, 0.2307650, 0.2633750, 0.5207850, 0.7432650, 0.924390],
+      "shading_upper_border_absolute_changes": [0.218120, 0.319170, 0.4553750, 0.5861650, 0.6946350, 0.7600150, 1.129035, 1.351275, 1.460930],
+
+      "median_relative_changes": [0.0, 2.482625, 8.684540, 14.96737, 19.62823, 21.82587, 36.60754, 46.44324, 52.66948],
+      "interannual_standard_deviation_relative_changes": [12.15427, 11.92079, 12.76716, 13.23007, 13.05237, 13.66976, 15.83847, 15.94889, 14.10047],
+      "shading_lower_border_relative_changes": [-12.15427, -9.438165, -4.082621, 1.737290, 6.575864, 8.156111, 20.76907, 30.49435, 38.56902],
+      "shading_upper_border_relative_changes": [12.15427, 14.40341, 21.45170, 28.19744, 32.68060, 35.49563, 52.44601, 62.39214, 66.76995],
+
+      "runs": {
+
+        "VISIT": {
+          "actual_values": [2.715220, 2.784150, 2.989330, 3.309850, 3.419680, 3.513280, 4.098740, 4.525920, 4.808840],
+          "absolute_changes": [0.0, 0.225910, 0.451820, 0.677730, 0.903650, 0.997240, 1.58270, 2.009890, 2.29280],
+          "relative_changes": [0.0, 8.978860, 17.95772, 26.93658, 35.91545, 39.63527, 62.90447, 79.88298, 91.12746]
+        },
+        "LPJ-GUESS": {
+          "actual_values": [0.5646230, 0.5790370, 0.6331820, 0.6701410, 0.6727440, 0.6771410, 0.7181160, 0.7356460, 0.743510],
+          "absolute_changes": [0.0, -0.024160, -0.003350, 0.019510, 0.021750, 0.026150, 0.067120, 0.084650, 0.092520],
+          "relative_changes": [0.0, -4.013610, -0.588640, 2.998150, 3.341010, 4.016470, 10.31060, 13.00351, 14.21151]
+        }
+      }
+    },
+
+    "GFDL-ESM2M": {
+
+      "median_actual_values": [1.670380, 1.749543, 1.904296, 1.957438, 2.182414, null, null, null, null],
+      "interannual_standard_deviation_actual_values": [0.2922285, 0.3054290, 0.2852750, 0.2772157, 0.2495703, null, null, null, null],
+      "shading_lower_border_actual_values": [1.378152, 1.444114, 1.619021, 1.680223, 1.932844, null, null, null, null],
+      "shading_upper_border_actual_values": [1.962608, 2.054972, 2.189571, 2.234654, 2.431984, null, null, null, null],
+
+      "median_absolute_changes": [0.0, 0.160920, 0.340390, 0.393730, 0.618710, null, null, null, null],
+      "interannual_standard_deviation_absolute_changes": [0.2912650, 0.303210, 0.285240, 0.2772150, 0.249570, null, null, null, null],
+      "shading_lower_border_absolute_changes": [-0.2912650, -0.142290, 0.055150, 0.1165150, 0.369140, null, null, null, null],
+      "shading_upper_border_absolute_changes": [0.2912650, 0.464130, 0.625630, 0.6709450, 0.868280, null, null, null, null],
+
+      "median_relative_changes": [0.0, 7.038085, 17.10719, 19.42101, 29.20864, null, null, null, null],
+      "interannual_standard_deviation_relative_changes": [16.13677, 17.50131, 17.03068, 16.44710, 14.94319, null, null, null, null],
+      "shading_lower_border_relative_changes": [-16.13677, -10.46323, 0.07651329, 2.973909, 14.26545, null, null, null, null],
+      "shading_upper_border_relative_changes": [16.13677, 24.53939, 34.13786, 35.86811, 44.15183, null, null, null, null],
+
+      "runs": {
+
+        "VISIT": {
+          "actual_values": [2.770750, 2.890330, 3.127250, 3.230170, 3.666790, null, null, null, null],
+          "absolute_changes": [0.0, 0.311230, 0.622460, 0.726090, 1.162720, null, null, null, null],
+          "relative_changes": [0.0, 12.42449, 24.84898, 28.99642, 46.43302, null, null, null, null]
+        },
+        "LPJ-GUESS": {
+          "actual_values": [0.570010, 0.6087560, 0.6813420, 0.6847070, 0.6980380, null, null, null, null],
+          "absolute_changes": [0.0, 0.010610, 0.058320, 0.061370, 0.07470, null, null, null, null],
+          "relative_changes": [0.0, 1.651680, 9.36540, 9.84560, 11.98426, null, null, null, null]
+        }
+      }
+    },
+
+    "MIROC5": {
+
+      "median_actual_values": [1.540228, 1.613979, 1.801666, 1.894661, 2.071399, 2.297553, null, null, null],
+      "interannual_standard_deviation_actual_values": [0.1795519, 0.1805822, 0.1812160, 0.2115330, 0.2158708, 0.2838092, null, null, null],
+      "shading_lower_border_actual_values": [1.360676, 1.433397, 1.620450, 1.683128, 1.855529, 2.013743, null, null, null],
+      "shading_upper_border_actual_values": [1.719779, 1.794562, 1.982882, 2.106194, 2.287270, 2.581362, null, null, null],
+
+      "median_absolute_changes": [0.0, 0.126280, 0.282930, 0.4188150, 0.5955550, 0.8217050, null, null, null],
+      "interannual_standard_deviation_absolute_changes": [0.175620, 0.1749050, 0.1809150, 0.2115350, 0.215870, 0.283810, null, null, null],
+      "shading_lower_border_absolute_changes": [-0.175620, -0.04862501, 0.1020150, 0.207280, 0.3796850, 0.5378950, null, null, null],
+      "shading_upper_border_absolute_changes": [0.175620, 0.3011850, 0.4638450, 0.630350, 0.8114250, 1.105515, null, null, null],
+
+      "median_relative_changes": [0.0, 4.643415, 14.14147, 20.36658, 28.67579, 42.59211, null, null, null],
+      "interannual_standard_deviation_relative_changes": [10.33934, 10.48921, 11.38225, 12.71797, 13.37437, 17.17690, null, null, null],
+      "shading_lower_border_relative_changes": [-10.33934, -5.845790, 2.759215, 7.648620, 15.30142, 25.41521, null, null, null],
+      "shading_upper_border_relative_changes": [10.33934, 15.13262, 25.52372, 33.08455, 42.05016, 59.76901, null, null, null],
+
+      "runs": {
+
+        "VISIT": {
+          "actual_values": [2.501750, 2.617190, 2.916750, 3.096480, 3.438660, 3.816510, null, null, null],
+          "absolute_changes": [0.0, 0.266170, 0.532340, 0.798510, 1.140690, 1.518540, null, null, null],
+          "relative_changes": [0.0, 11.58280, 23.16561, 34.74841, 49.63905, 66.08207, null, null, null]
+        },
+        "LPJ-GUESS": {
+          "actual_values": [0.5787050, 0.6107690, 0.6865830, 0.6928420, 0.7041390, 0.7785950, null, null, null],
+          "absolute_changes": [0.0, -0.013610, 0.033520, 0.039120, 0.050420, 0.124870, null, null, null],
+          "relative_changes": [0.0, -2.295970, 5.117330, 5.984760, 7.712530, 19.10215, null, null, null]
+        }
+      }
+    }
+  }
+}

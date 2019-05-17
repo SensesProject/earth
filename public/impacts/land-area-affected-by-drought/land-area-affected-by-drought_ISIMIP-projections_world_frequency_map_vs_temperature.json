@@ -1,0 +1,118 @@
+{
+  "plot_type": "frequency_map_vs_temperature",
+
+  "indicator": "land-area-affected-by-drought",
+  "assessment_category": "ISIMIP-projections",
+  "region": "Global",
+
+  "map_title": "frequency of droughts",
+  "temperature_unit": "°C",
+  "indicator_unit": "events per year",
+
+  "temperature_list": [ "1", "1.5", "2" ],
+  "climate_model_list": [ "IPSL-CM5A-LR", "GFDL-ESM2M", "MIROC5" ],
+  "impact_model_list": [ "CLM45", "H08", "LPJmL", "JULES-W1", "MPI-HM", "ORCHIDEE", "PCR-GLOBWB", "WaterGAP2" ],
+
+  "frequency_maps": {
+
+    "1": {
+      "IPSL-CM5A-LR": {
+
+        "H08": "frequency_map_IPSL-CM5A-LR_H08_1.json",
+        "LPJmL": "frequency_map_IPSL-CM5A-LR_LPJmL_1.json",
+        "JULES-W1": "frequency_map_IPSL-CM5A-LR_JULES-W1_1.json",
+        "MPI-HM": "frequency_map_IPSL-CM5A-LR_MPI-HM_1.json",
+        "ORCHIDEE": "frequency_map_IPSL-CM5A-LR_ORCHIDEE_1.json",
+        "PCR-GLOBWB": "frequency_map_IPSL-CM5A-LR_PCR-GLOBWB_1.json",
+        "WaterGAP2": "frequency_map_IPSL-CM5A-LR_WaterGAP2_1.json"
+      },
+
+      "GFDL-ESM2M": {
+
+        "CLM45": "frequency_map_GFDL-ESM2M_CLM45_1.json",
+        "H08": "frequency_map_GFDL-ESM2M_H08_1.json",
+        "LPJmL": "frequency_map_GFDL-ESM2M_LPJmL_1.json",
+        "JULES-W1": "frequency_map_GFDL-ESM2M_JULES-W1_1.json",
+        "MPI-HM": "frequency_map_GFDL-ESM2M_MPI-HM_1.json",
+        "ORCHIDEE": "frequency_map_GFDL-ESM2M_ORCHIDEE_1.json",
+        "PCR-GLOBWB": "frequency_map_GFDL-ESM2M_PCR-GLOBWB_1.json",
+        "WaterGAP2": "frequency_map_GFDL-ESM2M_WaterGAP2_1.json"
+      },
+
+      "MIROC5": {
+
+        "H08": "frequency_map_MIROC5_H08_1.json",
+        "LPJmL": "frequency_map_MIROC5_LPJmL_1.json",
+        "MPI-HM": "frequency_map_MIROC5_MPI-HM_1.json",
+        "PCR-GLOBWB": "frequency_map_MIROC5_PCR-GLOBWB_1.json",
+        "WaterGAP2": "frequency_map_MIROC5_WaterGAP2_1.json"
+      }
+    },
+    "1.5": {
+      "IPSL-CM5A-LR": {
+
+        "H08": "frequency_map_IPSL-CM5A-LR_H08_1.5.json",
+        "LPJmL": "frequency_map_IPSL-CM5A-LR_LPJmL_1.5.json",
+        "JULES-W1": "frequency_map_IPSL-CM5A-LR_JULES-W1_1.5.json",
+        "MPI-HM": "frequency_map_IPSL-CM5A-LR_MPI-HM_1.5.json",
+        "ORCHIDEE": "frequency_map_IPSL-CM5A-LR_ORCHIDEE_1.5.json",
+        "PCR-GLOBWB": "frequency_map_IPSL-CM5A-LR_PCR-GLOBWB_1.5.json",
+        "WaterGAP2": "frequency_map_IPSL-CM5A-LR_WaterGAP2_1.5.json"
+      },
+
+      "GFDL-ESM2M": {
+
+        "CLM45": "frequency_map_GFDL-ESM2M_CLM45_1.5.json",
+        "H08": "frequency_map_GFDL-ESM2M_H08_1.5.json",
+        "LPJmL": "frequency_map_GFDL-ESM2M_LPJmL_1.5.json",
+        "JULES-W1": "frequency_map_GFDL-ESM2M_JULES-W1_1.5.json",
+        "MPI-HM": "frequency_map_GFDL-ESM2M_MPI-HM_1.5.json",
+        "ORCHIDEE": "frequency_map_GFDL-ESM2M_ORCHIDEE_1.5.json",
+        "PCR-GLOBWB": "frequency_map_GFDL-ESM2M_PCR-GLOBWB_1.5.json",
+        "WaterGAP2": "frequency_map_GFDL-ESM2M_WaterGAP2_1.5.json"
+      },
+
+      "MIROC5": {
+
+        "H08": "frequency_map_MIROC5_H08_1.5.json",
+        "LPJmL": "frequency_map_MIROC5_LPJmL_1.5.json",
+        "MPI-HM": "frequency_map_MIROC5_MPI-HM_1.5.json",
+        "PCR-GLOBWB": "frequency_map_MIROC5_PCR-GLOBWB_1.5.json",
+        "WaterGAP2": "frequency_map_MIROC5_WaterGAP2_1.5.json"
+      }
+    },
+    "2": {
+      "IPSL-CM5A-LR": {
+
+        "H08": "frequency_map_IPSL-CM5A-LR_H08_2.json",
+        "LPJmL": "frequency_map_IPSL-CM5A-LR_LPJmL_2.json",
+        "JULES-W1": "frequency_map_IPSL-CM5A-LR_JULES-W1_2.json",
+        "MPI-HM": "frequency_map_IPSL-CM5A-LR_MPI-HM_2.json",
+        "ORCHIDEE": "frequency_map_IPSL-CM5A-LR_ORCHIDEE_2.json",
+        "PCR-GLOBWB": "frequency_map_IPSL-CM5A-LR_PCR-GLOBWB_2.json",
+        "WaterGAP2": "frequency_map_IPSL-CM5A-LR_WaterGAP2_2.json"
+      },
+
+      "GFDL-ESM2M": {
+
+        "CLM45": "frequency_map_GFDL-ESM2M_CLM45_2.json",
+        "H08": "frequency_map_GFDL-ESM2M_H08_2.json",
+        "LPJmL": "frequency_map_GFDL-ESM2M_LPJmL_2.json",
+        "JULES-W1": "frequency_map_GFDL-ESM2M_JULES-W1_2.json",
+        "MPI-HM": "frequency_map_GFDL-ESM2M_MPI-HM_2.json",
+        "ORCHIDEE": "frequency_map_GFDL-ESM2M_ORCHIDEE_2.json",
+        "PCR-GLOBWB": "frequency_map_GFDL-ESM2M_PCR-GLOBWB_2.json",
+        "WaterGAP2": "frequency_map_GFDL-ESM2M_WaterGAP2_2.json"
+      },
+
+      "MIROC5": {
+
+        "H08": "frequency_map_MIROC5_H08_2.json",
+        "LPJmL": "frequency_map_MIROC5_LPJmL_2.json",
+        "MPI-HM": "frequency_map_MIROC5_MPI-HM_2.json",
+        "PCR-GLOBWB": "frequency_map_MIROC5_PCR-GLOBWB_2.json",
+        "WaterGAP2": "frequency_map_MIROC5_WaterGAP2_2.json"
+      }
+    }
+  }
+}
