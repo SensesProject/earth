@@ -9,6 +9,7 @@
 import * as THREE from 'three'
 import OrbitControls from 'three-orbitcontrols'
 import drawThreeGeo from '../assets/js/threeGeo.js'
+import chroma from 'chroma-js'
 
 import world from '../assets/data/world.json'
 import worker from 'workerize-loader!../assets/js/mapRenderer'
@@ -50,6 +51,25 @@ export default {
     },
     domain1 () {
       return this.$store.state.domain1
+    },
+    temperature () {
+      return this.$store.state.temperature
+    },
+    colors () {
+      const color0 = '#070019'
+      const color1 = '#B035C9'
+      const color2 = '#54E8A9'
+      const color3 = '#FEF4DD'
+
+      const cs1 = chroma.scale([color0, color1]).mode('lab').colors(50)
+      const cs2 = chroma.scale([color2, color3]).mode('lab').colors(50)
+
+      return cs1.map((c1, i) => {
+        return chroma.scale([c1, cs2[i]]).mode('lab').colors(50)
+        // return cs2.map((c2, i) => {
+        //   return chroma.average([c1, c2], 'lch')
+        // })
+      })
     }
   },
   watch: {
@@ -73,7 +93,7 @@ export default {
     this.camera = new THREE.OrthographicCamera(frustumSize * aspect / -2, frustumSize * aspect / 2, frustumSize / 2, frustumSize / -2, 1, frustumSize * 2)
     this.camera.position.z = size * 2
 
-    scene.background = new THREE.Color(0x071A29)
+    scene.background = new THREE.Color(0x000)
     renderer.setSize(width, height)
     $refs.VisEarth.appendChild(renderer.domElement)
 
@@ -91,7 +111,7 @@ export default {
 
     const globe = new THREE.Group()
     drawThreeGeo.drawThreeGeo(world, size / 4 + 0.5, 'sphere', {
-      color: 0x1B2658
+      color: 0x3A4E4F
     }, globe)
     globe.setRotationFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2)
 
@@ -132,19 +152,19 @@ export default {
       this.map.map = texture
     },
     updateCanvas () {
-      const { period1, range1, domain1 } = this
+      const { temperature, range1, domain1, colors } = this
       this.ctx.fillStyle = '#00CC84'
       this.ctx.fillRect(0, 0, 720, 360)
-      if (this.grids[period1] !== undefined) {
-        this.updateTexture(this.grids[period1])
+      if (this.grids[temperature] !== undefined) {
+        this.updateTexture(this.grids[temperature])
         return
       }
       const canvasData = this.ctx.getImageData(0, 0, 720, 360)
 
       // if (this.workerInstance != null) this.workerInstance.terminate()
       this.workerInstance = worker()
-      this.workerInstance.renderMap({ canvasData, grid: this.grid, period1, range1, domain1 }).then(cData => {
-        this.$store.dispatch('addGrid', { period: period1, grid: cData })
+      this.workerInstance.renderMap({ canvasData, grid: this.grid, temperature, range1, domain1 }).then(cData => {
+        this.$store.dispatch('addGrid', { temperature, grid: cData })
         this.updateTexture(cData)
       })
     },

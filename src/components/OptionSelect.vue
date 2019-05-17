@@ -1,16 +1,16 @@
 <template>
-  <div class="OptionSelect">
-    {{ label }}
-    <!-- <svg :class="[color]" width="6px" height="7px" viewBox="0 0 6 7">
-      <polygon points="0 4.5 3 7 6 4.5"/>
-      <polygon points="0 2.5 3 0 6 2.5"/>
-    </svg> -->
-    <select :class="[color]" v-model="value">
-      <option
-        v-for="o in options"
-        :key="o.value"
-        :value="o.value">{{ o.label.toUpperCase() }}&nbsp;</option>
-    </select>
+  <div class="option-select">
+    <span class="label">{{ label }}&nbsp;</span>
+    <div class="select">
+      <select :value="value" @change="$emit('input', $event.target.value)">
+        <option
+          v-for="o in options"
+          :disabled="o.disabled"
+          :key="o.value || o"
+          :value="o.value || o">{{ o.label || o.value || o }}</option>
+      </select>
+      <div class="selected">{{ valueLabel }}&nbsp;</div>
+    </div>
   </div>
 </template>
 
@@ -20,19 +20,12 @@ export default {
   props: {
     label: {
       type: String,
-      default: 'label'
+      default: ''
     },
-    color: {
-      type: String,
-      default: 'blue'
-    },
-    valueKey: {
-      type: String,
-      default: 'key'
-    },
+    value: {},
     options: {
       type: Array,
-      default: null
+      default () { return [] }
     }
   },
   data () {
@@ -40,13 +33,11 @@ export default {
     }
   },
   computed: {
-    value: {
-      get () {
-        return this.$store.state[this.valueKey]
-      },
-      set (value) {
-        this.$store.dispatch('update', { value, prop: this.valueKey })
-      }
+    valueLabel () {
+      const { options, value } = this
+      if (value == null) return null
+      const v = options.find(o => o.value === value || o === value)
+      return v ? v.label || v.value || v : null
     }
   }
 }
@@ -54,26 +45,30 @@ export default {
 
 <style scoped lang="scss">
 @import "../assets/style/variables";
+.option-select {
+  display: flex;
+  flex-direction: column;
+  .label {
+    font-family: $font-mono;
+    font-size: 0.7em;
+    line-height: 1.2;
+  }
+  .select {
+    text-transform: capitalize;
+    position: relative;
+    border-bottom: 1px solid $color-white;
 
-.OptionSelect {
-  text-transform: uppercase;
-  display: inline-block;
-
-  select {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    font-size: 1rem;
-    border: none;
-    background: none;
-    margin: 0;
-    padding: 0;
-    width: auto;
-    outline: none;
-    font-family: 'Plex Sans', sans-serif;
-    font-feature-settings: "kern";
-    font-weight: 300;
-    line-height: 1;
+    select {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      appearance: none;
+      -webkit-appearance: none;
+      font-size: 1em;
+      // font-family: $font-sans;
+    }
   }
 }
+
 </style>
