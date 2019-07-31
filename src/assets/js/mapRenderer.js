@@ -16,7 +16,8 @@ export function renderMap ({ canvasData, grid, temperature, range1, domain1, col
         value0 = gridComparison[y][x] - 2
       }
       if (value0 >= 0 || value1 >= 0) {
-        const rgb = colors[value0][value1]
+        let rgb = colors[value0][value1]
+        if (value0 > 5 || value1 > 5)rgb = colors[Math.min(25, value0 + 5)][Math.min(25, value1 + 5)]
         const index = (x + (359 - y) * 720) * 4
         for (let i = 0; i < 3; i++) {
           canvasData.data[index + i] = rgb[i]

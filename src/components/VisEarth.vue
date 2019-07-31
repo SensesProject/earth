@@ -92,10 +92,10 @@ export default {
       return this.$store.state.temperature
     },
     colors () {
-      const color0 = '#070019'
+      const color0 = '#000'
       const color1 = '#B035C9'
       const color2 = '#54E8A9'
-      const color3 = '#FEF4DD'
+      const color3 = '#FFF'
 
       const cs1 = chroma.scale([color0, color1]).mode('lab').colors(26)
       const cs2 = chroma.scale([color2, color3]).mode('lab').colors(26)
@@ -135,7 +135,7 @@ export default {
 
     const aspect = width / height
     this.camera = new THREE.OrthographicCamera(frustumSize * aspect / -2, frustumSize * aspect / 2, frustumSize / 2, frustumSize / -2, 1, frustumSize * 2)
-    this.camera.position.z = size * 2
+    this.camera.position.z = size
 
     scene.background = new THREE.Color(0x000)
     renderer.setSize(width, height)
@@ -197,6 +197,8 @@ export default {
 
     const material1 = new THREE.MeshBasicMaterial({ map: texture })
     var material = new THREE.MeshPhongMaterial({ side: THREE.DoubleSide, map: texture })
+    // var material = new THREE.MeshPhongMaterial({ side: THREE.DoubleSide, color: 0xffffff })
+
     var mesh = new THREE.Mesh(geometry, map)
     scene.add(mesh)
 
@@ -437,7 +439,7 @@ export default {
     },
     updateCanvas () {
       const { temperature, range1, domain1, colors, compareValue, grid, gridComparison } = this
-      this.ctx.fillStyle = '#070019'
+      this.ctx.fillStyle = '#000'
       this.ctx.fillRect(0, 0, 720, 360)
       // if (this.grids[temperature] !== undefined) {
       //   this.updateTexture(this.grids[temperature])
