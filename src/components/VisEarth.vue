@@ -45,8 +45,11 @@ export default {
       camera: null,
       renderer: new THREE.WebGLRenderer({ antialias: true }),
       map: new THREE.MeshBasicMaterial(),
+      map2: new THREE.MeshBasicMaterial({ transparent: true }),
       frustumSize: 1000,
-      workerInstance: null
+      workerInstance: null,
+      ctx: null,
+      ctx2: null
     }
   },
   computed: {
@@ -88,16 +91,17 @@ export default {
       return this.$store.state.temperature
     },
     colors () {
-      const color0 = '#070019'
+      const color0 = '#000000' // #070019
       const color1 = '#B035C9'
       const color2 = '#54E8A9'
-      const color3 = '#FEF4DD'
+      const color3 = '#1F18FF' // #FEF4DD
 
       const cs1 = chroma.scale([color0, color1]).mode('lab').colors(26)
       const cs2 = chroma.scale([color2, color3]).mode('lab').colors(26)
 
       return cs1.map((c1, i) => {
-        return chroma.scale([c1, cs2[i]]).mode('lab').colors(28, 'rgb')
+        // return chroma.scale([c1, cs2[i]]).mode('lab').colors(28, 'rgb')
+        return chroma.scale([color0, color3]).mode('lab').colors(28, 'rgb')
         // return cs2.map((c2, i) => {
         //   return chroma.average([c1, c2], 'lch')
         // })
@@ -122,7 +126,7 @@ export default {
     }
   },
   mounted () {
-    const { renderer, $refs, scene, width, height, size, animate, createCanvas, map, frustumSize } = this
+    const { renderer, $refs, scene, width, height, size, animate, createCanvas, map, map2, frustumSize } = this
 
     const aspect = width / height
     this.camera = new THREE.OrthographicCamera(frustumSize * aspect / -2, frustumSize * aspect / 2, frustumSize / 2, frustumSize / -2, 1, frustumSize * 2)
@@ -134,9 +138,37 @@ export default {
 
     scene.add(new THREE.AmbientLight(0xffffff))
 
+    var texture = new THREE.TextureLoader().load('./img/hatched.png')
+
+    var material = new THREE.MeshBasicMaterial({
+      // side: THREE.DoubleSide,
+      map: texture,
+      transparent: true,
+      onBeforeCompile: function (shader) {
+        shader.fragmentShader = shader.fragmentShader.replace(
+          `#include <map_fragment>`,
+          `#ifdef USE_MAP
+            vec4 texelColor = texture2D( map, gl_FragCoord.xy / 1000.0 );
+            texelColor = mapTexelToLinear( texelColor );
+            diffuseColor *= texelColor;
+          #endif`)
+      }
+      // color: 0xff0000,
+      // wireframe: true
+    })
+
     var geometry = new THREE.SphereBufferGeometry(size / 4, 64, 64)
     var mesh = new THREE.Mesh(geometry, map)
+    var geometry2 = new THREE.SphereBufferGeometry(size / 4 + 0.5, 64, 64)
+    var mesh2 = new THREE.Mesh(geometry2, map2)
+    var geometry3 = new THREE.SphereBufferGeometry(size / 4 + 0.25, 64, 64)
+    var mesh3 = new THREE.Mesh(geometry3, material)
+    mesh.renderOrder = 1
+    mesh2.renderOrder = 3
+    mesh3.renderOrder = 2
     scene.add(mesh)
+    scene.add(mesh2)
+    scene.add(mesh3)
 
     var controls = new OrbitControls(this.camera, renderer.domElement)
     controls.minZoom = 1
@@ -145,7 +177,7 @@ export default {
     createCanvas()
 
     const globe = new THREE.Group()
-    drawThreeGeo.drawThreeGeo(world, size / 4 + 0.5, 'sphere', {
+    drawThreeGeo.drawThreeGeo(world, size / 4 - 0.75, 'sphere', {
       color: 0x3A3A4A
     }, globe)
     globe.setRotationFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2)
@@ -175,21 +207,29 @@ export default {
     },
     createCanvas () {
       this.canvas = document.createElement('canvas') // this.$refs.canvas
+      this.canvas2 = document.createElement('canvas') // this.$refs.canvas
       const resolution = 1
       this.canvas.setAttribute('width', 720 * resolution)
       this.canvas.setAttribute('height', 360 * resolution)
+      this.canvas2.setAttribute('width', 720 * resolution)
+      this.canvas2.setAttribute('height', 360 * resolution)
       this.ctx = this.canvas.getContext('2d')
-      this.ctx.fillRect(0, 0, 360, 180)
+      this.ctx2 = this.canvas2.getContext('2d')
       const texture = new THREE.CanvasTexture(this.canvas)
-
       texture.magFilter = THREE.NearestFilter
       texture.minFilter = THREE.NearestFilter
       this.map.map = texture
+      const texture2 = new THREE.CanvasTexture(this.canvas2)
+      texture2.magFilter = THREE.NearestFilter
+      texture2.minFilter = THREE.NearestFilter
+      this.map2.map = texture2
     },
     updateCanvas () {
       const { temperature, range1, domain1, colors, compareValue, grid, gridComparison } = this
-      this.ctx.fillStyle = '#070019'
+      this.ctx.fillStyle = 'rgb(255,255,255,0)'
       this.ctx.fillRect(0, 0, 720, 360)
+      this.ctx2.fillStyle = 'rgb(255,255,255,0)'
+      this.ctx2.fillRect(0, 0, 720, 360)
       // if (this.grids[temperature] !== undefined) {
       //   this.updateTexture(this.grids[temperature])
       //   return
@@ -206,6 +246,17 @@ export default {
     updateTexture (canvasData) {
       this.ctx.putImageData(canvasData, 0, 0)
       this.map.map.needsUpdate = true
+      canvasData.data.forEach((d, i) => {
+        if (i % 4 === 3) {
+          if (canvasData.data[i] === 0) {
+            canvasData.data[i] = 255
+          } else {
+            canvasData.data[i] = (canvasData.data[i - 1] > 50 && canvasData.data[i - 1] < 150) ? 0 : 255
+          }
+        }
+      })
+      this.ctx2.putImageData(canvasData, 0, 0)
+      this.map2.map.needsUpdate = true
     },
     resize () {
       const { width, height, camera, renderer, frustumSize } = this

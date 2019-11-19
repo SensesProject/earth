@@ -8,6 +8,7 @@ export function renderMap ({ canvasData, grid, temperature, range1, domain1, col
   //   .domain(domain)
   // colorScale.clamp(true)
   // console.log(temperature, grid)
+  console.log(canvasData)
   for (let y = 0; y < 360; y++) {
     for (let x = 0; x < 720; x++) {
       const value1 = grid[y][x] - 2
@@ -21,6 +22,10 @@ export function renderMap ({ canvasData, grid, temperature, range1, domain1, col
         for (let i = 0; i < 3; i++) {
           canvasData.data[index + i] = rgb[i]
         }
+        canvasData.data[index + 3] = 255
+      } else {
+        const index = (x + (359 - y) * 720) * 4
+        canvasData.data[index + 3] = 0
       }
       // }
     }
