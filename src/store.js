@@ -17,6 +17,7 @@ export default new Vuex.Store({
     height: window.innerHeight,
     mode: 'explore',
     showOptions: false,
+    showCountryDetails: null,
     modes: ['explore', 'indicator', 'global-warming-level', 'climate-model', 'impact-model'],
     variable: null,
     indicator: null,

@@ -1,7 +1,9 @@
 <template>
   <div class="VisEarth">
-    <div ref="VisEarth"/>
-    <!-- <canvas ref="canvas"/> -->
+    <div ref="VisEarth" :class="{ pointer: highlightCountry != null }"
+      @mousemove="onMouseMove"
+      @mousedown="mouseMoved = false"
+      @mouseup="onMouseUp"/>
     <svg class="key" :width="keyWidth" :height="64">
       <g transform="translate(0 18)">
         <g v-if="compareValue == null">
@@ -25,6 +27,9 @@
         <text y="64" :x="keyWidth - 1" text-anchor="middle">Never</text>
       </g>
     </svg>
+    <div v-if="tooltip" class="tooltip" :style="{top: `${tooltip.y}px`, left: `${tooltip.x}px`}">
+      {{ countryName }}
+    </div>
   </div>
 </template>
 
@@ -33,23 +38,36 @@ import * as THREE from 'three'
 import OrbitControls from 'three-orbitcontrols'
 import drawThreeGeo from '../assets/js/threeGeo.js'
 import chroma from 'chroma-js'
+import pointInPolygon from '@turf/boolean-point-in-polygon'
+import centroidFromPolygon from '@turf/centroid'
 
 import world from '../assets/data/world.json'
 import worker from 'workerize-loader!../assets/js/mapRenderer'
+import computeFromStore from '../assets/js/computeFromStore.js'
 
 export default {
   name: 'VisEarth',
   data () {
     return {
       scene: new THREE.Scene(),
+      raycaster: new THREE.Raycaster(),
+      mouse: new THREE.Vector2(5000, 5000),
       camera: null,
       renderer: new THREE.WebGLRenderer({ antialias: true }),
       map: new THREE.MeshBasicMaterial(),
       frustumSize: 1000,
-      workerInstance: null
+      workerInstance: null,
+      earth: null,
+      outline: new THREE.Group(),
+      center: new THREE.Group(),
+      highlightCountry: null,
+      controls: null,
+      tooltip: null,
+      mouseMoved: true
     }
   },
   computed: {
+    ...computeFromStore(['showCountryDetails']),
     keyWidth () {
       return 15 * this.colors.length
     },
@@ -102,6 +120,11 @@ export default {
         //   return chroma.average([c1, c2], 'lch')
         // })
       })
+    },
+    countryName () {
+      const { highlightCountry } = this
+      if (highlightCountry == null) return null
+      return world.features.find(f => f.properties.ADM0_A3 === highlightCountry).properties.ADMIN
     }
   },
   watch: {
@@ -119,10 +142,44 @@ export default {
     },
     height () {
       this.resize()
+    },
+    highlightCountry (country) {
+      const { size, outline, center } = this
+      while (outline.children.length > 0) outline.remove(outline.children[0])
+      this.tooltip = null
+      if (country == null) return
+      const feature = world.features.find(f => f.properties.ADM0_A3 === country)
+      drawThreeGeo.drawThreeGeo(feature, size / 4 + 0.5, 'sphere', {
+        color: 0x9BE8C7,
+        linewidth: 1
+      }, outline)
+      const centroid = centroidFromPolygon(feature)
+      if (country === 'CHL') centroid.geometry.coordinates[0] = -73
+      // console.log(centroid)
+
+      // const center = new THREE.Group()
+      while (center.children.length > 0) center.remove(center.children[0])
+      // center.setRotationFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2)
+
+      drawThreeGeo.drawThreeGeo(centroid, size / 4 + 0.5, 'sphere', {
+        color: 0x9BE8C7,
+        size: 10
+      }, center)
+      const vert = center.children[0].geometry.vertices[0]
+      vert.applyAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2)
+      // var vector = vert.project(camera)
+      // // .applyAxisAngle
+
+      // // vector.x = (vector.x + 1) / 2 * width
+      // // vector.y = -(vector.y - 1) / 2 * height
+      // this.tooltip = {
+      //   x: (vector.x + 1) / 2 * width,
+      //   y: -(vector.y - 1) / 2 * height
+      // }
     }
   },
   mounted () {
-    const { renderer, $refs, scene, width, height, size, animate, createCanvas, map, frustumSize } = this
+    const { renderer, $refs, scene, width, height, size, animate, createCanvas, map, frustumSize, outline, center } = this
 
     const aspect = width / height
     this.camera = new THREE.OrthographicCamera(frustumSize * aspect / -2, frustumSize * aspect / 2, frustumSize / 2, frustumSize / -2, 1, frustumSize * 2)
@@ -134,14 +191,15 @@ export default {
 
     scene.add(new THREE.AmbientLight(0xffffff))
 
-    var geometry = new THREE.SphereBufferGeometry(size / 4, 64, 64)
-    var mesh = new THREE.Mesh(geometry, map)
-    scene.add(mesh)
+    const geometry = new THREE.SphereBufferGeometry(size / 4, 64, 64)
+    this.earth = new THREE.Mesh(geometry, map)
+    scene.add(this.earth)
 
-    var controls = new OrbitControls(this.camera, renderer.domElement)
-    controls.minZoom = 1
-    controls.maxZoom = 10
-    controls.enablePan = false
+    this.controls = new OrbitControls(this.camera, renderer.domElement)
+    this.controls.minZoom = 1
+    this.controls.maxZoom = 10
+    this.controls.enablePan = false
+
     createCanvas()
 
     const globe = new THREE.Group()
@@ -149,19 +207,47 @@ export default {
       color: 0x3A3A4A
     }, globe)
     globe.setRotationFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2)
-
     scene.add(globe)
+
+    outline.setRotationFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2)
+    scene.add(outline)
 
     animate()
 
     this.$store.dispatch('updateMap')
+    // window.removeEventListener('mousemove', this.onMouseMove)
+    // window.addEventListener('mousemove', this.onMouseMove, false)
+    // window.removeEventListener('click', this.onClick)
+    // window.addEventListener('click', this.onClick, false)
   },
   methods: {
     animate (t = 0) {
-      const { animate, scene, camera, renderer } = this
+      const { animate, scene, camera, renderer, raycaster, mouse, earth, highlight, center, width, height, highlightCountry } = this
       camera.updateMatrixWorld()
-      requestAnimationFrame(animate)
+
+      raycaster.setFromCamera(mouse, camera)
+      const intersects = raycaster.intersectObjects([earth])
+      if (intersects.length > 0) {
+        highlight([intersects[0].uv.x * 360 - 180, intersects[0].uv.y * 180 - 90])
+      } else {
+        highlight()
+      }
       renderer.render(scene, camera)
+      requestAnimationFrame(animate)
+      this.controls.rotateSpeed = 1 / this.camera.zoom
+      if (center.children.length === 1 && highlightCountry) {
+        const vert = center.children[0].geometry.vertices[0]
+        // vert.applyAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2)
+        var vector = new THREE.Vector3(vert.x, vert.y, vert.z).project(camera)
+        // .applyAxisAngle
+
+        // vector.x = (vector.x + 1) / 2 * width
+        // vector.y = -(vector.y - 1) / 2 * height
+        this.tooltip = {
+          x: (vector.x + 1) / 2 * width,
+          y: -(vector.y - 1) / 2 * height
+        }
+      }
     },
     createVector (x, y, z) {
       const { camera, width, height } = this
@@ -216,6 +302,24 @@ export default {
       camera.bottom = -frustumSize / 2
       camera.updateProjectionMatrix()
       renderer.setSize(width, height)
+    },
+    onMouseMove (event) {
+      this.mouseMoved = true
+      this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1
+      this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1
+    },
+    onMouseUp (event) {
+      if (!this.mouseMoved) this.showCountryDetails = this.highlightCountry
+    },
+    highlight (point) {
+      let country = null
+      if (point != null) {
+        const c = world.features.find(f => pointInPolygon(point, f.geometry))
+        if (c != null) {
+          country = c.properties.ADM0_A3
+        }
+      }
+      this.highlightCountry = country
     }
   }
 }
@@ -226,6 +330,10 @@ export default {
 .VisEarth {
   position: absolute;
   // cursor: all-scroll;
+
+  .pointer {
+    cursor: pointer;
+  }
 
   .key {
     position: absolute;
@@ -245,6 +353,15 @@ export default {
     .ticks {
       fill: $color-white;
     }
+  }
+  .tooltip {
+    position: absolute;
+    background: $color-green;
+    transform: translate(-50%, -100%);
+    pointer-events: none;
+    padding: $spacing / 8 $spacing / 4;
+    font-size: 0.8em;
+    border-radius: 2px;
   }
 }
 </style>
