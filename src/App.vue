@@ -56,10 +56,10 @@ export default {
 </script>
 
 <style lang="scss">
-@import "/assets/style/base";
+@import "@/assets/style/base.scss";
 </style>
 <style lang="scss" scoped>
-@import "/assets/style/variables";
+@import "@/assets/style/variables.scss";
 .overlay {
   position: fixed;
   height: 100vh;

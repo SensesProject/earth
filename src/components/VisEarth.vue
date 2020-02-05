@@ -179,7 +179,7 @@ export default {
     }
   },
   mounted () {
-    const { renderer, $refs, scene, width, height, size, animate, createCanvas, map, frustumSize, outline, center } = this
+    const { renderer, $refs, scene, width, height, size, animate, createCanvas, map, frustumSize, outline } = this
 
     const aspect = width / height
     this.camera = new THREE.OrthographicCamera(frustumSize * aspect / -2, frustumSize * aspect / 2, frustumSize / 2, frustumSize / -2, 1, frustumSize * 2)

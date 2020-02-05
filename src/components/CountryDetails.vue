@@ -4,7 +4,7 @@
       <div class="option option-title">
         <span class="title">{{ showCountryDetails }}</span>
       </div>
-      <OptionLink class="option" label="↗ Show ISIpedia Report" 
+      <OptionLink class="option" label="↗ Show ISIpedia Report"
         :href="`http://isipedia.pik-potsdam.de/report/future-projections.${showCountryDetails}.extreme-events.d786b`"
         target="_blank"/>
       <OptionButton class="option" label="Close" @input="showCountryDetails = false"/>

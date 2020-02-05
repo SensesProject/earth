@@ -1,3 +1,10 @@
 module.exports = {
-  publicPath: './'
+  publicPath: './',
+  css: {
+    loaderOptions: {
+      sass: {
+        implementation: require('sass')
+      }
+    }
+  }
 }
