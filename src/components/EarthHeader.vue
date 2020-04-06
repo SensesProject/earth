@@ -1,6 +1,6 @@
 <template>
   <header class="EarthHeader">
-    <SensesLogo class="senses" color="white" :sx="2" :sy="0" :mx="1" :my="0" :lx="0" :ly="0"/>
+    <SensesMenu darkmode transparent id="senses-earth" :logo="{sx:2, sy:0, mx:1, my:0, lx:0, ly:0}"/>
     <h2>
       Frequency of
       <OptionSelectInline v-model="indicator" :options="indicators" class="option" :class="{ green: compareOption === 'indicator', white: compareOption === null}" />
@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import SensesLogo from 'library/src/components/SensesLogo.vue'
+import SensesMenu from 'library/src/components/SensesMenu.vue'
 import OptionSelectInline from './OptionSelectInline.vue'
 import computeFromStore from '../assets/js/computeFromStore.js'
 import { mapGetters } from 'vuex'
@@ -46,7 +46,7 @@ import { format } from 'd3-format'
 export default {
   name: 'EarthHeader',
   components: {
-    SensesLogo,
+    SensesMenu,
     OptionSelectInline
   },
   data () {
@@ -82,19 +82,19 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: top;
-  flex-direction: row-reverse;
-  padding: $spacing / 2 $spacing $spacing;
-  background-image: linear-gradient(0deg, transparentize($color-background, 1) 0%, transparentize($color-background, 0.25) 100%);
+  flex-direction: column;
+  // padding: $spacing / 2 $spacing $spacing;
+  // background-image: linear-gradient(0deg, transparentize($color-background, 1) 0%, transparentize($color-background, 0.25) 100%);
 
-  .senses-logo {
-    height: $spacing * 1.5;
+  .senses-menu {
     pointer-events: all;
   }
 
   h2 {
-    padding-top: $spacing * 0.25;
+    padding: $spacing / 4 $spacing / 2 $spacing / 4;
     font-weight: $font-weight-regular;
     margin-right: $spacing;
+    color: $color-white;
 
     .option {
       pointer-events: all;
