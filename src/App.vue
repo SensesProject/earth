@@ -45,7 +45,7 @@ export default {
     hideOverlay (e) {
       if (e.target.getAttribute('is-overlay') != null) {
         this.showOptions = false
-        this.showCountryDetails = false
+        this.showCountryDetails = null
       }
     }
   },

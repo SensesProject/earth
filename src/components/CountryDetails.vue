@@ -2,12 +2,12 @@
   <div class="earth-options" :class="{comparing}">
     <div class="option-group option-group-explore">
       <div class="option option-title">
-        <span class="title">{{ showCountryDetails }}</span>
+        <span class="title">{{ showCountryDetails.name }}</span>
       </div>
       <OptionLink class="option" label="↗ Show ISIpedia Report"
-        :href="`http://isipedia.pik-potsdam.de/report/future-projections.${showCountryDetails}.extreme-events.d786b`"
+        :href="`http://isipedia.pik-potsdam.de/report/future-projections.${showCountryDetails.code}.extreme-events.d786b`"
         target="_blank"/>
-      <OptionButton class="option" label="Close" @input="showCountryDetails = false"/>
+      <OptionButton class="option" label="Close" @input="showCountryDetails = null"/>
     </div>
   </div>
 </template>
