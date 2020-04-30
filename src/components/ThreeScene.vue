@@ -155,3 +155,10 @@ export default {
   height: 100%;
 }
 </style>
+<style lang="scss">
+.three-scene {
+  canvas {
+    display: block
+  }
+}
+</style>
