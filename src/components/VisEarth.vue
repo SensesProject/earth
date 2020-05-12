@@ -10,24 +10,24 @@
     <svg class="key" :width="keyWidth" :height="64">
       <g transform="translate(0 18)">
         <g v-if="compareValue == null">
-          <rect v-for="(c1, x) in colors" :key="`c${x}`" width="15" height="24" :x="keyWidth - (x + 1) * 15" :y="0" :fill="`rgb(${c1[x][0]},${c1[x][1]},${c1[x][2]})`"/>
+          <rect v-for="(c1, x) in colors" :key="`c${x}`" width="4" height="24" :x="x * 4" :y="0" :fill="`rgb(${c1[0]},${c1[1]},${c1[2]})`"/>
         </g>
         <g v-else>
-          <rect v-for="(c1, x) in colors" :key="`cg${x}`" width="15" height="8" :x="keyWidth - (x + 1) * 15" :y="16" :fill="`rgb(${colors[0][x][0]},${colors[0][x][1]},${colors[0][x][2]})`"/>
-          <rect v-for="(c1, x) in colors" :key="`cw${x}`" width="15" height="8" :x="keyWidth - (x + 1) * 15" :y="8" :fill="`rgb(${c1[x][0]},${c1[x][1]},${c1[x][2]})`"/>
-          <rect v-for="(c1, x) in colors" :key="`cv${x}`" width="15" height="8" :x="keyWidth - (x + 1) * 15" :y="0" :fill="`rgb(${c1[0][0]},${c1[0][1]},${c1[0][2]})`"/>
+          <rect v-for="(c1, x) in colors" :key="`cg${x}`" width="15" height="8" :x="x * 15" :y="16" :fill="`rgb(${colors[0][x][0]},${colors[0][x][1]},${colors[0][x][2]})`"/>
+          <rect v-for="(c1, x) in colors" :key="`cw${x}`" width="15" height="8" :x="x * 15" :y="8" :fill="`rgb(${c1[x][0]},${c1[x][1]},${c1[x][2]})`"/>
+          <rect v-for="(c1, x) in colors" :key="`cv${x}`" width="15" height="8" :x="x * 15" :y="0" :fill="`rgb(${c1[0][0]},${c1[0][1]},${c1[0][2]})`"/>
         </g>
       </g>
-      <text y="10">Frequency</text>
+      <text y="10">Land Area Affected</text>
       <g class="ticks">
         <rect y="18" width="1" height="32"/>
-        <text y="64">Annual</text>
+        <text y="64" text-anchor="middle">0%</text>
         <rect y="18" :x="keyWidth * 0.5" width="1" height="32"/>
-        <text y="64" :x="keyWidth * 0.5" text-anchor="middle">Biennial</text>
-        <rect y="18" :x="keyWidth * 0.75" width="1" height="32"/>
-        <text y="64" :x="keyWidth * 0.75" text-anchor="middle">Quadrennial</text>
+        <text y="64" :x="keyWidth * 0.5" text-anchor="middle">{{ scale.domain[1]/2 }}%</text>
+        <!-- <rect y="18" :x="keyWidth * 0.75" width="1" height="32"/>
+        <text y="64" :x="keyWidth * 0.75" text-anchor="middle">Quadrennial</text> -->
         <rect y="18" :x="keyWidth - 1" width="1" height="32"/>
-        <text y="64" :x="keyWidth - 1" text-anchor="middle">Never</text>
+        <text y="64" :x="keyWidth - 1" text-anchor="middle">{{ scale.domain[1] }}%</text>
       </g>
     </svg>
     <div v-if="country && !mouseMoved" class="tooltip" :style="{top: `${country.y}px`, left: `${country.x}px`}">
@@ -41,6 +41,7 @@ import ThreeScene from '@/components/ThreeScene.vue'
 import ObjectSphere from '@/components/ObjectSphere.vue'
 import ObjectGeo from '@/components/ObjectGeo.vue'
 
+import { mapGetters } from 'vuex'
 import chroma from 'chroma-js'
 import worker from 'workerize-loader!../assets/js/mapRenderer'
 import computeFromStore from '../assets/js/computeFromStore.js'
@@ -63,8 +64,9 @@ export default {
   },
   computed: {
     ...computeFromStore(['showCountryDetails']),
+    ...mapGetters(['scale']),
     keyWidth () {
-      return 15 * this.colors.length
+      return 4 * this.colors.length
     },
     size () {
       const { width, height } = this
@@ -101,24 +103,16 @@ export default {
       return this.$store.state.temperature
     },
     colors () {
+      const { scale } = this
       const color0 = '#070019'
-      const color1 = '#B035C9'
-      const color2 = '#54E8A9'
-      const color3 = '#FEF4DD'
+      const color1 = '#ddd6ff'
 
-      const cs1 = chroma.scale([color0, color1]).mode('lab').colors(26)
-      const cs2 = chroma.scale([color2, color3]).mode('lab').colors(26)
-
-      return cs1.map((c1, i) => {
-        return chroma.scale([c1, cs2[i]]).mode('lab').colors(28, 'rgb')
-        // return cs2.map((c2, i) => {
-        //   return chroma.average([c1, c2], 'lch')
-        // })
-      })
+      return chroma.scale([color0, color1]).mode('lab').colors(scale.range[1], 'rgb')
     }
   },
   watch: {
     grid () {
+      console.log('updates')
       this.updateCanvas()
     },
     gridComparison () {
@@ -136,6 +130,12 @@ export default {
     },
     updateCanvas () {
       const { temperature, range1, domain1, colors, compareValue, grid, gridComparison } = this
+      // grid.forEach(l => {
+      //   l.forEach(v => {
+      //     if (v !== 0) console.log(v)
+      //   })
+      // })
+      // console.log(colors)
       if (this.workerInstance != null) this.workerInstance.terminate()
       this.workerInstance = worker()
       this.workerInstance.renderMap({ grid, gridComparison, comparing: compareValue != null, temperature, range1, domain1, colors }).then(cData => {

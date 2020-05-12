@@ -2,37 +2,10 @@
   <header class="EarthHeader">
     <SensesMenu darkmode transparent id="senses-earth" :logo="{sx:2, sy:0, mx:1, my:0, lx:0, ly:0}"/>
     <h2>
-      Frequency of
-      <OptionSelectInline v-model="indicator" :options="indicators" class="option" :class="{ green: compareOption === 'indicator', white: compareOption === null}" />
-        <!-- {{ formatIndicator(indicator) }}</span> -->
-      <span v-if="compareOption === 'indicator'">
-        &
-        <OptionSelectInline v-model="compareValue" :options="indicators" class="option violet"/>
-      </span>
-      at a
-      <OptionSelectInline v-model="temperature" :options="globalWarmingLevels" class="option" :class="{ green: compareOption === 'global-warming-level'}"/>
-      <span v-if="compareOption === 'global-warming-level'">
-        &
-        <OptionSelectInline v-model="compareValue" :options="globalWarmingLevels" class="option violet"/>
-      </span>
-      global warming level<br>
-      in climate model
-      <span class="option" :class="{ green: compareOption === 'climate-model'}">
-        {{ climateModel }}
-      </span>
-      <span v-if="compareOption === 'climate-model'">
-        &
-        <span class="option violet">{{ compareValue }}</span>
-      </span>
-      and impact model
-      <span class="option" :class="{ green: compareOption === 'impact-model'}">
-        {{ impactModel }}
-      </span>
-      <span v-if="compareOption === 'impact-model'">
-        &
-        <span class="option violet">{{ compareValue }}</span>
-      </span><br>
-      <div class="button" role="button" @click="showOptions = true"/>
+      <OptionSelectInline v-model="indicator" :options="indicators" class="option"/>
+      <OptionSelectInline v-model="climateModel" :options="climateModels" class="option"/>
+      <OptionSelectInline v-model="impactModel" :options="impactModels" class="option"/>
+      <OptionSelectInline v-model="temperature" :options="temperatures" class="option"/>
     </h2>
   </header>
 </template>
@@ -54,8 +27,8 @@ export default {
     }
   },
   computed: {
-    ...computeFromStore(['mode', 'indicator', 'indicators', 'climateModel', 'impactModel', 'temperature', 'showOptions', 'compareValue', 'compareOption']),
-    ...mapGetters(['globalWarmingLevels'])
+    ...computeFromStore(['mode', 'indicator', 'indicators', 'climateModel', 'climateModels', 'temperatures', 'impactModel', 'temperature', 'showOptions', 'compareValue', 'compareOption']),
+    ...mapGetters(['globalWarmingLevels', 'impactModels'])
   },
   methods: {
     formatGlobalWarmingLevel (value) {
