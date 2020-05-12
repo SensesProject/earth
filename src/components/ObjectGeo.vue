@@ -27,7 +27,8 @@ export default {
       countries: new Group(),
       raycaster: new Raycaster(),
       mesh: null,
-      country: null
+      country: null,
+      startSize: null
     }
   },
   computed: {
@@ -42,6 +43,7 @@ export default {
     }
   },
   mounted () {
+    this.startSize = this.size
     this.init()
   },
   render (h) {
@@ -87,14 +89,14 @@ export default {
       requestAnimationFrame(highlight)
     },
     highlightCountry () {
-      const { country, size, countries, toScreenPosition } = this
+      const { country, startSize, countries, toScreenPosition } = this
       while (countries.children.length > 0) countries.remove(countries.children[0])
       if (country == null) {
         this.$emit('highlight')
         return
       }
       const feature = world.features.find(f => f.properties.ADM0_A3 === country)
-      drawThreeGeo.drawThreeGeo(feature, size + 0.5, 'sphere', {
+      drawThreeGeo.drawThreeGeo(feature, startSize + 0.5, 'sphere', {
         color: 0x9BE8C7,
         linewidth: 1
       }, countries)
@@ -103,14 +105,14 @@ export default {
       this.$emit('highlight', { ...screenPosition, code: feature.properties.ADM0_A3, name: feature.properties.ADMIN })
     },
     toScreenPosition (centroid) {
-      const { renderer, camera, size } = this
+      const { renderer, camera, startSize } = this
 
       const phi = (90 - centroid[1]) * (Math.PI / 180)
       const theta = (180 + centroid[0]) * (Math.PI / 180)
 
-      const x = -((size / 2) * Math.sin(phi) * Math.cos(theta))
-      const z = ((size / 2) * Math.sin(phi) * Math.sin(theta))
-      const y = ((size / 2) * Math.cos(phi))
+      const x = -((startSize / 2) * Math.sin(phi) * Math.cos(theta))
+      const z = ((startSize / 2) * Math.sin(phi) * Math.sin(theta))
+      const y = ((startSize / 2) * Math.cos(phi))
 
       var vector = new Vector3(x, y, z)
       var width = renderer.context.canvas.width
