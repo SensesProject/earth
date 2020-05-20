@@ -55,12 +55,11 @@ indicators.forEach(i => {
         minValues.push(Math.min(...data.map(row => Math.min(...row))))
       })
       const binning = false
-      const domain = [0, Math.ceil(Math.max(...maxValues) / 10) * 10]
-      const s = scale().domain(domain).clamp(true)
+      const domain = [0, Math.ceil(Math.max(...maxValues, 1) / 10) * 10]
+      const s = scale().domain(domain).nice(2).clamp(true)
       const bins = binning ? s.ticks(5).length : s.domain()[1]
       const range = [0, bins]
       s.range(range)
-      scales[i] = { domain: s.domain(), range }
       allFiles.push(...selectedFiles.map(f => {
         return {
           ...f,
@@ -68,7 +67,7 @@ indicators.forEach(i => {
           scale: { domain: s.domain(), range }
         }
       }))
-      console.log(i, scales[i])
+      console.log(i, s.domain(), domain)
       selectedFiles.forEach(f => {
         const abs = fs.readFileSync(`./data/ISIpedia/${i}-abs/all_${f.name}.csv`, 'utf8').trim().split('\n').map(line => line.split(','))
         const height = abs.length

@@ -21,14 +21,10 @@
       </g>
       <text y="10">Land area exposed</text>
       <g class="ticks">
-        <rect y="18" width="1" height="32"/>
-        <text y="64" text-anchor="middle">0%</text>
-        <rect y="18" :x="keyWidth * 0.5" width="1" height="32"/>
-        <text y="64" :x="keyWidth * 0.5" text-anchor="middle">{{ scale.domain[1]/2 }}%</text>
-        <!-- <rect y="18" :x="keyWidth * 0.75" width="1" height="32"/>
-        <text y="64" :x="keyWidth * 0.75" text-anchor="middle">Quadrennial</text> -->
-        <rect y="18" :x="keyWidth - 1" width="1" height="32"/>
-        <text y="64" :x="keyWidth - 1" text-anchor="middle">{{ scale.domain[1] }}%</text>
+        <g v-for="(t, i) in ticks" :key="`t-${i}`">
+          <rect y="18" :x="t.x" width="1" height="32"/>
+          <text y="64" :x="t.x" text-anchor="middle">{{ t.value }}%</text>
+        </g>
       </g>
     </svg>
     <div v-if="country && !mouseMoved" class="tooltip" :style="{top: `${country.y}px`, left: `${country.x}px`}">
@@ -41,6 +37,8 @@
 import ThreeScene from '@/components/ThreeScene.vue'
 import ObjectSphere from '@/components/ObjectSphere.vue'
 import ObjectGeo from '@/components/ObjectGeo.vue'
+
+import { scaleLinear } from 'd3-scale'
 
 import { mapGetters } from 'vuex'
 import chroma from 'chroma-js'
@@ -110,11 +108,20 @@ export default {
       const color2 = '#FFE6B5'
 
       return chroma.scale([color0, color1, color2]).mode('lch').colors(scale.range[1], 'rgb')
+    },
+    ticks () {
+      const { keyWidth, scale } = this
+      const s = scaleLinear().domain(scale.range).range([0, keyWidth])
+      return s.ticks(2).map(value => {
+        return {
+          value,
+          x: s(value)
+        }
+      })
     }
   },
   watch: {
     grid () {
-      console.log('updates')
       this.updateCanvas()
     },
     gridComparison () {
