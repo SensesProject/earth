@@ -8,9 +8,10 @@
       <ObjectGeo :size="size / 2" @highlight="setHighlight" :interactive="!mouseDown"/>
     </ThreeScene>
     <svg class="key" :width="keyWidth" :height="64">
+
       <g transform="translate(0 18)">
         <g v-if="compareValue == null">
-          <rect v-for="(c1, x) in colors" :key="`c${x}`" width="4" height="24" :x="x * 4" :y="0" :fill="`rgb(${c1[0]},${c1[1]},${c1[2]})`"/>
+          <rect v-for="(c1, x) in colors" :key="`c${x}`" :width="keyWidth / colors.length + 0.4" height="24" :x="x * (keyWidth / colors.length) - 0.2" :y="0" :fill="`rgb(${c1[0]},${c1[1]},${c1[2]})`"/>
         </g>
         <g v-else>
           <rect v-for="(c1, x) in colors" :key="`cg${x}`" width="15" height="8" :x="x * 15" :y="16" :fill="`rgb(${colors[0][x][0]},${colors[0][x][1]},${colors[0][x][2]})`"/>
@@ -18,7 +19,7 @@
           <rect v-for="(c1, x) in colors" :key="`cv${x}`" width="15" height="8" :x="x * 15" :y="0" :fill="`rgb(${c1[0][0]},${c1[0][1]},${c1[0][2]})`"/>
         </g>
       </g>
-      <text y="10">Land Area Affected</text>
+      <text y="10">Land area exposed</text>
       <g class="ticks">
         <rect y="18" width="1" height="32"/>
         <text y="64" text-anchor="middle">0%</text>
@@ -66,7 +67,7 @@ export default {
     ...computeFromStore(['showCountryDetails']),
     ...mapGetters(['scale']),
     keyWidth () {
-      return 4 * this.colors.length
+      return 200
     },
     size () {
       const { width, height } = this
@@ -173,8 +174,8 @@ export default {
   .key {
     position: absolute;
     // z-index: 100;
-    bottom: $spacing;
-    left: $spacing;
+    bottom: $spacing / 2;
+    left: $spacing / 2;
     pointer-events: none;
     overflow: visible;
     // background: $color-blue;
