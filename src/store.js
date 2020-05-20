@@ -33,7 +33,7 @@ export default new Vuex.Store({
     impactModels,
     climateModel: climateModels[0],
     climateModels,
-    temperature: temperatures[0],
+    temperature: temperatures[temperatures.length - 1],
     temperatures,
     files: grids.files,
     variable1: 'tas',
