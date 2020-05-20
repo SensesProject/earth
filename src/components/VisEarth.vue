@@ -151,7 +151,7 @@ export default {
       this.mouseDown = true
     },
     onMouseUp (event) {
-      if (!this.mouseMoved) this.showCountryDetails = this.country
+      // if (!this.mouseMoved) this.showCountryDetails = this.country
       this.mouseDown = false
       this.mouseMoved = false
     }
