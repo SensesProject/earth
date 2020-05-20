@@ -42,7 +42,8 @@ indicators.forEach(i => {
   allFiles.push(...selectedFiles.map(f => {
     return {
       ...f,
-      name: `${f.new}.txt`
+      name: `${f.new}.txt`,
+      scale: { domain: s.domain(), range }
     }
   }))
   selectedFiles.forEach(f => {

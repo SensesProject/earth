@@ -72,8 +72,8 @@ export default new Vuex.Store({
       // x === 'years' ? { domain: null, name: 'Year', unit: '', variable: 'years' } : variables.find(v => v.variable === x)
     },
     scale: state => {
-      const { scales, indicator } = state
-      return scales[indicator]
+      const { files, indicator, impactModel, climateModel } = state
+      return files.find(f => f.indicator === indicator && f.cm === climateModel && f.im === impactModel).scale
     }
   },
   mutations: {
