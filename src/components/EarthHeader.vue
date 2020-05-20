@@ -1,18 +1,34 @@
 <template>
   <header class="EarthHeader">
     <SensesMenu darkmode transparent id="senses-earth" :logo="{sx:2, sy:0, mx:1, my:0, lx:0, ly:0}"/>
-    <h2>
-      <OptionSelectInline v-model="indicator" :options="indicators" class="option"/>
-      <OptionSelectInline v-model="climateModel" :options="climateModels" class="option"/>
-      <OptionSelectInline v-model="impactModel" :options="impactModels" class="option"/>
-      <OptionSelectInline v-model="temperature" :options="temperatures" class="option"/>
-    </h2>
+    <div class="wide">
+      <h2 class="tiny">
+        <div class="option-line">
+          Land area exposed to
+          <SensesSelect v-model="indicator" :options="indicators" :width="150" class="invert option"/>
+        </div>
+        <div class="option-line">
+          at
+          <SensesRadio v-model="temperature" :options="temperatureOptions" class="invert option"/>
+          °C global warming
+        </div>
+        <div class="option-line">
+          in climate model
+          <SensesSelect v-model="climateModel" :options="climateModels" class="invert option"/>
+        </div>
+        <div class="option-line">
+          & impact model
+          <SensesSelect v-model="impactModel" :options="impactModels" class="invert option"/>
+        </div>
+      </h2>
+    </div>
   </header>
 </template>
 
 <script>
 import SensesMenu from 'library/src/components/SensesMenu.vue'
-import OptionSelectInline from './OptionSelectInline.vue'
+import SensesSelect from 'library/src/components/SensesSelect.vue'
+import SensesRadio from 'library/src/components/SensesRadio.vue'
 import computeFromStore from '../assets/js/computeFromStore.js'
 import { mapGetters } from 'vuex'
 import { format } from 'd3-format'
@@ -20,7 +36,8 @@ export default {
   name: 'EarthHeader',
   components: {
     SensesMenu,
-    OptionSelectInline
+    SensesSelect,
+    SensesRadio
   },
   data () {
     return {
@@ -28,7 +45,15 @@ export default {
   },
   computed: {
     ...computeFromStore(['mode', 'indicator', 'indicators', 'climateModel', 'climateModels', 'temperatures', 'impactModel', 'temperature', 'showOptions', 'compareValue', 'compareOption']),
-    ...mapGetters(['globalWarmingLevels', 'impactModels'])
+    ...mapGetters(['globalWarmingLevels', 'impactModels']),
+    temperatureOptions () {
+      const { temperatures } = this
+      return temperatures.map(value => ({
+        value,
+        label: `${+value === 0 ? '±' : '+'}${+value}`
+        // label: `${+value === 0 ? '±' : '+'}${value}°C`
+      }))
+    }
   },
   methods: {
     formatGlobalWarmingLevel (value) {
@@ -43,7 +68,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import "../assets/style/variables";
+@import "library/src/style/global.scss";
 
 .EarthHeader {
   position: absolute;
@@ -68,23 +93,33 @@ export default {
     font-weight: $font-weight-regular;
     margin-right: $spacing;
     color: $color-white;
+    display: flex;
+    flex-direction: column;
+
+    .option-line {
+      display: flex;
+      align-items: center;
+      margin-bottom: 4px;
+      white-space: nowrap;
+    }
 
     .option {
       pointer-events: all;
       cursor: default;
-      font-weight: $font-weight-bold;
+      margin: 0 $spacing * 0.25;
+      // font-weight: $font-weight-bold;
       &.white {
         color: $color-white;
         // background: linear-gradient(0deg,transparent,transparent 2px,$color-white 2px,$color-white 3.5px,transparent 0);
       }
-      &.violet {
-        color: $color-scale-violet;
-        // background: linear-gradient(0deg,transparent,transparent 2px,$color-scale-violet 2px,$color-scale-violet 3.5px,transparent 0);
-      }
-      &.green {
-        color: $color-scale-green;
-        // background: linear-gradient(0deg,transparent,transparent 2px,$color-scale-green 2px,$color-scale-green 3.5px,transparent 0);
-      }
+      // &.violet {
+      //   color: $color-scale-violet;
+      //   // background: linear-gradient(0deg,transparent,transparent 2px,$color-scale-violet 2px,$color-scale-violet 3.5px,transparent 0);
+      // }
+      // &.green {
+      //   color: $color-scale-green;
+      //   // background: linear-gradient(0deg,transparent,transparent 2px,$color-scale-green 2px,$color-scale-green 3.5px,transparent 0);
+      // }
       // text-transform: uppercase;
     }
 
@@ -99,6 +134,55 @@ export default {
       cursor: pointer;
       pointer-events: all;
     }
+  }
+}
+</style>
+<style lang="scss">
+@import "library/src/style/global.scss";
+.senses-select .trigger button.highlight {
+  background: $color-neon;
+  color: $color-white;
+
+  svg g path {
+    stroke: $color-white;
+  }
+
+  &:hover {
+    background: getColor(neon, 40);
+    svg g path {
+      stroke: $color-white;
+    }
+  }
+}
+div.senses-tooltip-select {
+  box-shadow: none;
+
+  .tooltip-inner {
+    background: getColor(neon, 20);
+    color: $color-white;
+    min-width: 80px;
+
+    .option {
+      &:hover {
+        background: getColor(neon, 40);
+        color: $color-white;
+      }
+      &.active:hover {
+        background: getColor(neon, 50);
+        color: $color-white;
+      }
+    }
+  }
+
+  .tooltip-arrow {
+    border-color: getColor(neon, 20);
+  }
+}
+.senses-radio .radio label {
+  margin-bottom: 0 !important;
+  input + span {
+    padding: 2px 0.125rem !important;
+    line-height: inherit !important;
   }
 }
 </style>
