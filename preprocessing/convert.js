@@ -16,8 +16,10 @@ const scales = {}
 indicators.forEach(i => {
   const files = fs.readdirSync(`./data/ISIpedia/${i}-abs`)
   const fileComponents = files.map(file => file.match(/^all_(.*)\.csv/)[1].split('_'))
-  const cms = [...new Set(fileComponents.map(c => c[0]))] // .filter((c, i) => i < 1)
-  const ims = [...new Set(fileComponents.map(c => c[1]))] // .filter((c, i) => c === 'median')
+  let cms = [...new Set(fileComponents.map(c => c[0]))] // .filter((c, i) => i < 1)
+  if (cms.indexOf('median') !== -1) { cms = ['median', ...cms.filter(c => c !== 'median')] }
+  let ims = [...new Set(fileComponents.map(c => c[1]))].filter((c, i, all) => all.length > 2 || c !== 'median')
+  if (ims.indexOf('median') !== -1) { ims = ['median', ...ims.filter(c => c !== 'median')] }
   const wls = [...new Set(fileComponents.map(c => c[2]))].filter((c, i) => i < 5 && c !== '0.5')
   const maxValues = []
   const minValues = []
