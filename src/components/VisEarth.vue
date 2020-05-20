@@ -190,7 +190,6 @@ export default {
     text {
       fill: $color-white;
       font-family: $font-mono;
-      font-size: 0.7em;
     }
 
     .ticks {

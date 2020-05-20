@@ -21,6 +21,16 @@
           <SensesSelect v-if="impactModels.length > 1" v-model="impactModel" :options="impactModels" class="invert option"/>
           <span v-else class="highlight no-hover option" >{{ impactModels[0] }}</span>
         </div>
+        <!-- <div class="option-line narrow">
+          <span class="tiny">
+            Advanced Options (coming soon)
+          </span>
+        </div> -->
+        <div class="option-line narrow more mono" @click="showOptions = true">
+          <span class="tiny">
+            Learn more
+          </span>
+        </div>
       </h2>
     </div>
   </header>
@@ -102,6 +112,17 @@ export default {
       align-items: center;
       margin-bottom: 4px;
       white-space: nowrap;
+    }
+
+    .more {
+      pointer-events: all;
+      text-decoration: underline;
+      cursor: pointer;
+      margin-top: $spacing / 8;
+      // transition: color $transition;
+      &:hover {
+        color: getColor(neon, 80)
+      }
     }
 
     .option {
