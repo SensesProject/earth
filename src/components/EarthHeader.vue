@@ -18,7 +18,8 @@
         </div>
         <div class="option-line">
           & impact model
-          <SensesSelect v-model="impactModel" :options="impactModels" class="invert option"/>
+          <SensesSelect v-if="impactModels.length > 1" v-model="impactModel" :options="impactModels" class="invert option"/>
+          <span v-else class="highlight no-hover option" >{{ impactModels[0] }}</span>
         </div>
       </h2>
     </div>
@@ -121,6 +122,12 @@ export default {
       //   // background: linear-gradient(0deg,transparent,transparent 2px,$color-scale-green 2px,$color-scale-green 3.5px,transparent 0);
       // }
       // text-transform: uppercase;
+      &.highlight.no-hover {
+        background: $color-neon;
+        color: $color-white;
+        padding-top: 1px;
+        padding-bottom: 1px;
+      }
     }
 
     .button {

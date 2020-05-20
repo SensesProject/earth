@@ -14,6 +14,7 @@
 </template>
 
 <script>
+
 import 'vue-resize/dist/vue-resize.css'
 import VisEarth from './components/VisEarth.vue'
 import EarthOptions from './components/EarthOptions.vue'
