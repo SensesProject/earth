@@ -5,7 +5,7 @@
       <h2 class="tiny">
         <div class="option-line">
           Land area exposed to
-          <SensesSelect v-model="indicator" :options="indicators" :width="150" class="invert option"/>
+          <SensesSelect v-model="indicator" :options="indicators" class="invert option"/>
         </div>
         <div class="option-line">
           at
