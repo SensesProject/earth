@@ -53,7 +53,7 @@ export default {
     init () {
       const { size, container, highlight, countries } = this
       drawThreeGeo.drawThreeGeo(world, size + 0.5, 'sphere', {
-        color: 0x3A3A4A
+        color: 0x292D50
       }, container)
 
       requestAnimationFrame(highlight)

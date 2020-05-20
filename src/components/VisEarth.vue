@@ -104,10 +104,11 @@ export default {
     },
     colors () {
       const { scale } = this
-      const color0 = '#070019'
-      const color1 = '#ddd6ff'
+      const color0 = '#0A0924'
+      const color1 = '#C32C62'
+      const color2 = '#FFE6B5'
 
-      return chroma.scale([color0, color1]).mode('lab').colors(scale.range[1], 'rgb')
+      return chroma.scale([color0, color1, color2]).mode('lch').colors(scale.range[1], 'rgb')
     }
   },
   watch: {

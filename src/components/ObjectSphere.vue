@@ -48,7 +48,13 @@ export default {
     },
     getTexture () {
       const { imgData } = this
-      if (imgData == null) return new DataTexture(new Uint8Array(3), 1, 1, RGBFormat)
+      if (imgData == null) {
+        const color = new Uint8Array(3)
+        color[0] = 10
+        color[1] = 9
+        color[2] = 36
+        return new DataTexture(color, 1, 1, RGBFormat)
+      }
       return new DataTexture(imgData.data, imgData.width, imgData.height, RGBFormat)
     }
   },

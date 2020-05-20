@@ -72,7 +72,7 @@ export default {
     dirLight.position.set(1, 5, 4)
     scene.add(dirLight)
     scene.add(container)
-    scene.background = new Color(0x202022)
+    scene.background = new Color(0x020212)
     $refs.three.appendChild(renderer.domElement)
 
     this.controls = new OrbitControls(this.camera, renderer.domElement)
