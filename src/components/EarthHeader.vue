@@ -90,7 +90,7 @@ export default {
   }
 
   h2 {
-    padding: $spacing / 4 $spacing / 2 $spacing / 4;
+    padding: 0 $spacing / 2;
     font-weight: $font-weight-regular;
     margin-right: $spacing;
     color: $color-white;
@@ -187,6 +187,10 @@ div.senses-tooltip-select {
 }
 .senses-radio .radio label {
   margin-bottom: 0 !important;
+  color: getColor(neon, 60) !important;
+  &:hover {
+    color: getColor(neon, 80) !important;
+  }
   input + span {
     padding: 2px 0.125rem !important;
     line-height: inherit !important;
