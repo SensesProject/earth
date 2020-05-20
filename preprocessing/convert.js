@@ -18,7 +18,7 @@ indicators.forEach(i => {
   const fileComponents = files.map(file => file.match(/^all_(.*)\.csv/)[1].split('_'))
   const cms = [...new Set(fileComponents.map(c => c[0]))] // .filter((c, i) => i < 1)
   const ims = [...new Set(fileComponents.map(c => c[1]))] // .filter((c, i) => c === 'median')
-  const wls = [...new Set(fileComponents.map(c => c[2]))].filter((c, i) => i < 5)
+  const wls = [...new Set(fileComponents.map(c => c[2]))].filter((c, i) => i < 5 && c !== '0.5')
   const maxValues = []
   const minValues = []
   console.log(i, cms, ims, wls)
