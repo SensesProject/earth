@@ -3,7 +3,7 @@ $color-white: #FFF;
 $color-background: darken(#071A29, 4);
 
 $color-violet: #B035C9;
-$color-green: #9BE8C7;
+$color-green: $color-neon;
 $color-yellow: #FFC740;
 $color-blue: #635EFF;
 $color-cyan: #00AAFF;
@@ -16,4 +16,4 @@ $color-scale-green: #54E8A9;
 $color-scale-white: #FEF4DD;
 
 $color-default: $color-white;
-$color-accent: $color-green;
+$color-accent: $color-neon;

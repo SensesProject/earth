@@ -190,7 +190,8 @@ export default {
   }
   .tooltip {
     position: absolute;
-    background: $color-green;
+    background: $color-neon;
+    color: $color-white;
     transform: translate(-50%, -100%);
     pointer-events: none;
     padding: $spacing / 8 $spacing / 4;

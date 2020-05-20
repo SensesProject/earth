@@ -97,10 +97,18 @@ export default {
       }
       const feature = world.features.find(f => f.properties.ADM0_A3 === country)
       drawThreeGeo.drawThreeGeo(feature, startSize + 0.5, 'sphere', {
-        color: 0x9BE8C7,
+        color: 0x5263ff,
         linewidth: 1
       }, countries)
       const centroid = centroidFromPolygon(feature)
+      if (country === 'USA') {
+        centroid.geometry.coordinates[0] = -100
+        centroid.geometry.coordinates[1] = 40
+      }
+      if (country === 'FRA') {
+        centroid.geometry.coordinates[0] = 2
+        centroid.geometry.coordinates[1] = 47
+      }
       const screenPosition = toScreenPosition(centroid.geometry.coordinates)
       this.$emit('highlight', { ...screenPosition, code: feature.properties.ADM0_A3, name: feature.properties.ADMIN })
     },
