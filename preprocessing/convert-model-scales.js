@@ -67,7 +67,7 @@ indicators.forEach(i => {
           scale: { domain: s.domain(), range }
         }
       }))
-      console.log(i, s.domain(), domain)
+      console.log(i, s.domain(), domain, [Math.min(...minValues), Math.max(...maxValues)])
       selectedFiles.forEach(f => {
         const abs = fs.readFileSync(`./data/ISIpedia/${i}-abs/all_${f.name}.csv`, 'utf8').trim().split('\n').map(line => line.split(','))
         const height = abs.length
