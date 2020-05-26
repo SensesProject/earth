@@ -158,7 +158,7 @@ export default new Vuex.Store({
         commit('set', { prop: 'impactModel', value: file.im })
       }
 
-      fetch(`./temp/${file.name}`)
+      fetch(`./grids/${file.name}`)
         .then(r => r.text())
         .then(d => {
           // try {

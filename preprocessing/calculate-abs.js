@@ -5,8 +5,8 @@ const rimraf = require('rimraf')
 // clean up
 rimraf.sync('./data/out')
 fs.mkdirSync('./data/out')
-rimraf.sync('../public/temp')
-fs.mkdirSync('../public/temp')
+rimraf.sync('../public/grids')
+fs.mkdirSync('../public/grids')
 
 const indicators = ['crop-failure', 'drought', 'heatwave', 'river-flood', 'tropical-cyclone', 'wildfire']
 // const indicators = ['wildfire']
@@ -87,8 +87,8 @@ indicators.forEach(i => {
 
     // console.log(grid)
 
-    // fs.writeFileSync(`../public/temp/${f.new}.txt`, pako.deflate(JSON.stringify({ grid, mapping: [0, 10] }), { to: 'string' }))
-    // zip.file(`../public/temp/${f.new}.txt`, grid)
+    // fs.writeFileSync(`../public/grids/${f.new}.txt`, pako.deflate(JSON.stringify({ grid, mapping: [0, 10] }), { to: 'string' }))
+    // zip.file(`../public/grids/${f.new}.txt`, grid)
   })
   // console.log(Math.max(...issues))
   issueFiles.push(...new Set(issues))

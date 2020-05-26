@@ -6,8 +6,8 @@ const pako = require('pako')
 // clean up
 rimraf.sync('./data/out')
 fs.mkdirSync('./data/out')
-rimraf.sync('../public/temp')
-fs.mkdirSync('../public/temp')
+rimraf.sync('../public/grids')
+fs.mkdirSync('../public/grids')
 
 const indicators = ['crop-failure', 'drought', 'heatwave', 'river-flood', 'tropical-cyclone', 'wildfire']
 // const indicators = ['wildfire']
@@ -88,7 +88,7 @@ indicators.forEach(i => {
       }
       data.push(row.join(''))
     }
-    fs.writeFileSync(`../public/temp/${f.new}.txt`, pako.deflate(data.join('\n'), { to: 'string' }))
+    fs.writeFileSync(`../public/grids/${f.new}.txt`, pako.deflate(data.join('\n'), { to: 'string' }))
   })
 })
 fs.writeFileSync(`../src/assets/data/grids.json`, JSON.stringify({
