@@ -27,7 +27,7 @@ export default new Vuex.Store({
     showCountryDetails: null,
     modes: ['explore', 'indicator', 'global-warming-level', 'climate-model', 'impact-model'],
     variable: null,
-    indicator: indicators[0],
+    indicator: 'heatwave',
     indicators,
     impactModel: impactModels[0],
     impactModels,
