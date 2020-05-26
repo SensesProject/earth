@@ -5,7 +5,7 @@
       <h2 class="tiny">
         <div class="option-line">
           Land area exposed to
-          <SensesSelect v-model="indicator" :options="indicators" class="invert option"/>
+          <SensesSelect v-model="indicator" :options="indicatorOptions" class="invert option"/>
         </div>
         <div class="option-line">
           at
@@ -64,6 +64,14 @@ export default {
         label: `${+value === 0 ? '±' : '+'}${+value}`
         // label: `${+value === 0 ? '±' : '+'}${value}°C`
       }))
+    },
+    indicatorOptions () {
+      return this.indicators.map(i => {
+        return {
+          label: i.replace(/-/g, ' '),
+          value: i
+        }
+      })
     }
   },
   methods: {
