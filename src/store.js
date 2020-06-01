@@ -73,6 +73,7 @@ export default new Vuex.Store({
     },
     scale: state => {
       const { files, indicator, impactModel, climateModel } = state
+      if (files.find(f => f.indicator === indicator && f.cm === climateModel && f.im === impactModel) == null) return { range: [0, 1] }
       return files.find(f => f.indicator === indicator && f.cm === climateModel && f.im === impactModel).scale
     }
   },
