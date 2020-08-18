@@ -3,6 +3,7 @@
     <div class="inner">
       <h3>SENSES Earth</h3>
       <p>This visualisation shows the land areas exposed to different types of extreme events under global warming, as projected by a variety of impact models.</p>
+
       <h3>Impact models</h3>
       <p>Impact models simulate the most important biophysical processes of particular Earth subsystems and use climate data, among other data, as their input. For instance, in order to model the hydrology on the Earth's surface, a hydrological model uses quantities such as precipitation, temperature, radiation and so on as input. Then the model lets the precipitation trickle into the soil or evaporate from the surface, plants pump soil water back into the atmosphere, water in rivers is routed across continents etc. All the impact models here were run under the umbrella of the ISIMIP project. Please refer to www.isimip.org for further information on the project or the individual impact models.</p>
 
@@ -33,38 +34,20 @@
 
       <h3>References</h3>
       <ul>
-      <li><a href="https://doi.org/10.1073/pnas.1301293110">Emanuel, K. (2013). Downscaling CMIP5 climate models shows increased tropical cyclone activity over the 21st century. Proceedings of the National Academy of Sciences, 110 (30), 12219-12224.</a></li>
-
-      <li><a href="https://doi.org/10.5194/essd-10-185-2018">Geiger, T., Frieler, K., & Bresch, D. N. (2018). A global historical data set of tropical cyclone exposure (TCE-DAT). Earth System Science Data, 10 (1), 185–194.</a></li>
-
-      <li><a href="https://books.google.com/books?id=2uH5ygAACAAJ">Masterton, J. M., & Richardson, F. A.  (1979).  Humidex: A Method of Quantifying Human Discomfort Due to Excessive Heat and Humidity.  Environment Canada, Atmospheric Environment.</a></li>
-
-      <li><a href="https://doi.org/10.1088/1748-9326/10/12/124003">Russo, S., Sillmann, J., & Fischer, E. M. (2015). Top ten european heatwaves since 1950 and their occurrence in the coming decades. Environmental Research Letters, 10 (12), 124003.</a></li>
-
-      <li><a href="https://doi.org/10.1038/s41598-017-07536-7">Russo, S., Sillmann, J., & Sterl, A. (2017). Humid heat waves at different warming levels. Scientific Reports, 7 (1), 7477. </a></li>
-
-      <li><a href="https://doi.org/10.1029/2010WR009726">Yamazaki, D., Kanae, S., Kim, H., & Oki, T. (2011). A physically based description of floodplain inundation dynamics in a global river routing model. Water Resources Research, 47 (4).</a></li>
+        <li><a href="https://doi.org/10.1073/pnas.1301293110">Emanuel, K. (2013). Downscaling CMIP5 climate models shows increased tropical cyclone activity over the 21st century. Proceedings of the National Academy of Sciences, 110 (30), 12219-12224.</a></li>
+        <li><a href="https://doi.org/10.5194/essd-10-185-2018">Geiger, T., Frieler, K., & Bresch, D. N. (2018). A global historical data set of tropical cyclone exposure (TCE-DAT). Earth System Science Data, 10 (1), 185–194.</a></li>
+        <li><a href="https://books.google.com/books?id=2uH5ygAACAAJ">Masterton, J. M., & Richardson, F. A.  (1979).  Humidex: A Method of Quantifying Human Discomfort Due to Excessive Heat and Humidity.  Environment Canada, Atmospheric Environment.</a></li>
+        <li><a href="https://doi.org/10.1088/1748-9326/10/12/124003">Russo, S., Sillmann, J., & Fischer, E. M. (2015). Top ten european heatwaves since 1950 and their occurrence in the coming decades. Environmental Research Letters, 10 (12), 124003.</a></li>
+        <li><a href="https://doi.org/10.1038/s41598-017-07536-7">Russo, S., Sillmann, J., & Sterl, A. (2017). Humid heat waves at different warming levels. Scientific Reports, 7 (1), 7477. </a></li>
+        <li><a href="https://doi.org/10.1029/2010WR009726">Yamazaki, D., Kanae, S., Kim, H., & Oki, T. (2011). A physically based description of floodplain inundation dynamics in a global river routing model. Water Resources Research, 47 (4).</a></li>
       </ul>
-</div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'EarthOptions',
-  data () {
-    return {}
-  },
-  methods: {
-    toggleCompare () {
-      this.comparing = !this.comparing
-      this.setComparison(null, null)
-    },
-    setComparison (value, option) {
-      this.compareOption = option
-      this.compareValue = value
-    }
-  }
+  name: 'overlay-about'
 }
 </script>
 
@@ -77,15 +60,11 @@ export default {
   overflow: auto;
   padding: $spacing * 2 $spacing / 2 $spacing;
 
-  // display: flex;
-  // justify-content: center;
   width: 100%;
+  max-width: 720px;
 
   .inner {
     width: 100%;
-    max-width: 720px;
-    // padding: 0 0 $spacing;
-    margin: auto;
   }
 
   p {
