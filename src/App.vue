@@ -5,11 +5,11 @@
     <EarthHeader/>
 
     <transition name="fade">
-      <div class="overlay" is-overlay v-if="showOptions || showCountryDetails" @click="hideOverlay($event)">
-        <div v-if="showOptions" class="close button"  is-overlay @click="hideOverlay(true)">
+      <div class="overlay" is-overlay v-if="showAbout || showCountryDetails" @click="hideOverlay($event)">
+        <div v-if="showAbout" class="close button"  is-overlay @click="hideOverlay(true)">
           <SensesFalafel  color="white" symbol="close"/>
         </div>
-        <OverlayAbout v-if="showOptions"/>
+        <OverlayAbout v-if="showAbout"/>
         <CountryDetails v-if="showCountryDetails"/>
       </div>
     </transition>
@@ -42,7 +42,7 @@ export default {
     }
   },
   computed: {
-    ...computeFromStore(['showOptions', 'showCountryDetails'])
+    ...computeFromStore(['showAbout', 'showCountryDetails'])
   },
   methods: {
     setClientSize () {
@@ -50,13 +50,13 @@ export default {
     },
     hideOverlay (e) {
       if (e === true || e.target.getAttribute('is-overlay') != null) {
-        this.showOptions = false
+        this.showAbout = false
         this.showCountryDetails = null
       }
     }
   },
   mounted () {
-    this.$store.dispatch('setDefaults')
+    this.$store.dispatch('init')
   }
 }
 </script>

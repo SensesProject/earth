@@ -9,7 +9,7 @@
         </div>
         <div class="option-line">
           at
-          <SensesRadio v-model="temperature" :options="temperatureOptions" class="invert option"/>
+          <SensesRadio v-model="warmingLevel" :options="warmingLevelOptions" class="invert option"/>
           °C global warming
         </div>
         <div class="option-line">
@@ -26,7 +26,7 @@
             Advanced Options (coming soon)
           </span>
         </div> -->
-        <div class="option-line narrow more mono" @click="showOptions = true">
+        <div class="option-line narrow more mono" @click="showAbout = true">
           <span class="tiny">
             Learn more
           </span>
@@ -55,11 +55,11 @@ export default {
     }
   },
   computed: {
-    ...computeFromStore(['mode', 'indicator', 'indicators', 'climateModel', 'climateModels', 'temperatures', 'impactModel', 'temperature', 'showOptions', 'compareValue', 'compareOption']),
-    ...mapGetters(['globalWarmingLevels', 'impactModels']),
-    temperatureOptions () {
-      const { temperatures } = this
-      return temperatures.map(value => ({
+    ...computeFromStore(['mode', 'indicator', 'indicators', 'climateModel', 'climateModels', 'warmingLevels', 'impactModel', 'warmingLevel', 'showAbout', 'compareValue', 'compareOption']),
+    ...mapGetters(['impactModels']),
+    warmingLevelOptions () {
+      const { warmingLevels } = this
+      return warmingLevels.map(value => ({
         value,
         label: `${+value === 0 ? '±' : '+'}${+value}`
         // label: `${+value === 0 ? '±' : '+'}${value}°C`
