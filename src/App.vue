@@ -9,7 +9,7 @@
         <div v-if="showOptions" class="close button"  is-overlay @click="hideOverlay(true)">
           <SensesFalafel  color="white" symbol="close"/>
         </div>
-        <EarthOptions v-if="showOptions"/>
+        <OverlayAbout v-if="showOptions"/>
         <CountryDetails v-if="showCountryDetails"/>
       </div>
     </transition>
@@ -21,7 +21,7 @@
 import 'vue-resize/dist/vue-resize.css'
 import SensesFalafel from 'library/src/components/SensesFalafel.vue'
 import VisEarth from './components/VisEarth.vue'
-import EarthOptions from './components/EarthOptions.vue'
+import OverlayAbout from './components/OverlayAbout.vue'
 import CountryDetails from './components/CountryDetails.vue'
 import EarthHeader from './components/EarthHeader.vue'
 import { ResizeObserver } from 'vue-resize'
@@ -31,7 +31,7 @@ export default {
   name: 'app',
   components: {
     VisEarth,
-    EarthOptions,
+    OverlayAbout,
     CountryDetails,
     EarthHeader,
     ResizeObserver,
