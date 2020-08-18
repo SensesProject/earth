@@ -1,33 +1,26 @@
 <template>
-  <div class="VisEarth"
+  <div class="VisEarth" ref="earth"
     @mousedown="onMouseDown"
     @mousemove="onMouseMove"
     @mouseup="onMouseUp">
+    <ResizeObserver @notify="setClientSize"/>
     <ThreeScene :width="width" :height="height">
       <ObjectSphere :size="size / 2" :img-data="imgData"/>
       <ObjectGeo :size="size / 2" @highlight="setHighlight" :interactive="!mouseDown"/>
     </ThreeScene>
     <svg class="key" :width="keyWidth" :height="64">
-
       <g transform="translate(0 18)">
-        <g v-if="compareValue == null">
-          <rect v-for="(c1, x) in colors" :key="`c${x}`" :width="keyWidth / colors.length + 0.4" height="24" :x="x * (keyWidth / colors.length) - 0.2" :y="0" :fill="`rgb(${c1[0]},${c1[1]},${c1[2]})`"/>
-        </g>
-        <g v-else>
-          <rect v-for="(c1, x) in colors" :key="`cg${x}`" width="15" height="8" :x="x * 15" :y="16" :fill="`rgb(${colors[0][x][0]},${colors[0][x][1]},${colors[0][x][2]})`"/>
-          <rect v-for="(c1, x) in colors" :key="`cw${x}`" width="15" height="8" :x="x * 15" :y="8" :fill="`rgb(${c1[x][0]},${c1[x][1]},${c1[x][2]})`"/>
-          <rect v-for="(c1, x) in colors" :key="`cv${x}`" width="15" height="8" :x="x * 15" :y="0" :fill="`rgb(${c1[0][0]},${c1[0][1]},${c1[0][2]})`"/>
-        </g>
+        <rect v-for="(c1, x) in colors" :key="`c${x}`" :width="keyWidth / colors.length + 0.4" height="24" :x="x * (keyWidth / colors.length) - 0.2" :y="0" :fill="`rgb(${c1[0]},${c1[1]},${c1[2]})`"/>
       </g>
       <text y="10">Land area exposed</text>
       <g class="ticks">
         <g v-for="(t, i) in ticks" :key="`t-${i}`">
           <rect y="18" :x="t.x" width="1" height="32"/>
-          <text y="64" :x="t.x" text-anchor="middle">{{ t.value }}%</text>
+          <text y="64" :x="t.x">{{ t.value }}%</text>
         </g>
       </g>
     </svg>
-    <div v-if="country && !mouseMoved" class="tooltip" :style="{top: `${country.y}px`, left: `${country.x}px`}">
+    <div v-if="country && !mouseMoved" class="tooltip tiny" :style="{top: `${country.y}px`, left: `${country.x}px`}">
       {{ country.name }}
     </div>
   </div>
@@ -37,10 +30,9 @@
 import ThreeScene from '@/components/ThreeScene.vue'
 import ObjectSphere from '@/components/ObjectSphere.vue'
 import ObjectGeo from '@/components/ObjectGeo.vue'
-
+import { ResizeObserver } from 'vue-resize'
 import { scaleLinear } from 'd3-scale'
 
-import { mapGetters } from 'vuex'
 import chroma from 'chroma-js'
 import worker from 'workerize-loader!../assets/js/mapRenderer'
 import computeFromStore from '../assets/js/computeFromStore.js'
@@ -50,56 +42,27 @@ export default {
   components: {
     ThreeScene,
     ObjectSphere,
-    ObjectGeo
+    ObjectGeo,
+    ResizeObserver
   },
+  props: ['grid', 'scale'],
   data () {
     return {
       workerInstance: null,
       mouseMoved: false,
       imgData: null,
       country: null,
-      mouseDown: false
+      mouseDown: false,
+      keyWidth: 200,
+      width: 768,
+      height: 768
     }
   },
   computed: {
-    ...computeFromStore(['showCountryDetails']),
-    ...mapGetters(['scale']),
-    keyWidth () {
-      return 200
-    },
+    // ...computeFromStore(['showCountryDetails']),
     size () {
       const { width, height } = this
       return Math.min(width, height)
-    },
-    grid () {
-      return this.$store.state.map
-    },
-    gridComparison () {
-      return this.$store.state.mapComparison
-    },
-    compareValue   () {
-      return this.$store.state.compareValue
-    },
-    width () {
-      return this.$store.state.width
-    },
-    height () {
-      return this.$store.state.height
-    },
-    grids () {
-      return this.$store.state.grids
-    },
-    period1 () {
-      return this.$store.state.period1
-    },
-    range1 () {
-      return this.$store.state.range1
-    },
-    domain1 () {
-      return this.$store.state.domain1
-    },
-    temperature () {
-      return this.$store.state.temperature
     },
     colors () {
       const { scale } = this
@@ -123,34 +86,19 @@ export default {
   watch: {
     grid () {
       this.updateCanvas()
-    },
-    gridComparison () {
-      this.updateCanvas()
-    },
-    domain1 () {
-      this.updateCanvas()
     }
   },
-  mounted () {
-  },
   methods: {
-    setHighlight (country) {
-      this.country = country
-    },
     updateCanvas () {
-      const { temperature, range1, domain1, colors, compareValue, grid, gridComparison } = this
-      // grid.forEach(l => {
-      //   l.forEach(v => {
-      //     if (v !== 0) console.log(v)
-      //   })
-      // })
-      // console.log(colors)
+      const { colors, grid } = this
       if (this.workerInstance != null) this.workerInstance.terminate()
       this.workerInstance = worker()
-      this.workerInstance.renderMap({ grid, gridComparison, comparing: compareValue != null, temperature, range1, domain1, colors }).then(cData => {
-        this.$store.dispatch('addGrid', { temperature, grid: cData })
+      this.workerInstance.renderMap({ grid, colors }).then(cData => {
         this.imgData = cData
       })
+    },
+    setHighlight (country) {
+      this.country = country
     },
     onMouseMove (event) {
       if (this.mouseDown) this.mouseMoved = true
@@ -160,9 +108,14 @@ export default {
       this.mouseDown = true
     },
     onMouseUp (event) {
-      // if (!this.mouseMoved) this.showCountryDetails = this.country
+      if (!this.mouseMoved) this.$emit('details', this.country)
       this.mouseDown = false
       this.mouseMoved = false
+    },
+    setClientSize () {
+      const rect = this.$refs.earth.getBoundingClientRect()
+      this.width = rect.width
+      this.height = rect.height
     }
   }
 }
@@ -172,20 +125,18 @@ export default {
 @import "../assets/style/variables";
 .VisEarth {
   position: absolute;
-  // cursor: all-scroll;
-
+  width: 100%;
+  height: 100%;
   .pointer {
     cursor: pointer;
   }
 
   .key {
     position: absolute;
-    // z-index: 100;
     bottom: $spacing / 2;
     left: $spacing / 2;
     pointer-events: none;
     overflow: visible;
-    // background: $color-blue;
 
     text {
       fill: $color-white;
@@ -194,6 +145,7 @@ export default {
 
     .ticks {
       fill: $color-white;
+      text-anchor: middle;
     }
   }
   .tooltip {
@@ -203,8 +155,7 @@ export default {
     transform: translate(-50%, -100%);
     pointer-events: none;
     padding: $spacing / 8 $spacing / 4;
-    font-size: 0.8em;
-    border-radius: 2px;
+    border-radius: $border-radius;
   }
 }
 </style>

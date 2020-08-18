@@ -1,7 +1,6 @@
 <template>
   <div class="app">
-    <ResizeObserver @notify="setClientSize"/>
-    <VisEarth/>
+    <VisEarth :grid="grid" :scale="scale" @details="showDetails($event)"/>
     <EarthHeader/>
     <transition name="fade">
       <div class="overlay" is-overlay v-if="showAbout || showCountryDetails" @click="hideOverlay($event)">
@@ -22,7 +21,7 @@ import VisEarth from './components/VisEarth.vue'
 import OverlayAbout from './components/OverlayAbout.vue'
 import CountryDetails from './components/CountryDetails.vue'
 import EarthHeader from './components/EarthHeader.vue'
-import { ResizeObserver } from 'vue-resize'
+import { mapGetters, mapState } from 'vuex'
 import computeFromStore from './assets/js/computeFromStore.js'
 
 export default {
@@ -32,7 +31,6 @@ export default {
     OverlayAbout,
     CountryDetails,
     EarthHeader,
-    ResizeObserver,
     SensesFalafel
   },
   data () {
@@ -40,17 +38,19 @@ export default {
     }
   },
   computed: {
+    ...mapState(['grid']),
+    ...mapGetters(['scale']),
     ...computeFromStore(['showAbout', 'showCountryDetails'])
   },
   methods: {
-    setClientSize () {
-      this.$store.dispatch('updateSize')
-    },
     hideOverlay (e) {
       if (e === true || e.target.getAttribute('is-overlay') != null) {
         this.showAbout = false
         this.showCountryDetails = null
       }
+    },
+    showDetails (country) {
+      this.showCountryDetails = country
     }
   },
   mounted () {

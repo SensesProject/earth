@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import fetch from 'unfetch'
-import pako from 'pako'
 import grids from '@/assets/data/grids.json'
 
 const indicators = [...new Set(grids.files.map(f => f.indicator))]
@@ -13,8 +12,6 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    width: window.innerWidth,
-    height: window.innerHeight,
     showAbout: false,
     showCountryDetails: null,
     indicator: 'heatwave',
@@ -27,7 +24,7 @@ export default new Vuex.Store({
     warmingLevels,
     files: grids.files,
     scales: grids.scales,
-    map: null,
+    grid: null,
     title: null
   },
   getters: {
@@ -48,7 +45,7 @@ export default new Vuex.Store({
   },
   actions: {
     init ({ dispatch }, d) {
-      dispatch('updateMap')
+      dispatch('updateGrid')
     },
     update ({ commit, dispatch }, d) {
       commit('set', d)
@@ -57,15 +54,11 @@ export default new Vuex.Store({
         case 'climateModel':
         case 'impactModel':
         case 'warmingLevel':
-          dispatch('updateMap')
+          dispatch('updateGrid')
           break
       }
     },
-    updateSize ({ commit }) {
-      commit('set', { prop: 'width', value: window.innerWidth })
-      commit('set', { prop: 'height', value: window.innerHeight })
-    },
-    updateMap ({ commit, state }) {
+    updateGrid ({ commit, state }) {
       const { files, indicator, climateModel, impactModel, warmingLevel } = state
       let file = files.find(f => f.indicator === indicator && f.cm === climateModel && f.im === impactModel && f.wl === warmingLevel)
       if (file == null) {
@@ -76,24 +69,8 @@ export default new Vuex.Store({
       fetch(`./grids/${file.name}`)
         .then(r => r.text())
         .then(d => {
-          const data = pako.inflate(d, { to: 'string' })
-          const map = []
-          for (let y = 359; y >= 0; y--) {
-            const lat = []
-            const line = data.split('\n')[y]
-            for (let x = 0; x < 720; x++) {
-              lat.push(charcodeToValue(line.charCodeAt(x)))
-            }
-            map.push(lat)
-          }
-          commit('set', { prop: 'map', value: map })
+          commit('set', { prop: 'grid', value: d })
         })
     }
   }
 })
-
-function charcodeToValue (code) {
-  if (code >= 93) code--
-  if (code >= 35) code--
-  return code - 32
-}
