@@ -3,11 +3,10 @@
     <ResizeObserver @notify="setClientSize"/>
     <VisEarth/>
     <EarthHeader/>
-
     <transition name="fade">
       <div class="overlay" is-overlay v-if="showAbout || showCountryDetails" @click="hideOverlay($event)">
-        <div v-if="showAbout" class="close button"  is-overlay @click="hideOverlay(true)">
-          <SensesFalafel  color="white" symbol="close"/>
+        <div class="close button"  is-overlay @click="hideOverlay(true)">
+          <SensesFalafel color="white" symbol="close"/>
         </div>
         <OverlayAbout v-if="showAbout"/>
         <CountryDetails v-if="showCountryDetails"/>
@@ -17,7 +16,6 @@
 </template>
 
 <script>
-
 import 'vue-resize/dist/vue-resize.css'
 import SensesFalafel from 'library/src/components/SensesFalafel.vue'
 import VisEarth from './components/VisEarth.vue'
@@ -86,7 +84,7 @@ export default {
   }
 
   &.fade-enter-active, &.fade-leave-active {
-  transition: opacity .4s;
+    transition: opacity .4s;
   }
   &.fade-enter {
     opacity: 0;
@@ -100,7 +98,6 @@ export default {
       transform: translateY($spacing);
     }
   }
-
   .close {
     height: 40px;
     position: fixed;
