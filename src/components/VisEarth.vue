@@ -35,7 +35,6 @@ import { scaleLinear } from 'd3-scale'
 
 import chroma from 'chroma-js'
 import worker from 'workerize-loader!../assets/js/mapRenderer'
-import computeFromStore from '../assets/js/computeFromStore.js'
 
 export default {
   name: 'VisEarth',
