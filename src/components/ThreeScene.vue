@@ -33,6 +33,22 @@ export default {
     z: {
       default: 0,
       type: Number
+    },
+    preventInteraction: {
+      type: Boolean,
+      default: false
+    },
+    background: {
+      type: Number,
+      default: 0x020212
+    },
+    zoom: {
+      type: Number,
+      default: null
+    },
+    size: {
+      type: Number,
+      default: 1000
     }
   },
   data () {
@@ -42,7 +58,6 @@ export default {
       camera: null,
       container: null,
       controls: null,
-      size: 1000,
       mouse: { x: 5000, y: 5000 }
     }
   },
@@ -55,7 +70,7 @@ export default {
     }
   },
   mounted () {
-    const { size, width, height } = this
+    const { size, width, height, preventInteraction, background, zoom } = this
     const aspect = width / height
     this.camera = new OrthographicCamera(size * aspect / -2, size * aspect / 2, size / 2, size / -2, 1, size * 2)
     this.scene = new Scene()
@@ -72,31 +87,49 @@ export default {
     dirLight.position.set(1, 5, 4)
     scene.add(dirLight)
     scene.add(container)
-    scene.background = new Color(0x020212)
-    $refs.three.appendChild(renderer.domElement)
 
-    this.controls = new OrbitControls(this.camera, renderer.domElement)
-    this.controls.minZoom = 1
-    this.controls.maxZoom = 10
-    this.controls.enablePan = false
+    scene.background = new Color(background)
+    $refs.three.appendChild(renderer.domElement)
+    if (!preventInteraction) {
+      this.controls = new OrbitControls(this.camera, renderer.domElement)
+      this.controls.minZoom = 1
+      this.controls.maxZoom = 10
+      this.controls.enablePan = false
+    }
+
+    if (zoom != null) {
+      this.camera.zoom = zoom
+    }
 
     animate()
   },
   methods: {
     animate (t = 0) {
-      const { animate, scene, camera, renderer, controls } = this
+      const { animate, scene, camera, renderer, controls, preventInteraction } = this
       camera.updateMatrixWorld()
-      controls.rotateSpeed = 1 / this.camera.zoom
+      if (!preventInteraction) {
+        controls.rotateSpeed = 1 / this.camera.zoom
+      }
       renderer.render(scene, camera)
       requestAnimationFrame(animate)
     },
     resize () {
       const { width, height, camera, renderer, size } = this
-      const aspect = window.innerWidth / window.innerHeight
-      camera.left = -size * aspect / 2
-      camera.right = size * aspect / 2
-      camera.top = size / 2
-      camera.bottom = -size / 2
+
+      if (width > height) {
+        const aspect = width / height
+        camera.left = -size * aspect / 2
+        camera.right = size * aspect / 2
+        camera.top = size / 2
+        camera.bottom = -size / 2
+      } else {
+        const aspect = height / width
+        camera.left = -size / 2
+        camera.right = size / 2
+        camera.top = size * aspect / 2
+        camera.bottom = -size * aspect / 2
+      }
+
       camera.updateProjectionMatrix()
       renderer.setSize(width, height)
     },
