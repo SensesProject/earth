@@ -19,6 +19,14 @@ export default {
     imgData: {
       default: null,
       type: Object
+    },
+    borderColor: {
+      type: String,
+      default: '#292D50'
+    },
+    highlightColor: {
+      type: String,
+      default: '#5263ff'
     }
   },
   data () {
@@ -51,9 +59,9 @@ export default {
   },
   methods: {
     init () {
-      const { size, container, highlight, countries } = this
+      const { size, container, borderColor, highlight, countries } = this
       drawThreeGeo.drawThreeGeo(world, size + 0.5, 'sphere', {
-        color: 0x292D50
+        color: borderColor
       }, container)
 
       requestAnimationFrame(highlight)
@@ -89,7 +97,7 @@ export default {
       requestAnimationFrame(highlight)
     },
     highlightCountry () {
-      const { country, startSize, countries, toScreenPosition } = this
+      const { country, startSize, countries, toScreenPosition, highlightColor } = this
       while (countries.children.length > 0) countries.remove(countries.children[0])
       if (country == null) {
         this.$emit('highlight')
@@ -97,7 +105,7 @@ export default {
       }
       const feature = world.features.find(f => f.properties.ADM0_A3 === country)
       drawThreeGeo.drawThreeGeo(feature, startSize + 0.5, 'sphere', {
-        color: 0x5263ff,
+        color: highlightColor,
         linewidth: 1
       }, countries)
       const centroid = centroidFromPolygon(feature)

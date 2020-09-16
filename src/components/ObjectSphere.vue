@@ -11,6 +11,10 @@ export default {
     imgData: {
       default: null,
       type: Object
+    },
+    baseColor: {
+      type: String,
+      default: '#0A0924'
     }
   },
   data () {
@@ -47,12 +51,14 @@ export default {
       mesh.material.map.needsUpdate = true
     },
     getTexture () {
-      const { imgData } = this
+      const { imgData, baseColor } = this
       if (imgData == null) {
         const color = new Uint8Array(3)
-        color[0] = 10
-        color[1] = 9
-        color[2] = 36
+        const match = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(baseColor)
+
+        color[0] = parseInt(match[1], 16)
+        color[1] = parseInt(match[2], 16)
+        color[2] = parseInt(match[3], 16)
         return new DataTexture(color, 1, 1, RGBFormat)
       }
       return new DataTexture(imgData.data, imgData.width, imgData.height, RGBFormat)

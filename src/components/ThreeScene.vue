@@ -39,8 +39,8 @@ export default {
       default: false
     },
     background: {
-      type: Number,
-      default: 0x020212
+      type: String,
+      default: '#020212'
     },
     zoom: {
       type: Number,
@@ -49,6 +49,14 @@ export default {
     size: {
       type: Number,
       default: 1000
+    },
+    yaw: {
+      type: Number,
+      default: 1
+    },
+    pitch: {
+      type: Number,
+      default: -0.25
     }
   },
   data () {
@@ -77,10 +85,8 @@ export default {
     this.renderer = new WebGLRenderer({ antialias: true })
     this.container = new Group()
 
-    const { camera, renderer, scene, $refs, animate, container } = this
-    camera.position.x = size
-    camera.position.y = size / 4
-    camera.lookAt(new Vector3(0, 0, 0))
+    const { renderer, scene, $refs, animate, container, positionCamera } = this
+    positionCamera()
     renderer.setSize(width, height)
     renderer.setPixelRatio(window.devicePixelRatio)
     const dirLight = new DirectionalLight(0xffffff, 1)
@@ -104,14 +110,27 @@ export default {
     animate()
   },
   methods: {
+    positionCamera () {
+      const { yaw, pitch, size, camera, zoom } = this
+      if (camera == null) return
+      if (zoom != null) camera.zoom = zoom
+      camera.position.z = Math.sin(yaw * Math.PI * 2) * Math.cos(pitch * -1 * Math.PI / 2) * size
+      camera.position.y = Math.sin(pitch * -1 * Math.PI / 2) * size
+      camera.position.x = Math.cos(yaw * Math.PI * 2) * Math.cos(pitch * -1 * Math.PI / 2) * size
+      camera.lookAt(new Vector3(0, 0, 0))
+      // requestAnimationFrame(this.animate)
+    },
     animate (t = 0) {
       const { animate, scene, camera, renderer, controls, preventInteraction } = this
-      camera.updateMatrixWorld()
+      requestAnimationFrame(animate)
+      // camera.updateMatrixWorld()
+      camera.updateProjectionMatrix()
       if (!preventInteraction) {
         controls.rotateSpeed = 1 / this.camera.zoom
+      } else {
+        this.positionCamera()
       }
       renderer.render(scene, camera)
-      requestAnimationFrame(animate)
     },
     resize () {
       const { width, height, camera, renderer, size } = this
@@ -177,6 +196,12 @@ export default {
     height () {
       this.resize()
     }
+    // yaw () {
+    //   this.positionCamera()
+    // },
+    // pitch () {
+    //   this.positionCamera()
+    // }
   }
 }
 </script>

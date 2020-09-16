@@ -4,16 +4,17 @@
     @mousemove="onMouseMove"
     @mouseup="onMouseUp">
     <ResizeObserver @notify="setClientSize"/>
-    <ThreeScene :width="width" :height="height">
-      <ObjectSphere :size="size / 2" :img-data="imgData"/>
-      <ObjectGeo :size="size / 2" @highlight="setHighlight" :interactive="!mouseDown"/>
+    <ThreeScene :width="width" :height="height" :prevent-interaction="preventInteraction" :background="allColors.background" :yaw="yaw" :pitch="pitch" :zoom="zoom">
+      <ObjectSphere :size="size / 2" :img-data="imgData" :baseColor="allColors.colorScale[0]"/>
+      <ObjectGeo :size="size / 2" @highlight="setHighlight" :interactive="!preventInteraction && !mouseDown"
+        :borderColor="allColors.borderColor" :highlightColor="allColors.highlightColor"/>
     </ThreeScene>
     <svg class="key" :width="keyWidth" :height="64">
       <g transform="translate(0 18)">
-        <rect v-for="(c1, x) in colors" :key="`c${x}`" :width="keyWidth / colors.length + 0.4" height="24" :x="x * (keyWidth / colors.length) - 0.2" :y="0" :fill="`rgb(${c1[0]},${c1[1]},${c1[2]})`"/>
+        <rect v-for="(c1, x) in colorScale" :key="`c${x}`" :width="keyWidth / colorScale.length + 0.4" height="24" :x="x * (keyWidth / colorScale.length) - 0.2" :y="0" :fill="`rgb(${c1[0]},${c1[1]},${c1[2]})`"/>
       </g>
-      <text y="10">Land area exposed</text>
-      <g class="ticks">
+      <text y="10" :fill="allColors.text">Land area exposed</text>
+      <g class="ticks" :fill="allColors.text">
         <g v-for="(t, i) in ticks" :key="`t-${i}`">
           <rect y="18" :x="t.x" width="1" height="32"/>
           <text y="64" :x="t.x">{{ t.value }}%</text>
@@ -27,14 +28,22 @@
 </template>
 
 <script>
-import ThreeScene from '@/components/ThreeScene.vue'
-import ObjectSphere from '@/components/ObjectSphere.vue'
-import ObjectGeo from '@/components/ObjectGeo.vue'
+import ThreeScene from '../components/ThreeScene.vue'
+import ObjectSphere from '../components/ObjectSphere.vue'
+import ObjectGeo from '../components/ObjectGeo.vue'
 import { ResizeObserver } from 'vue-resize'
 import { scaleLinear } from 'd3-scale'
 
 import chroma from 'chroma-js'
 import worker from 'workerize-loader!../assets/js/mapRenderer'
+
+const defaultColors = {
+  background: '#020212',
+  text: '#ffffff',
+  borderColor: '#292D50',
+  highlightColor: '#5263ff',
+  colorScale: ['#0A0924', '#C32C62', '#FFE6B5']
+}
 
 export default {
   name: 'VisEarth',
@@ -44,7 +53,35 @@ export default {
     ObjectGeo,
     ResizeObserver
   },
-  props: ['grid', 'scale'],
+  props: {
+    grid: String,
+    scale: {
+      type: Object,
+      default () { return { domain: [0, 100], range: [0, 100] } }
+    },
+    colors: {
+      type: Object,
+      default () {
+        return defaultColors
+      }
+    },
+    preventInteraction: {
+      type: Boolean,
+      default: false
+    },
+    yaw: {
+      type: Number,
+      default: 1
+    },
+    pitch: {
+      type: Number,
+      default: -0.25
+    },
+    zoom: {
+      type: Number,
+      default: null
+    }
+  },
   data () {
     return {
       workerInstance: null,
@@ -63,13 +100,12 @@ export default {
       const { width, height } = this
       return Math.min(width, height)
     },
-    colors () {
-      const { scale } = this
-      const color0 = '#0A0924'
-      const color1 = '#C32C62'
-      const color2 = '#FFE6B5'
-
-      return chroma.scale([color0, color1, color2]).mode('lch').colors(scale.range[1], 'rgb')
+    allColors () {
+      return { ...defaultColors, ...this.colors }
+    },
+    colorScale () {
+      const { scale, allColors } = this
+      return chroma.scale(allColors.colorScale).mode('lab').colors(scale.range[1], 'rgb')
     },
     ticks () {
       const { keyWidth, scale } = this
@@ -83,16 +119,20 @@ export default {
     }
   },
   watch: {
-    grid () {
-      this.updateCanvas()
+    grid: {
+      handler () { this.updateCanvas() },
+      immediate: true
     }
+  },
+  mounted () {
+    this.setClientSize()
   },
   methods: {
     updateCanvas () {
-      const { colors, grid } = this
+      const { colorScale, grid } = this
       if (this.workerInstance != null) this.workerInstance.terminate()
       this.workerInstance = worker()
-      this.workerInstance.renderMap({ grid, colors }).then(cData => {
+      this.workerInstance.renderMap({ grid, colors: colorScale }).then(cData => {
         this.imgData = cData
       })
     },
@@ -100,13 +140,16 @@ export default {
       this.country = country
     },
     onMouseMove (event) {
+      if (this.preventInteraction) return
       if (this.mouseDown) this.mouseMoved = true
     },
     onMouseDown (event) {
+      if (this.preventInteraction) return
       this.mouseMoved = false
       this.mouseDown = true
     },
     onMouseUp (event) {
+      if (this.preventInteraction) return
       if (!this.mouseMoved) this.$emit('details', this.country)
       this.mouseDown = false
       this.mouseMoved = false
@@ -137,13 +180,7 @@ export default {
     pointer-events: none;
     overflow: visible;
 
-    text {
-      fill: $color-white;
-      font-family: $font-mono;
-    }
-
     .ticks {
-      fill: $color-white;
       text-anchor: middle;
     }
   }
