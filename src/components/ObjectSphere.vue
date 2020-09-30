@@ -49,6 +49,7 @@ export default {
       const { getTexture, mesh } = this
       mesh.material.map = getTexture()
       mesh.material.map.needsUpdate = true
+      this.$parent.$emit('update')
     },
     getTexture () {
       const { imgData, baseColor } = this

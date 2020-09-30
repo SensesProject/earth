@@ -79,6 +79,7 @@ export default {
     }
   },
   mounted () {
+    this.$on('update', () => { console.log('aaa'); this.redraw = true })
     const { size, width, height, preventInteraction, background, zoom } = this
     const aspect = width / height
     this.camera = new OrthographicCamera(size * aspect / -2, size * aspect / 2, size / 2, size / -2, 1, size * 2)
@@ -135,7 +136,6 @@ export default {
         renderer.render(scene, camera)
         this.redraw = false
       }
-      
     },
     resize () {
       const { width, height, camera, renderer, size } = this
