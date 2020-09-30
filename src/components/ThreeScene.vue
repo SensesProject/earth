@@ -66,7 +66,8 @@ export default {
       camera: null,
       container: null,
       controls: null,
-      mouse: { x: 5000, y: 5000 }
+      mouse: { x: 5000, y: 5000 },
+      redraw: false
     }
   },
   provide () {
@@ -124,13 +125,17 @@ export default {
       const { animate, scene, camera, renderer, controls, preventInteraction } = this
       requestAnimationFrame(animate)
       // camera.updateMatrixWorld()
-      camera.updateProjectionMatrix()
-      if (!preventInteraction) {
-        controls.rotateSpeed = 1 / this.camera.zoom
-      } else {
-        this.positionCamera()
+      if (!preventInteraction || this.redraw) {
+        camera.updateProjectionMatrix()
+        if (!preventInteraction) {
+          controls.rotateSpeed = 1 / this.camera.zoom
+        } else {
+          this.positionCamera()
+        }
+        renderer.render(scene, camera)
+        this.redraw = false
       }
-      renderer.render(scene, camera)
+      
     },
     resize () {
       const { width, height, camera, renderer, size } = this
@@ -192,16 +197,21 @@ export default {
   watch: {
     width () {
       this.resize()
+      this.redraw = true
     },
     height () {
       this.resize()
+      this.redraw = true
+    },
+    yaw () {
+      this.redraw = true
+    },
+    pitch () {
+      this.redraw = true
+    },
+    zoom () {
+      this.redraw = true
     }
-    // yaw () {
-    //   this.positionCamera()
-    // },
-    // pitch () {
-    //   this.positionCamera()
-    // }
   }
 }
 </script>
