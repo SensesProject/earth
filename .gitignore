@@ -22,4 +22,4 @@ yarn-error.log*
 
 # preprocessing
 preprocessing/credentials.json
-preprocessing/data/ISIpedia
+preprocessing/data/extreme-events

@@ -4,9 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "download": "node isimip-data-download.js",
-    "convert": "node convert.js",
-    "convert-model-scales": "node convert-model-scales.js"
+    "convert": "node convert.js"
   },
   "author": "",
   "license": "ISC",
