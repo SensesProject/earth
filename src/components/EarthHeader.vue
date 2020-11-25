@@ -1,63 +1,228 @@
 <template>
   <header class="EarthHeader">
-    <a class="senses" href="/">
-      <svg width="32" height="32" viewBox="0 0 32 32">
-        <circle cx="12" cy="12" r="11.5"/>
-        <circle cx="24" cy="28" r="3.5"/>
-        <circle cx="24" cy="11" r="7.5"/>
-      </svg>
-      <h1>SENSES Earth</h1>
-    </a>
-    <h2>{{ title }}</h2>
+    <SensesMenu darkmode transparent id="senses-earth" :logo="{sx:2, sy:0, mx:1, my:0, lx:0, ly:0}"/>
+    <div class="wide">
+      <h2 class="tiny">
+        <div class="option-line">
+          Land area exposed to
+          <SensesSelect v-model="indicator" :options="indicatorOptions" class="invert option"/>
+        </div>
+        <div class="option-line">
+          at
+          <SensesRadio v-model="warmingLevel" :options="warmingLevelOptions" class="invert option"/>
+          °C global warming
+        </div>
+        <div class="option-line">
+          in climate model
+          <SensesSelect v-model="climateModel" :options="climateModels" class="invert option"/>
+        </div>
+        <div class="option-line">
+          & impact model
+          <SensesSelect v-if="impactModels.length > 1" v-model="impactModel" :options="impactModels" class="invert option"/>
+          <span v-else class="highlight no-hover option" >{{ impactModels[0] }}</span>
+        </div>
+        <!-- <div class="option-line narrow">
+          <span class="tiny">
+            Advanced Options (coming soon)
+          </span>
+        </div> -->
+        <div class="option-line narrow more mono" @click="showAbout = true">
+          <span class="tiny">
+            Learn more
+          </span>
+        </div>
+      </h2>
+    </div>
   </header>
 </template>
 
 <script>
+import SensesMenu from 'library/src/components/SensesMenu.vue'
+import SensesSelect from 'library/src/components/SensesSelect.vue'
+import SensesRadio from 'library/src/components/SensesRadio.vue'
 import computeFromStore from '../assets/js/computeFromStore.js'
+import { mapGetters } from 'vuex'
+import { format } from 'd3-format'
 export default {
   name: 'EarthHeader',
+  components: {
+    SensesMenu,
+    SensesSelect,
+    SensesRadio
+  },
   data () {
     return {
-      title: 'Average near surface temperature 1900–1905 in scenario RCP 6.0'
     }
   },
   computed: {
-    ...computeFromStore(['period1', 'scenario1'])
+    ...computeFromStore(['mode', 'indicator', 'indicators', 'climateModel', 'climateModels', 'warmingLevels', 'impactModel', 'warmingLevel', 'showAbout', 'compareValue', 'compareOption']),
+    ...mapGetters(['impactModels']),
+    warmingLevelOptions () {
+      const { warmingLevels } = this
+      return warmingLevels.map(value => ({
+        value,
+        label: `${+value === 0 ? '±' : '+'}${+value}`
+        // label: `${+value === 0 ? '±' : '+'}${value}°C`
+      }))
+    },
+    indicatorOptions () {
+      return this.indicators.map(i => {
+        return {
+          label: i.replace(/-/g, ' '),
+          value: i
+        }
+      })
+    }
+  },
+  methods: {
+    formatGlobalWarmingLevel (value) {
+      return format('.1f')(value)
+    },
+    formatIndicator (value) {
+      if (value == null) return
+      return value.replace(/-/g, ' ')
+    }
   }
 }
 </script>
 
 <style scoped lang="scss">
-@import "../assets/style/variables";
+@import "library/src/style/global.scss";
 
 .EarthHeader {
   position: absolute;
-  background: $color-overlay-background;
   width: 100vw;
   top: 0;
   left: 0;
+  pointer-events: none;
 
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: $spacing / 2 $spacing;
-  flex-direction: row-reverse;
+  align-items: top;
+  flex-direction: column;
+  // padding: $spacing / 2 $spacing $spacing;
+  // background-image: linear-gradient(0deg, transparentize($color-background, 1) 0%, transparentize($color-background, 0.25) 100%);
 
-  .senses {
+  .senses-menu {
+    pointer-events: all;
+  }
+
+  h2 {
+    padding: 0 $spacing / 2;
+    font-weight: $font-weight-regular;
+    margin-right: $spacing;
+    color: $color-white;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
 
-    svg {
-      circle {
-        fill: none;
-        stroke: $color-white;
+    .option-line {
+      display: flex;
+      align-items: center;
+      margin-bottom: 4px;
+      white-space: nowrap;
+    }
+
+    .more {
+      pointer-events: all;
+      text-decoration: underline;
+      cursor: pointer;
+      margin-top: $spacing / 8;
+      // transition: color $transition;
+      &:hover {
+        color: getColor(neon, 80)
       }
     }
 
-    h1 {
-      margin-left: $spacing / 4;
+    .option {
+      pointer-events: all;
+      cursor: default;
+      margin: 0 $spacing * 0.25;
+      // font-weight: $font-weight-bold;
+      &.white {
+        color: $color-white;
+        // background: linear-gradient(0deg,transparent,transparent 2px,$color-white 2px,$color-white 3.5px,transparent 0);
+      }
+      // &.violet {
+      //   color: $color-scale-violet;
+      //   // background: linear-gradient(0deg,transparent,transparent 2px,$color-scale-violet 2px,$color-scale-violet 3.5px,transparent 0);
+      // }
+      // &.green {
+      //   color: $color-scale-green;
+      //   // background: linear-gradient(0deg,transparent,transparent 2px,$color-scale-green 2px,$color-scale-green 3.5px,transparent 0);
+      // }
+      // text-transform: uppercase;
+      &.highlight.no-hover {
+        background: $color-neon;
+        color: $color-white;
+        padding-top: 1px;
+        padding-bottom: 1px;
+      }
     }
+
+    .button {
+      $size: 24px;
+      margin-top: calc(#{$spacing} - #{$size});
+      border-radius: 2px;
+      background: $color-green;
+      height: $size;
+      width: $size;
+      background: $color-green url(../assets/img/options.svg) center center no-repeat;
+      cursor: pointer;
+      pointer-events: all;
+    }
+  }
+}
+</style>
+<style lang="scss">
+@import "library/src/style/global.scss";
+.senses-select .trigger button.highlight {
+  background: $color-neon;
+  color: $color-white;
+
+  svg g path {
+    stroke: $color-white;
+  }
+
+  &:hover {
+    background: getColor(neon, 40);
+    svg g path {
+      stroke: $color-white;
+    }
+  }
+}
+div.senses-tooltip-select {
+  box-shadow: none;
+
+  .tooltip-inner {
+    background: getColor(neon, 20);
+    color: $color-white;
+    min-width: 80px;
+
+    .option {
+      &:hover {
+        background: getColor(neon, 40);
+        color: $color-white;
+      }
+      &.active:hover {
+        background: getColor(neon, 50);
+        color: $color-white;
+      }
+    }
+  }
+
+  .tooltip-arrow {
+    border-color: getColor(neon, 20);
+  }
+}
+.senses-radio .radio label {
+  margin-bottom: 0 !important;
+  color: getColor(neon, 60) !important;
+  &:hover {
+    color: getColor(neon, 80) !important;
+  }
+  input + span {
+    padding: 2px 0.125rem !important;
+    line-height: inherit !important;
   }
 }
 </style>

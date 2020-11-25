@@ -200,9 +200,9 @@ function drawThreeGeo (json, radius, shape, materalOptions, container) {
     var particle_geom = new THREE.Geometry()
     particle_geom.vertices.push(new THREE.Vector3(x, y, z))
 
-    var particle_material = new THREE.ParticleSystemMaterial(options)
+    var particle_material = new THREE.PointsMaterial(options)
 
-    var particle = new THREE.ParticleSystem(particle_geom, particle_material)
+    var particle = new THREE.Points(particle_geom, particle_material)
     container.add(particle)
 
     clearArrays()

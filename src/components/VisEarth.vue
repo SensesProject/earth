@@ -1,190 +1,197 @@
 <template>
-  <div class="VisEarth">
-    <div ref="VisEarth"/>
-    <!-- <canvas ref="canvas"/> -->
+  <div class="VisEarth" ref="earth"
+    @mousedown="onMouseDown"
+    @mousemove="onMouseMove"
+    @mouseup="onMouseUp">
+    <ResizeObserver @notify="setClientSize"/>
+    <ThreeScene :width="width" :height="height" :prevent-interaction="preventInteraction" :background="allColors.background" :yaw="yaw" :pitch="pitch" :zoom="zoom">
+      <ObjectSphere :size="size / 2" :img-data="imgData" :baseColor="allColors.colorScale[0]"/>
+      <ObjectGeo :size="size / 2" @highlight="setHighlight" :interactive="!preventInteraction && !mouseDown"
+        :borderColor="allColors.borderColor" :highlightColor="allColors.highlightColor"/>
+    </ThreeScene>
+    <svg class="key" :width="keyWidth" :height="64">
+      <g transform="translate(0 18)">
+        <rect v-for="(c1, x) in colorScale" :key="`c${x}`" :width="keyWidth / colorScale.length + 0.4" height="24" :x="x * (keyWidth / colorScale.length) - 0.2" :y="0" :fill="`rgb(${c1[0]},${c1[1]},${c1[2]})`"/>
+      </g>
+      <text y="10" :fill="allColors.text">Land area exposed</text>
+      <g class="ticks" :fill="allColors.text">
+        <g v-for="(t, i) in ticks" :key="`t-${i}`">
+          <rect y="18" :x="t.x" width="1" height="32"/>
+          <text y="64" :x="t.x">{{ t.value }}%</text>
+        </g>
+      </g>
+    </svg>
+    <div v-if="country && !mouseMoved" class="tooltip tiny" :style="{top: `${country.y}px`, left: `${country.x}px`}">
+      {{ country.name }}
+    </div>
   </div>
 </template>
 
 <script>
-import * as THREE from 'three'
-import OrbitControls from 'three-orbitcontrols'
-import drawThreeGeo from '../assets/js/threeGeo.js'
+import ThreeScene from '../components/ThreeScene.vue'
+import ObjectSphere from '../components/ObjectSphere.vue'
+import ObjectGeo from '../components/ObjectGeo.vue'
+import { ResizeObserver } from 'vue-resize'
+import { scaleLinear } from 'd3-scale'
 
-import world from '../assets/data/world.json'
+import chroma from 'chroma-js'
 import worker from 'workerize-loader!../assets/js/mapRenderer'
+
+const defaultColors = {
+  background: '#020212',
+  text: '#ffffff',
+  borderColor: '#292D50',
+  highlightColor: '#5263ff',
+  colorScale: ['#0A0924', '#C32C62', '#FFE6B5']
+}
 
 export default {
   name: 'VisEarth',
+  components: {
+    ThreeScene,
+    ObjectSphere,
+    ObjectGeo,
+    ResizeObserver
+  },
+  props: {
+    grid: String,
+    scale: {
+      type: Object,
+      default () { return { domain: [0, 100], range: [0, 100] } }
+    },
+    colors: {
+      type: Object,
+      default () {
+        return defaultColors
+      }
+    },
+    preventInteraction: {
+      type: Boolean,
+      default: false
+    },
+    yaw: {
+      type: Number,
+      default: 1
+    },
+    pitch: {
+      type: Number,
+      default: -0.25
+    },
+    zoom: {
+      type: Number,
+      default: null
+    }
+  },
   data () {
     return {
-      scene: new THREE.Scene(),
-      camera: null,
-      renderer: new THREE.WebGLRenderer({ antialias: true }),
-      map: new THREE.MeshBasicMaterial(),
-      frustumSize: 1000,
-      workerInstance: null
+      workerInstance: null,
+      mouseMoved: false,
+      imgData: null,
+      country: null,
+      mouseDown: false,
+      keyWidth: 200,
+      width: 768,
+      height: 768
     }
   },
   computed: {
+    // ...computeFromStore(['showCountryDetails']),
     size () {
       const { width, height } = this
       return Math.min(width, height)
     },
-    grid () {
-      return this.$store.state.map
+    allColors () {
+      return { ...defaultColors, ...this.colors }
     },
-    width () {
-      return this.$store.state.width
+    colorScale () {
+      const { scale, allColors } = this
+      return chroma.scale(allColors.colorScale).mode('lab').colors(scale.range[1], 'rgb')
     },
-    height () {
-      return this.$store.state.height
-    },
-    grids () {
-      return this.$store.state.grids
-    },
-    period1 () {
-      return this.$store.state.period1
-    },
-    range1 () {
-      return this.$store.state.range1
-    },
-    domain1 () {
-      return this.$store.state.domain1
+    ticks () {
+      const { keyWidth, scale } = this
+      const s = scaleLinear().domain(scale.range).range([0, keyWidth])
+      return s.ticks(2).map(value => {
+        return {
+          value,
+          x: s(value)
+        }
+      })
     }
   },
   watch: {
-    grid () {
-      this.updateCanvas()
-    },
-    domain1 () {
-      this.updateCanvas()
-    },
-    width () {
-      this.resize()
-    },
-    height () {
-      this.resize()
+    grid: {
+      handler () { this.updateCanvas() },
+      immediate: true
     }
   },
   mounted () {
-    const { renderer, $refs, scene, width, height, size, animate, createCanvas, map, frustumSize } = this
-
-    const aspect = width / height
-    this.camera = new THREE.OrthographicCamera(frustumSize * aspect / -2, frustumSize * aspect / 2, frustumSize / 2, frustumSize / -2, 1, frustumSize * 2)
-    this.camera.position.z = size * 2
-
-    scene.background = new THREE.Color(0x071A29)
-    renderer.setSize(width, height)
-    $refs.VisEarth.appendChild(renderer.domElement)
-
-    scene.add(new THREE.AmbientLight(0xffffff))
-
-    var geometry = new THREE.SphereBufferGeometry(size / 4, 64, 64)
-    var mesh = new THREE.Mesh(geometry, map)
-    scene.add(mesh)
-
-    var controls = new OrbitControls(this.camera, renderer.domElement)
-    controls.minZoom = 1
-    controls.maxZoom = 10
-    controls.enablePan = false
-    createCanvas()
-
-    const globe = new THREE.Group()
-    drawThreeGeo.drawThreeGeo(world, size / 4 + 0.5, 'sphere', {
-      color: 0x1B2658
-    }, globe)
-    globe.setRotationFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2)
-
-    scene.add(globe)
-
-    animate()
-
-    this.$store.dispatch('updateMap')
+    this.setClientSize()
   },
   methods: {
-    animate (t = 0) {
-      const { animate, scene, camera, renderer } = this
-      camera.updateMatrixWorld()
-      requestAnimationFrame(animate)
-      renderer.render(scene, camera)
-    },
-    createVector (x, y, z) {
-      const { camera, width, height } = this
-      var p = new THREE.Vector3(x, y, z)
-      var vector = p.project(camera)
-
-      vector.x = (vector.x + 1) / 2 * width
-      vector.y = -(vector.y - 1) / 2 * height
-
-      return vector
-    },
-    createCanvas () {
-      this.canvas = document.createElement('canvas') // this.$refs.canvas
-      const resolution = 1
-      this.canvas.setAttribute('width', 720 * resolution)
-      this.canvas.setAttribute('height', 360 * resolution)
-      this.ctx = this.canvas.getContext('2d')
-      this.ctx.fillRect(0, 0, 360, 180)
-      const texture = new THREE.CanvasTexture(this.canvas)
-
-      texture.magFilter = THREE.NearestFilter
-      texture.minFilter = THREE.NearestFilter
-      this.map.map = texture
-    },
     updateCanvas () {
-      const { period1, range1, domain1 } = this
-      this.ctx.fillStyle = '#00CC84'
-      this.ctx.fillRect(0, 0, 720, 360)
-      if (this.grids[period1] !== undefined) {
-        this.updateTexture(this.grids[period1])
-        return
-      }
-      const canvasData = this.ctx.getImageData(0, 0, 720, 360)
-
-      // if (this.workerInstance != null) this.workerInstance.terminate()
+      const { colorScale, grid } = this
+      if (this.workerInstance != null) this.workerInstance.terminate()
       this.workerInstance = worker()
-      this.workerInstance.renderMap({ canvasData, grid: this.grid, period1, range1, domain1 }).then(cData => {
-        this.$store.dispatch('addGrid', { period: period1, grid: cData })
-        this.updateTexture(cData)
+      this.workerInstance.renderMap({ grid, colors: colorScale }).then(cData => {
+        this.imgData = cData
       })
     },
-    updateTexture (canvasData) {
-      this.ctx.putImageData(canvasData, 0, 0)
-      this.map.map.needsUpdate = true
+    setHighlight (country) {
+      this.country = country
     },
-    resize () {
-      const { width, height, camera, renderer, frustumSize } = this
-      const aspect = window.innerWidth / window.innerHeight
-      camera.left = -frustumSize * aspect / 2
-      camera.right = frustumSize * aspect / 2
-      camera.top = frustumSize / 2
-      camera.bottom = -frustumSize / 2
-      camera.updateProjectionMatrix()
-      renderer.setSize(width, height)
+    onMouseMove (event) {
+      if (this.preventInteraction) return
+      if (this.mouseDown) this.mouseMoved = true
+    },
+    onMouseDown (event) {
+      if (this.preventInteraction) return
+      this.mouseMoved = false
+      this.mouseDown = true
+    },
+    onMouseUp (event) {
+      if (this.preventInteraction) return
+      if (!this.mouseMoved) this.$emit('details', this.country)
+      this.mouseDown = false
+      this.mouseMoved = false
+    },
+    setClientSize () {
+      const rect = this.$refs.earth.getBoundingClientRect()
+      this.width = rect.width
+      this.height = rect.height
     }
   }
 }
 </script>
 
 <style scoped lang="scss">
+@import "../assets/style/variables";
 .VisEarth {
   position: absolute;
-}
-</style>
-<style lang="scss">
-.VisEarth {
-    canvas {
-    display: block;
+  width: 100%;
+  height: 100%;
+  .pointer {
+    cursor: pointer;
   }
 
-  .label {
+  .key {
     position: absolute;
-    z-index: 100;
-    background: black;
-    color: white;
-    transform: translate(-50%, -50%);
-    padding: 4px 8px;
-    font-family: "IBM Plex Sans"
+    bottom: $spacing / 2;
+    left: $spacing / 2;
+    pointer-events: none;
+    overflow: visible;
+
+    .ticks {
+      text-anchor: middle;
+    }
+  }
+  .tooltip {
+    position: absolute;
+    background: $color-neon;
+    color: $color-white;
+    transform: translate(-50%, -100%);
+    pointer-events: none;
+    padding: $spacing / 8 $spacing / 4;
+    border-radius: $border-radius;
   }
 }
 </style>

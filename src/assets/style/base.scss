@@ -1,76 +1,36 @@
-@import "normalize-scss";
 @import "variables";
-@import "fonts";
+// @import "mixins";
+// @import "fonts";
 
-*, *:before, *:after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+$font-prefix: "../node_modules/library/src/assets/fonts";
+@import "library/src/style/base.scss";
+
+
+html {
+  background: black;
 }
 
-body {
-  background: $color-background;
-  font-family: 'Plex Sans', sans-serif;
-  font-feature-settings: "kern";
-  font-weight: 300;
-  color: $color-white;
-  font-size: 16px;
-  line-height: 1.25;
+b, strong, h1, h2, h3, h4, h5 {
+  font-weight: $font-weight-bold;
+}
 
-  h1, h2 {
-    font-size: 1rem;
-  }
+h1, h2, h3 {
+  font-size: 1em;
+}
 
-  h2 {
-    text-transform: uppercase;
-  }
+a {
+  color: $color-accent;
+  text-decoration: none;
+}
 
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
+.sans {
+  font-family: $font-sans;
+}
 
-  span, select {
-    &.blue {
-      color: $color-blue;
-    }
-    &.red {
-      color: $color-red;
-    }
-    &.yellow {
-      color: $color-yellow;
-    }
-    &.green {
-      color: $color-green;
-    }
-    &.violet {
-      color: $color-violet;
-    }
-  }
-  svg {
-    .blue {
-      fill: $color-blue;
-      stroke: none;
-    }
-    .red {
-      fill: $color-red;
-      stroke: none;
-    }
-    .yellow {
-      fill: $color-yellow;
-      stroke: none;
-    }
-    .green {
-      fill: $color-green;
-      stroke: none;
-    }
-    .violet {
-      fill: $color-violet;
-      stroke: none;
-    }
-  }
+.serif {
+  font-family: $font-serif;
+}
 
-  .upper {
-    text-transform: uppercase;
-  }
+.mono {
+  font-family: $font-mono;
 }

@@ -1,105 +1,76 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import fetch from 'unfetch'
-import { scaleLinear } from 'd3-scale'
+import grids from '@/assets/data/grids.json'
+
+const indicators = [...new Set(grids.files.map(f => f.indicator))]
+const impactModels = [...new Set(grids.files.map(f => f.im))]
+const climateModels = [...new Set(grids.files.map(f => f.cm))]
+const warmingLevels = [...new Set(grids.files.map(f => f.wl))]
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    width: window.innerWidth,
-    height: window.innerHeight,
-    mode: 0,
-    variable1: 'tas',
-    variable2: 'pr',
-    scenario1: 'rcp60',
-    scenario2: 'rcp26',
-    period1: 2095,
-    period2: 2005,
-    range1: ['#00CC84', '#D2FEFF', '#4E40B2'],
-    domain1: [-40, 0, 40],
-    scale2: {
-      range: ['#000', '#4E40B2'],
-      domain: [0, 1000]
+    showAbout: false,
+    showCountryDetails: null,
+    indicator: 'heatwave',
+    indicators,
+    impactModel: impactModels[0],
+    impactModels,
+    climateModel: climateModels[0],
+    climateModels,
+    warmingLevel: warmingLevels[warmingLevels.length - 1],
+    warmingLevels,
+    files: grids.files,
+    scales: grids.scales,
+    grid: null,
+    title: null
+  },
+  getters: {
+    impactModels: state => {
+      const { files, indicator } = state
+      return [...new Set(files.filter(f => f.indicator === indicator).map(f => f.im))]
     },
-    dataset1: {},
-    dataset2: {},
-    grids: {},
-    map: null
+    scale: state => {
+      const { files, indicator, impactModel, climateModel } = state
+      if (files.find(f => f.indicator === indicator && f.cm === climateModel && f.im === impactModel) == null) return { range: [0, 1] }
+      return files.find(f => f.indicator === indicator && f.cm === climateModel && f.im === impactModel).scale
+    }
   },
   mutations: {
     set (state, { prop, value }) {
       state[prop] = value
-    },
-    clear (state, prop) {
-      state[prop] = {}
-    },
-    setMap (state) {
-      state.map = state.dataset1[state.period1]
-    },
-    addMap (state, { map, period }) {
-      state.dataset1[period] = map
-    },
-    addGrid (state, { grid, period }) {
-      state.grids[period] = grid
     }
   },
   actions: {
+    init ({ dispatch }, d) {
+      dispatch('updateGrid')
+    },
     update ({ commit, dispatch }, d) {
       commit('set', d)
       switch (d.prop) {
-        case 'scenario1':
-        case 'variable1':
-          commit('clear', 'dataset1')
-        case 'domain1':
-          commit('clear', 'grids')
-        case 'period1':
-        case 'period2':
-          dispatch('updateMap')
+        case 'indicator':
+        case 'climateModel':
+        case 'impactModel':
+        case 'warmingLevel':
+          dispatch('updateGrid')
           break
       }
     },
-    updateSize ({ commit }) {
-      commit('set', { prop: 'width', value: window.innerWidth })
-      commit('set', { prop: 'height', value: window.innerHeight })
-    },
-    updateMap ({ commit, state }) {
-      const { dataset1, period1, variable1, scenario1 } = state
-      if (dataset1[period1] === undefined) {
-        fetch(`/data/${variable1}-${scenario1}-${period1}.json`)
-          .then(r => r.json())
-          .then(data => {
-            const map = []
-            const scale = scaleLinear()
-              .domain(data.domain)
-              .range(data.range)
-            for (let y = 359; y >= 0; y--) {
-              const lat = []
-              const line = data.grid[0][y]
-              for (let x = 0; x < 720; x++) {
-                lat.push(scale(charcodeToValue(line.charCodeAt(x))))
-              }
-              map.push(lat)
-            }
-            if (state.variable1 === variable1 && state.scenario1 === scenario1) {
-              commit('addMap', { map, period: period1 })
-              if (state.period1 === period1) {
-                commit('setMap')
-              }
-            }
-          })
-      } else {
-        commit('setMap')
+    updateGrid ({ commit, state }) {
+      const { files, indicator, climateModel, impactModel, warmingLevel } = state
+      let file = files.find(f => f.indicator === indicator && f.cm === climateModel && f.im === impactModel && f.wl === warmingLevel)
+      if (file == null) {
+        file = files.find(f => f.indicator === indicator && f.cm === climateModel && f.wl === warmingLevel)
+        commit('set', { prop: 'impactModel', value: file.im })
       }
-    },
-    addGrid ({ commit }, { grid, period }) {
-      commit('addGrid', { grid, period })
+
+      fetch(`./grids/${file.name}`)
+        .then(r => r.text())
+        .then(d => {
+          commit('set', { prop: 'grid', value: d })
+        })
     }
   }
 })
-
-function charcodeToValue (code) {
-  if (code >= 93) code--
-  if (code >= 35) code--
-  return code - 32
-}
