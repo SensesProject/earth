@@ -21,7 +21,7 @@ indicators.forEach(i => {
   let ims = [...new Set(fileComponents.map(c => c[1]))].filter((c, i, all) => all.length > 2 || c !== 'median')
   if (ims.indexOf('median') !== -1) { ims = ['median', ...ims.filter(c => c !== 'median')] }
   // const wls = [...new Set(fileComponents.map(c => c[2]))].filter((c, i) => i < 5 && c !== '0.5')
-  const wls = ['0.0', '1.0', '1.5', '2.0', '3.0']
+  const wls = ['0.0', '0.5', '1.0', '1.5', '2.0', '2.5', '3.0']
   console.log(i, cms, ims, wls)
   // console.log(`${i}: file availabilty check ${files.length === cms.length * ims.length * wls.length ? 'passed' : 'failed'}`)
   cms.forEach(cm => {
