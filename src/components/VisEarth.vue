@@ -35,7 +35,8 @@ import { ResizeObserver } from 'vue-resize'
 import { scaleLinear } from 'd3-scale'
 
 import chroma from 'chroma-js'
-import worker from 'workerize-loader!../assets/js/mapRenderer'
+// import worker from 'workerize-loader!../assets/js/mapRenderer'
+import { renderMap } from '../assets/js/mapRenderer'
 
 const defaultColors = {
   background: '#020212',
@@ -120,7 +121,9 @@ export default {
   },
   watch: {
     grid: {
-      handler () { this.updateCanvas() },
+      handler (grid) {
+        if (grid !== null) this.updateCanvas()
+      },
       immediate: true
     }
   },
@@ -130,11 +133,16 @@ export default {
   methods: {
     updateCanvas () {
       const { colorScale, grid } = this
-      if (this.workerInstance != null) this.workerInstance.terminate()
-      this.workerInstance = worker()
-      this.workerInstance.renderMap({ grid, colors: colorScale }).then(cData => {
-        this.imgData = cData
-      })
+      // const time = new Date().getTime()
+      // if (this.workerInstance != null) this.workerInstance.terminate()
+      // this.workerInstance = worker()
+      // this.workerInstance.renderMap({ grid, colors: colorScale }).then(cData => {
+      //   console.log(new Date().getTime() - time)
+      //   // this.imgData = cData
+      //   console.log(new Date().getTime() - time)
+      // })
+      this.imgData = renderMap({ grid, colors: colorScale })
+      // console.log(new Date().getTime() - time)
     },
     setHighlight (country) {
       this.country = country

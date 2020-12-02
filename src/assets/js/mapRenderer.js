@@ -1,15 +1,21 @@
 import pako from 'pako'
 export function renderMap ({ colors, grid }) {
+  // let time = new Date().getTime()
   const inflated = pako.inflate(grid, { to: 'string' })
+  // console.log(new Date().getTime() - time)
+  // time = new Date().getTime()
   const values = []
+  const lines = inflated.split('\n')
   for (let y = 359; y >= 0; y--) {
     const lat = []
-    const line = inflated.split('\n')[y]
+    const line = lines[y]
     for (let x = 0; x < 720; x++) {
       lat.push(charcodeToValue(line.charCodeAt(x)))
     }
     values.push(lat)
   }
+  // console.log(new Date().getTime() - time)
+  // time = new Date().getTime()
   const width = 720
   const height = 360
   const data = new Uint8Array(3 * width * height)
@@ -23,6 +29,7 @@ export function renderMap ({ colors, grid }) {
       }
     }
   }
+  // console.log(new Date().getTime() - time)
   return { data, width, height }
 }
 
