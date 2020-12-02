@@ -1,45 +1,41 @@
 <template>
   <header class="EarthHeader">
     <SensesMenu darkmode transparent id="senses-earth" :logo="{sx:2, sy:0, mx:1, my:0, lx:0, ly:0}"/>
-    <div class="wide">
-      <h2 class="tiny">
-        <div class="option-line">
-          Land area exposed to
-          <SensesSelect v-model="indicator" :options="indicatorOptions" class="invert option"/>
-        </div>
-        <div class="option-line">
-          at
-          <SensesRadio v-model="warmingLevel" :options="warmingLevelOptions" class="invert option"/>
-          °C global warming
-        </div>
-        <div class="option-line">
-          in climate model
-          <SensesSelect v-model="climateModel" :options="climateModels" class="invert option"/>
-        </div>
-        <div class="option-line">
-          & impact model
-          <SensesSelect v-if="impactModels.length > 1" v-model="impactModel" :options="impactModels" class="invert option"/>
-          <span v-else class="highlight no-hover option" >{{ impactModels[0] }}</span>
-        </div>
-        <!-- <div class="option-line narrow">
-          <span class="tiny">
-            Advanced Options (coming soon)
-          </span>
-        </div> -->
-        <div class="option-line narrow more mono" @click="showAbout = true">
-          <span class="tiny">
-            Learn more
-          </span>
-        </div>
-      </h2>
+    <div class="options">
+      <div class="option-line">
+        <EarthRadio v-model="indicator" :options="indicatorOptions" class="invert option" :isHorizontal="false"/>
+      </div>
+      <div class="option-line">
+        <input class="option" orient="vertical" v-model="warmingLevelProxy" type="range" min="0" :max="this.warmingLevels.length - 1"/>
+        {{warmingLevel}}
+      </div>
+      <!-- <div class="option-line">
+        in climate model
+        <SensesSelect v-model="climateModel" :options="climateModels" class="invert option"/>
+      </div>
+      <div class="option-line">
+        & impact model
+        <SensesSelect v-if="impactModels.length > 1" v-model="impactModel" :options="impactModels" class="invert option"/>
+        <span v-else class="highlight no-hover option" >{{ impactModels[0] }}</span>
+      </div> -->
+      <!-- <div class="option-line narrow">
+        <span class="tiny">
+          Advanced Options (coming soon)
+        </span>
+      </div> -->
+      <!-- <div class="option-line narrow more mono" @click="showAbout = true">
+        <span class="tiny">
+          Learn more
+        </span>
+      </div> -->
     </div>
   </header>
 </template>
 
 <script>
 import SensesMenu from 'library/src/components/SensesMenu.vue'
-import SensesSelect from 'library/src/components/SensesSelect.vue'
-import SensesRadio from 'library/src/components/SensesRadio.vue'
+// import SensesSelect from 'library/src/components/SensesSelect.vue'
+import EarthRadio from '@/components/EarthRadio.vue'
 import computeFromStore from '../assets/js/computeFromStore.js'
 import { mapGetters } from 'vuex'
 import { format } from 'd3-format'
@@ -47,8 +43,8 @@ export default {
   name: 'EarthHeader',
   components: {
     SensesMenu,
-    SensesSelect,
-    SensesRadio
+    // SensesSelect,
+    EarthRadio
   },
   data () {
     return {
@@ -57,6 +53,14 @@ export default {
   computed: {
     ...computeFromStore(['mode', 'indicator', 'indicators', 'climateModel', 'climateModels', 'warmingLevels', 'impactModel', 'warmingLevel', 'showAbout', 'compareValue', 'compareOption']),
     ...mapGetters(['impactModels']),
+    warmingLevelProxy: {
+      get () {
+        return this.warmingLevels.indexOf(this.warmingLevel)
+      },
+      set (value) {
+        this.warmingLevel = this.warmingLevels[value]
+      }
+    },
     warmingLevelOptions () {
       const { warmingLevels } = this
       return warmingLevels.map(value => ({
@@ -68,6 +72,7 @@ export default {
     indicatorOptions () {
       return this.indicators.map(i => {
         return {
+          glyph: `glyph-${i}`,
           label: i.replace(/-/g, ' '),
           value: i
         }
@@ -107,19 +112,34 @@ export default {
     pointer-events: all;
   }
 
-  h2 {
-    padding: 0 $spacing / 2;
+  .options {
+    position: absolute;
+    height: 100vh;
+    width: 100%;
+    padding: 0 $spacing / 4;
     font-weight: $font-weight-regular;
     margin-right: $spacing;
     color: $color-white;
     display: flex;
-    flex-direction: column;
+    // flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
 
     .option-line {
       display: flex;
       align-items: center;
       margin-bottom: 4px;
       white-space: nowrap;
+      flex-direction: column;
+
+      input[type=range][orient=vertical]
+      {
+          writing-mode: bt-lr; /* IE */
+          -webkit-appearance: slider-vertical; /* WebKit */
+          width: 8px;
+          height: 175px;
+          padding: 0 5px;
+      }
     }
 
     .more {
