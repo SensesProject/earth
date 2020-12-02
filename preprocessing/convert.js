@@ -20,13 +20,13 @@ indicators.forEach(i => {
   if (cms.indexOf('median') !== -1) { cms = ['median', ...cms.filter(c => c !== 'median')] }
   let ims = [...new Set(fileComponents.map(c => c[1]))].filter((c, i, all) => all.length > 2 || c !== 'median')
   if (ims.indexOf('median') !== -1) { ims = ['median', ...ims.filter(c => c !== 'median')] }
-  const wls = [...new Set(fileComponents.map(c => c[2]))].filter((c, i) => i < 5 && c !== '0.5')
+  // const wls = [...new Set(fileComponents.map(c => c[2]))].filter((c, i) => i < 5 && c !== '0.5')
+  const wls = ['0.0', '1.0', '1.5', '2.0', '3.0']
   console.log(i, cms, ims, wls)
   // console.log(`${i}: file availabilty check ${files.length === cms.length * ims.length * wls.length ? 'passed' : 'failed'}`)
   cms.forEach(cm => {
     ims.forEach(im => {
       const maxValues = []
-      const minValues = []
       const selectedFiles = wls.map(wl => {
         return {
           name: `${cm}_${im}_${wl}`,
@@ -51,8 +51,9 @@ indicators.forEach(i => {
           data.push(row)
         }
 
-        maxValues.push(Math.max(...data.map(row => Math.max(...row))))
-        minValues.push(Math.min(...data.map(row => Math.min(...row))))
+        const max = Math.max(...data.map(row => Math.max(...row)))
+        f.available = max !== 0
+        maxValues.push(max)
       })
       const binning = false
       const domain = [0, Math.ceil(Math.max(...maxValues, 1) / 10) * 10]
@@ -67,7 +68,7 @@ indicators.forEach(i => {
           scale: { domain: s.domain(), range }
         }
       }))
-      console.log(i, s.domain(), domain, [Math.min(...minValues), Math.max(...maxValues)])
+      console.log(i, s.domain(), domain, [0, Math.max(...maxValues)])
       selectedFiles.forEach(f => {
         const abs = fs.readFileSync(`./data/extreme-events/${i}-abs/all_${f.name}.csv`, 'utf8').trim().split('\n').map(line => line.split(','))
         const height = abs.length
