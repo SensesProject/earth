@@ -1,6 +1,6 @@
 <template>
   <div class="app">
-    <VisEarth :grid="grid" :scale="scale" @details="showDetails($event)"/>
+    <VisEarth :portal="'key'" hideKeyLabel :grid="grid" :scale="scale" @details="showDetails($event)"/>
     <EarthHeader/>
     <transition name="fade">
       <div class="overlay" is-overlay v-if="showAbout || showCountryDetails" @click="hideOverlay($event)">

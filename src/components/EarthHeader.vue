@@ -6,8 +6,7 @@
         <EarthRadio v-model="indicator" :options="indicatorOptions" class="invert option" :isHorizontal="false"/>
       </div>
       <div class="option-line">
-        <input class="option" orient="vertical" v-model="warmingLevelProxy" type="range" min="0" :max="this.warmingLevels.length - 1"/>
-        {{warmingLevel}}
+        <EarthRange class="option" v-model="warmingLevelProxy" :max="maxTemp"/>
       </div>
       <!-- <div class="option-line">
         in climate model
@@ -29,13 +28,30 @@
         </span>
       </div> -->
     </div>
+    <div class="details tiny">
+      <PortalTarget name="key"/>
+      <div class="text">
+        Land are exposed to <span class="neon">{{indicatorLabel}}</span> at <span class="neon" v-html="warmingLabel"/> in climate model
+        <SensesSelect v-model="climateModel" :options="climateModels" class="invert option"/>
+        <template v-if="indicator !== 'heatwave'">
+          & impact model <SensesSelect v-if="impactModels.length > 1" v-model="impactModel" :options="impactModels" class="invert option"/>
+          <span v-else class="neon" >{{ impactModels[0] }}</span>
+        </template><br>
+        <span v-if="warning" v-html="warning"></span>&nbsp;
+        <span class="learn" @click="showAbout = true">
+          Learn more
+        </span>
+      </div>
+    </div>
   </header>
 </template>
 
 <script>
+import { PortalTarget } from 'portal-vue'
 import SensesMenu from 'library/src/components/SensesMenu.vue'
-// import SensesSelect from 'library/src/components/SensesSelect.vue'
+import SensesSelect from 'library/src/components/SensesSelect.vue'
 import EarthRadio from '@/components/EarthRadio.vue'
+import EarthRange from '@/components/EarthRange.vue'
 import computeFromStore from '../assets/js/computeFromStore.js'
 import { mapGetters } from 'vuex'
 import { format } from 'd3-format'
@@ -43,8 +59,10 @@ export default {
   name: 'EarthHeader',
   components: {
     SensesMenu,
-    // SensesSelect,
-    EarthRadio
+    SensesSelect,
+    EarthRange,
+    EarthRadio,
+    PortalTarget
   },
   data () {
     return {
@@ -61,22 +79,32 @@ export default {
         this.warmingLevel = this.warmingLevels[value]
       }
     },
-    warmingLevelOptions () {
-      const { warmingLevels } = this
-      return warmingLevels.map(value => ({
-        value,
-        label: `${+value === 0 ? '±' : '+'}${+value}`
-        // label: `${+value === 0 ? '±' : '+'}${value}°C`
-      }))
-    },
     indicatorOptions () {
       return this.indicators.map(i => {
         return {
           glyph: `glyph-${i}`,
-          label: i.replace(/-/g, ' '),
+          label: `${i.replace(/-/g, ' ')}s`,
           value: i
         }
       })
+    },
+    maxTemp () {
+      if (this.climateModel === 'GFDL-ESM2M') return 4
+      if (this.climateModel === 'MIROC5') return 5
+      return 6
+    },
+    warning () {
+      if (this.climateModel === 'median' && this.warmingLevel === '2.5') return 'Data at the selected warming level are only available for 3 of the 4 climate models.'
+      if (this.climateModel === 'median' && this.warmingLevel === '3.0') return 'Data at the selected warming level are only available for 2 of the 4 climate models.'
+      if (this.climateModel === 'GFDL-ESM2M') return 'Data for the selected climate model are only available up to +2.0&thinsp;°C.'
+      if (this.climateModel === 'MIROC5') return 'Data for the selected climate model are only available up to +2.5&thinsp;°C.'
+      return null
+    },
+    indicatorLabel () {
+      return this.indicatorOptions.find(opt => opt.value === this.indicator).label
+    },
+    warmingLabel () {
+      return `${this.warmingLevel === '0.0' ? '±' : '+'}${this.warmingLevel}&thinsp;°C`
     }
   },
   methods: {
@@ -97,6 +125,7 @@ export default {
 .EarthHeader {
   position: absolute;
   width: 100vw;
+  height: 100vh;
   top: 0;
   left: 0;
   pointer-events: none;
@@ -116,7 +145,7 @@ export default {
     position: absolute;
     height: 100vh;
     width: 100%;
-    padding: 0 $spacing / 4;
+    padding: 0 calc(#{$spacing / 2} - 2px);
     font-weight: $font-weight-regular;
     margin-right: $spacing;
     color: $color-white;
@@ -128,18 +157,9 @@ export default {
     .option-line {
       display: flex;
       align-items: center;
-      margin-bottom: 4px;
+      // margin-bottom: 4px;
       white-space: nowrap;
       flex-direction: column;
-
-      input[type=range][orient=vertical]
-      {
-          writing-mode: bt-lr; /* IE */
-          -webkit-appearance: slider-vertical; /* WebKit */
-          width: 8px;
-          height: 175px;
-          padding: 0 5px;
-      }
     }
 
     .more {
@@ -156,7 +176,7 @@ export default {
     .option {
       pointer-events: all;
       cursor: default;
-      margin: 0 $spacing * 0.25;
+      // margin: 0 $spacing * 0.25;
       // font-weight: $font-weight-bold;
       &.white {
         color: $color-white;
@@ -189,6 +209,71 @@ export default {
       background: $color-green url(../assets/img/options.svg) center center no-repeat;
       cursor: pointer;
       pointer-events: all;
+    }
+  }
+
+  ::v-deep {
+    .details {
+      position: absolute;
+      padding: 0 calc(#{$spacing / 2} - 2px) $spacing * 0.75;
+      bottom: 0;
+      color: white;
+
+      .vue-portal-target {
+        display: flex;
+        // align-items: center;
+        flex-direction: column;
+        pointer-events: none;
+        // color: $color-white;
+        .label {
+          padding: $spacing / 8 0 0 0;
+        }
+        .scale {
+          display: flex;
+          // justify-content: center;
+          align-items: center;
+
+          svg {
+            border-radius: $border-radius;
+          }
+
+          .tick {
+            // width: 60px;
+            // background: green;
+            &:first-of-type {
+              text-align: right;
+              padding: 0 $spacing / 4 0 0;
+            }
+            &:last-of-type {
+              padding: 0 0 0 $spacing / 4;
+            }
+          }
+        }
+      }
+    }
+
+    .text {
+      margin-top: $spacing / 4;
+
+      span.neon {
+        font-weight: bold;
+        color: lighten(getColor(neon, 50), 5);
+      }
+
+      span.learn {
+        pointer-events: all;
+        text-decoration: underline;
+
+        &:hover {
+          color: lighten(getColor(neon, 50), 5);
+          cursor: pointer;
+        }
+      }
+
+      .option {
+        pointer-events: all;
+        margin: 0 $spacing / 8;
+      }
     }
   }
 }

@@ -13,18 +13,30 @@
           :checked="(o.value != null ? o.value : o) === value"
           :value="o.value != null ? o.value : o"
           @change="$emit('input', o.value != null ? o.value : o)">
-          <span>
-            <span class="glyph" :class="o.glyph"/>
+          <SensesTooltip :textClass="[]" :tooltipClass="['tiny', 'earth-tooltip']"
+            placement="right" :tooltip="o.label || (o.value != null ? o.value : o)" trigger="manual"
+            :tooltipOptions="{autoHide: false, open: (o.value != null ? o.value : o) === value || (o.value != null ? o.value : o) === hoverVal}">
+            <span @mouseover="hoverVal = o.value != null ? o.value : o"
+          @mouseout="hoverVal = null"
+          @mouseleave="hoverVal = null">
+              <span class="glyph" :class="o.glyph"/>
             <!-- {{ o.label || (o.value != null ? o.value : o) }} -->
-          </span>
+            </span>
+          </SensesTooltip>
       </label>
     </div>
   </div>
 </template>
 
 <script>
+import SensesTooltip from 'library/src/components/SensesTooltip.vue'
+
 export default {
   name: 'SensesRadio',
+  components: {
+    // eslint-disable-next-line vue/no-unused-components
+    SensesTooltip
+  },
   props: {
     label: {
       type: [String, Number],
@@ -64,6 +76,7 @@ export default {
   },
   data () {
     return {
+      hoverVal: null
     }
   },
   computed: {
@@ -73,8 +86,12 @@ export default {
 
 <style scoped lang="scss">
 @import "library/src/style/global.scss";
+$btn-size: 28px;
 .senses-radio {
   display: inline-block;
+  border-radius: $spacing / 2;
+  padding-bottom: 2px;
+  background: getColor(neon, 20);
   .radio {
     display: grid;
     grid-column-gap: 1px;
@@ -86,31 +103,14 @@ export default {
     }
 
     label {
-      &:first-child {
-        border-radius: $border-radius $border-radius 0 0;
-      }
-
-      &:last-child {
-        border-radius: 0 0 $border-radius $border-radius;
-      }
-    }
-
-    &.isHorizontal {
-      grid-auto-flow: column;
-
-      label {
-        &:first-child {
-          border-radius: $border-radius 0 0 $border-radius;
-        }
-
-        &:last-child {
-          border-radius: 0 $border-radius $border-radius 0;
-        }
-      }
+      width: $btn-size;
+      height: $btn-size;
+      overflow: hidden;
+      border-radius: $btn-size;
     }
 
     .glyph {
-      font-size: 2em;
+      font-size: 1.8em;
     }
 
     [class^=glyph-]:before, [class*=" glyph-"]:before {
@@ -119,14 +119,14 @@ export default {
 
     label {
       color: getColor(neon, 40);
-      margin-bottom: 1px;
-      border-radius: 0; // Because highlight class has border radius
+      margin-bottom: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
 
       &.highlight {
         padding: 0;
+        margin: 2px;
       }
 
       input {
@@ -136,7 +136,7 @@ export default {
         width: 0;
         height: 0;
 
-        &:checked+span {
+        &:checked+div {
           color: $color-white;
           cursor: default;
         }
@@ -154,4 +154,21 @@ export default {
   }
 }
 
+</style>
+<style lang="scss">
+@import "library/src/style/global.scss";
+.tooltip.senses-tooltip.earth-tooltip {
+  z-index: 10;
+  .tooltip-inner {
+    padding: 0 $spacing / 8;
+    min-height: $spacing;
+    min-width: 0;
+    background: none;
+    text-transform: capitalize;
+    // border-radius: $spacing / 4;
+  }
+  .tooltip-arrow {
+    display: none;
+  }
+}
 </style>

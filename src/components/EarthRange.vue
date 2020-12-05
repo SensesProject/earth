@@ -1,24 +1,25 @@
 <template>
-  <div class="senses-radio">
-    <span v-if="label" class="tiny">{{ label }}&nbsp;</span>
-    <div class="radio" :class="{ isEqualWidth, isHorizontal }">
-      <label
-        v-for="(o, i) in options"
-        :key="i"
-        class="highlight"
-        :class="[{active: (o.value != null ? o.value : o) === value}, o.color]">
-        <input
-          type="radio"
-          :name="_uid"
-          :checked="(o.value != null ? o.value : o) === value"
-          :value="o.value != null ? o.value : o"
-          @change="$emit('input', o.value != null ? o.value : o)">
-          <span>
-            <span class="glyph" :class="o.glyph"/>
-            <!-- {{ o.label || (o.value != null ? o.value : o) }} -->
-          </span>
-      </label>
+  <div class="earth-range">
+    <div class="label">
+      <svg width="182" height="30">
+        <g transform="rotate(90) translate(-4, -2)">
+          <g v-for="i in 7" :key="i" :transform="`translate(0 -${(i - 0.5) * (178 / 7)})`"
+            :opacity="i - 1 > max ? 0.2 : i -1 === value ? 1 : 0.6">
+            <line stroke="white" :x2="(i - 1) % 2 === 0 ? -6 : -3"/>
+            <!-- <rect width="2" y="-12" height="24" fill="red"/> -->
+            <text v-if="(i - 1) % 2 === 0" fill="white" text-anchor="end" y="4" x="-12">
+              {{i - 1 === 0 ? '±' : '+'}}{{(i - 1) / 2}}&thinsp;°C
+            </text>
+          </g>
+        </g>
+      </svg>
     </div>
+    <input type="range"
+      :style="{width: `${2 + (max + 1) * (180/7)}px`}"
+      @input="$emit('input', $event.target.value)"
+      :value="value"
+      :max="max"
+      min="0"/>
   </div>
 </template>
 
@@ -26,132 +27,142 @@
 export default {
   name: 'SensesRadio',
   props: {
-    label: {
-      type: [String, Number],
-      default: '',
-      docs: 'Text to show above input'
-    },
     value: {
-      docs: 'To be used with v-model'
+      type: Number,
+      default: 0
     },
-    options: {
-      type: Array,
-      default () {
-        return [{
-          value: 1,
-          label: 'Option 1'
-        }, {
-          value: 'Option 2'
-        }, {
-          value: 3,
-          label: 'Option 3',
-          color: 'green'
-        },
-        'Long Option 4']
-      },
-      docs: 'Array of available options. Options can be either strings or objects, with properties value (required), label (optional), and color (optional)'
-    },
-    isEqualWidth: {
-      type: Boolean,
-      default: true,
-      docs: 'Defines if items have the same width'
-    },
-    isHorizontal: {
-      type: Boolean,
-      default: true,
-      docs: 'Defines if orientation is horizontal or vertical'
+    max: {
+      type: Number,
+      default: 7
     }
   },
   data () {
     return {
     }
   },
-  computed: {
+  watch: {
+    max (max) {
+      if (this.value > max) this.$emit('input', max)
+    }
   }
 }
 </script>
 
 <style scoped lang="scss">
 @import "library/src/style/global.scss";
-.senses-radio {
-  display: inline-block;
-  .radio {
-    display: grid;
-    grid-column-gap: 1px;
-    position: relative;
+$btn-size: 28px;
+.earth-range {
+  transform: translate(77px, 3px) rotate(-90deg);
+  position: relative;
+  width: 182px;
+  height: $spacing;
+
+  .label {
+    position: absolute;
+    background: getColor(neon, 0);
+    border-radius: $spacing / 2;
+    top: 0;
+    height: 100%;
     width: 100%;
+    z-index: -1;
 
-    &.isEqualWidth {
-      grid-auto-columns: 1fr;
-    }
-
-    label {
-      &:first-child {
-        border-radius: $border-radius $border-radius 0 0;
-      }
-
-      &:last-child {
-        border-radius: 0 0 $border-radius $border-radius;
-      }
-    }
-
-    &.isHorizontal {
-      grid-auto-flow: column;
-
-      label {
-        &:first-child {
-          border-radius: $border-radius 0 0 $border-radius;
-        }
-
-        &:last-child {
-          border-radius: 0 $border-radius $border-radius 0;
-        }
-      }
-    }
-
-    .glyph {
-      font-size: 2em;
-    }
-
-    [class^=glyph-]:before, [class*=" glyph-"]:before {
-      margin: 0;
-    }
-
-    label {
-      color: getColor(neon, 40);
-      margin-bottom: 1px;
-      border-radius: 0; // Because highlight class has border radius
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      &.highlight {
-        padding: 0;
-      }
-
-      input {
-        opacity: 0;
-        appearance: none;
-        -webkit-appearance: none;
-        width: 0;
-        height: 0;
-
-        &:checked+span {
-          color: $color-white;
-          cursor: default;
-        }
-
-        +span {
-          width: 100%;
-          display: inline-block;
-          line-height: 1 !important;
-          padding: 0 !important;
-          text-align: center;
-          cursor: pointer;
-        }
-      }
+    svg {
+      overflow: visible;
+      pointer-events: none;
     }
   }
+
+  input[type=range]{
+    writing-mode: bt-lr; /* IE */
+    -webkit-appearance: slider-vertical; /* WebKit */
+    height: $spacing;
+    margin: 0;
+    background-color: getColor(neon, 20);
+    border-radius: $spacing / 2;
+    -webkit-appearance: none;
+    padding: 0px 2px;
+  }
+  input[type=range]:focus {
+    outline: none;
+  }
+  input[type=range]::-webkit-slider-runnable-track {
+    background: getColor(neon, 20);
+    border: 0;
+    border-radius: 25px;
+    width: 100%;
+    height: $btn-size;
+    cursor: pointer;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    margin-top: 0px;
+    width: $btn-size;
+    height: $btn-size;
+    background: getColor(neon, 50);
+    border: 0;
+    border-radius: 14px;
+    cursor: pointer;
+    -webkit-appearance: none;
+  }
+  input[type=range]:focus::-webkit-slider-runnable-track {
+    background: none;
+  }
+  input[type=range]::-moz-range-track {
+    background: getColor(neon, 20);
+    border: 0;
+    border-radius: 25px;
+    width: 100%;
+    height: $btn-size;
+    cursor: pointer;
+  }
+  input[type=range]::-moz-range-thumb {
+    width: $btn-size;
+    height: $btn-size;
+    background: getColor(neon, 50);
+    border: 0;
+    border-radius: 14px;
+    cursor: pointer;
+  }
+  input[type=range]::-ms-track {
+    background: getColor(neon, 20);
+    border-color: transparent;
+    border-width: 0px 0;
+    color: transparent;
+    width: 100%;
+    height: $btn-size;
+    cursor: pointer;
+  }
+  input[type=range]::-ms-fill-lower {
+    background: getColor(neon, 20);
+    border: 0;
+    border-radius: 50px;
+  }
+  input[type=range]::-ms-fill-upper {
+    background: getColor(neon, 20);
+    border: 0;
+    border-radius: 50px;
+  }
+  input[type=range]::-ms-thumb {
+    width: $btn-size;
+    height: $btn-size;
+    background: getColor(neon, 50);
+    border: 0;
+    border-radius: 14px;
+    cursor: pointer;
+    margin-top: 0px;
+    /*Needed to keep the Edge thumb centred*/
+  }
+  input[type=range]:focus::-ms-fill-lower {
+    background: getColor(neon, 20);
+  }
+  input[type=range]:focus::-ms-fill-upper {
+    background: getColor(neon, 20);
+  }
+  @supports (-ms-ime-align:auto) {
+    input[type=range] {
+      margin: 0;
+    }
+  }
+
 }
 
 </style>

@@ -9,18 +9,20 @@
       <ObjectGeo :size="size / 2" @highlight="setHighlight" :interactive="!preventInteraction && !mouseDown"
         :borderColor="allColors.borderColor" :highlightColor="allColors.highlightColor"/>
     </ThreeScene>
-    <svg class="key" :width="keyWidth" :height="64">
-      <g transform="translate(0 18)">
-        <rect v-for="(c1, x) in colorScale" :key="`c${x}`" :width="keyWidth / colorScale.length + 0.4" height="24" :x="x * (keyWidth / colorScale.length) - 0.2" :y="0" :fill="`rgb(${c1[0]},${c1[1]},${c1[2]})`"/>
-      </g>
-      <text y="10" :fill="allColors.text">Land area exposed</text>
-      <g class="ticks" :fill="allColors.text">
-        <g v-for="(t, i) in ticks" :key="`t-${i}`">
-          <rect y="18" :x="t.x" width="1" height="32"/>
-          <text y="64" :x="t.x">{{ t.value }}%</text>
-        </g>
-      </g>
-    </svg>
+    <component :is="portal != null ? 'Portal' : 'div'" :to="portal" class="key tiny" :style="{color: colors.text}">
+      <div class="scale">
+        <span class="tick">{{ scale.range[0] }}%</span>
+        <svg :width="keyWidth" :height="16">
+          <g>
+            <rect v-for="(c1, x) in colorScale" :key="`c${x}`" :width="keyWidth / colorScale.length + 0.4" height="16" :x="x * (keyWidth / colorScale.length) - 0.2" :y="0" :fill="`rgb(${c1[0]},${c1[1]},${c1[2]})`"/>
+          </g>
+        </svg>
+        <span class="tick">{{ scale.range[1] }}%</span>
+      </div>
+      <div class="label" v-if="!hideKeyLabel">
+        Land area exposed
+      </div>
+    </component>
     <div v-if="country && !mouseMoved" class="tooltip tiny" :style="{top: `${country.y}px`, left: `${country.x}px`}">
       {{ country.name }}
     </div>
@@ -35,7 +37,7 @@ import { ResizeObserver } from 'vue-resize'
 import { scaleLinear } from 'd3-scale'
 
 import chroma from 'chroma-js'
-// import worker from 'workerize-loader!../assets/js/mapRenderer'
+import { Portal } from 'portal-vue'
 import { renderMap } from '../assets/js/mapRenderer'
 
 const defaultColors = {
@@ -52,9 +54,18 @@ export default {
     ThreeScene,
     ObjectSphere,
     ObjectGeo,
-    ResizeObserver
+    ResizeObserver,
+    Portal
   },
   props: {
+    portal: {
+      type: String,
+      default: null
+    },
+    hideKeyLabel: {
+      type: Boolean,
+      default: false
+    },
     grid: String,
     scale: {
       type: Object,
@@ -90,7 +101,7 @@ export default {
       imgData: null,
       country: null,
       mouseDown: false,
-      keyWidth: 200,
+      keyWidth: 120,
       width: 768,
       height: 768
     }
@@ -111,7 +122,7 @@ export default {
     ticks () {
       const { keyWidth, scale } = this
       const s = scaleLinear().domain(scale.range).range([0, keyWidth])
-      return s.ticks(2).map(value => {
+      return scale.range.map(value => {
         return {
           value,
           x: s(value)
@@ -185,11 +196,35 @@ export default {
     position: absolute;
     bottom: $spacing / 2;
     left: $spacing / 2;
+    right: $spacing / 2;
+    display: flex;
+    // align-items: center;
+    flex-direction: column;
     pointer-events: none;
-    overflow: visible;
+    // color: $color-white;
+    .label {
+      padding: $spacing / 8 0 0 0;
+    }
+    .scale {
+      display: flex;
+      // justify-content: center;
+      align-items: center;
 
-    .ticks {
-      text-anchor: middle;
+      svg {
+        border-radius: $border-radius;
+      }
+
+      .tick {
+        // width: 60px;
+        // background: green;
+        &:first-of-type {
+          text-align: right;
+          padding: 0 $spacing / 4 0 0;
+        }
+        &:last-of-type {
+          padding: 0 0 0 $spacing / 4;
+        }
+      }
     }
   }
   .tooltip {
