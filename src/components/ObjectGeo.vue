@@ -93,6 +93,8 @@ export default {
         } else {
           this.country = null
         }
+      } else {
+        this.country = null
       }
       requestAnimationFrame(highlight)
     },
