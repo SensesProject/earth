@@ -43,13 +43,14 @@ export default {
 
       this.getContainer(c => {
         c.add(this.container)
+        this.$parent.forceRedraw()
       })
     },
     updateTexture () {
       const { getTexture, mesh } = this
       mesh.material.map = getTexture()
       mesh.material.map.needsUpdate = true
-      this.$parent.$emit('update')
+      this.$parent.forceRedraw()
     },
     getTexture () {
       const { imgData, baseColor } = this

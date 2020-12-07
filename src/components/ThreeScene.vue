@@ -192,6 +192,9 @@ export default {
         }
       }
       check()
+    },
+    forceRedraw () {
+      this.redraw = true
     }
   },
   watch: {
