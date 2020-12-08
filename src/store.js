@@ -10,11 +10,17 @@ const warmingLevels = [...new Set(grids.files.map(f => f.wl))]
 
 Vue.use(Vuex)
 
+let indicator = 'heatwave'
+if (indicators.indexOf(location.hash.split('#')[1]) !== -1) {
+  indicator = location.hash.split('#')[1]
+  location.hash = ''
+}
+
 export default new Vuex.Store({
   state: {
     showAbout: false,
     showCountryDetails: null,
-    indicator: 'heatwave',
+    indicator,
     indicators,
     impactModel: impactModels[0],
     impactModels,
