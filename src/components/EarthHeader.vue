@@ -8,25 +8,6 @@
       <div class="option-line">
         <EarthRange class="option" v-model="warmingLevelProxy" :max="maxTemp"/>
       </div>
-      <!-- <div class="option-line">
-        in climate model
-        <SensesSelect v-model="climateModel" :options="climateModels" class="invert option"/>
-      </div>
-      <div class="option-line">
-        & impact model
-        <SensesSelect v-if="impactModels.length > 1" v-model="impactModel" :options="impactModels" class="invert option"/>
-        <span v-else class="highlight no-hover option" >{{ impactModels[0] }}</span>
-      </div> -->
-      <!-- <div class="option-line narrow">
-        <span class="tiny">
-          Advanced Options (coming soon)
-        </span>
-      </div> -->
-      <!-- <div class="option-line narrow more mono" @click="showAbout = true">
-        <span class="tiny">
-          Learn more
-        </span>
-      </div> -->
     </div>
     <div class="details tiny">
       <PortalTarget name="key"/>
