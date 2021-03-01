@@ -19,7 +19,7 @@
     "pako": "^1.0.11",
     "portal-vue": "^2.1.7",
     "sass": "^1.23.7",
-    "three": "^0.100.0",
+    "three": "^0.125.0",
     "three-orbitcontrols": "2.99.1",
     "unfetch": "^4.0.1",
     "vue": "^2.5.21",
