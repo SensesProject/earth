@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "d3-scale": "^3.2.1",
+    "d3-scale": "^4.0.2",
     "pako": "^1.0.11",
     "rimraf": "^3.0.0",
     "ssh2-sftp-client": "^5.1.2"
